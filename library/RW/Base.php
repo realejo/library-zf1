@@ -1,4 +1,13 @@
 <?php
+/**
+ * Funcionalidades Básicas
+ *
+ * @category   RW
+ * @package    RW_Base
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ */
 class RW_Base
 {
     static public $charTable = array(
@@ -90,7 +99,7 @@ class RW_Base
                 $allowattributes = explode(",",$allowattributes);
 
 
-            echo strspn ($string, 'style');
+            echo strripos($string, 'style');
             die();
 
             foreach($allowattributes as $aa){

@@ -4,8 +4,8 @@
  *
  * @category   RW
  * @package    RW_Version
- * @author     Rodrigo $Author$
- * @version    $Rev$ $Date$
+ * @author     Realejo $Author$
+ * @version    $Id$
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  */
 class RW_Version

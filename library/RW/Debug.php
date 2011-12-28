@@ -1,8 +1,17 @@
 <?php
+/**
+ *
+ * @category   RW
+ * @package    RW_Debug
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses Zend_Debug
+ */
 class RW_Debug extends Zend_Debug
 {
-	public $teste = array();
-	
+
     static function log($message, $priority = Zend_Log::DEBUG)
     {
         if (APPLICATION_ENV != 'production') {

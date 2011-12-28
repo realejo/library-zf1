@@ -2,9 +2,11 @@
 /**
  * Valida e formata o CNPJ
  *
- * @author Rodrigo Capilé
- * @version 1.0
- *
+ * @category   RW
+ * @package    RW_CNPJ
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  */
 class RW_CNPJ
 {

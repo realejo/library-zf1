@@ -2,11 +2,16 @@
 /**
  * CKEDITOR helper
  *
- * @author Rodrigo
- * @version
- * @todo verificar o JQuery Adapter
+ * @category   RW
+ * @package    RW_View
+ * @subpackage Helper
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper
+ *
+ * @todo verificar o JQuery Adapter
  */
 class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 {
@@ -15,14 +20,14 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
     private $_ckfinder;
     private $_useJQuery = false;
 
-	/**
-	 * Reduz o texto eliminando o html
-	 *
-	 * @param string $texto texto a ser resumido
-	 * @param int $size número de caracteres máximo
-	 *
-	 */
-	public function CKEDITOR($campos, $view, $options = null) {
+    /**
+     * Reduz o texto eliminando o html
+     *
+     * @param string $texto texto a ser resumido
+     * @param int $size número de caracteres máximo
+     *
+     */
+    public function CKEDITOR($campos, $view, $options = null) {
         $config = new Zend_Config_Ini(APPLICATION_PATH . "/../configs/application.ini", APPLICATION_ENV);
         $ckeditor = $this->_ckeditor = '/admin/js/_' . $config->cms->htmleditor->ckeditor;
         $ckfinder = $this->_ckfinder = '/admin/js/_' . $config->cms->htmleditor->ckfinder;
@@ -66,7 +71,7 @@ HTML;
         }
 
         return $html;
-	}
+    }
 
     private function _getConfig_HTML($campo) {
         $ckfinder = $this->_ckfinder;

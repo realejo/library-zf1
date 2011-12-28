@@ -4,9 +4,14 @@
  *
  *  Mostra as mensagens para o usuário
  *
- * @author Rodrigo $Author$
- * @version $Rev$ $Date$
- * @uses viewHelper Zend_View_Helper
+ * @category   RW
+ * @package    RW_View
+ * @subpackage Helper
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses       Zend_View_Helper
  */
 class RW_View_Helper_ShowMessage extends Zend_View_Helper_Abstract
 {
@@ -48,10 +53,10 @@ class RW_View_Helper_ShowMessage extends Zend_View_Helper_Abstract
         $return = '';
         if ( count($messages) > 0 ) {
             $return = PHP_EOL . '<!-- Mensagens -->' . PHP_EOL;
-		    foreach ( $messages as $msg) {
-	            $return .= "<div class=\"alert-message {$msg['type']}\">" . PHP_EOL;
-	            $return .= $msg['message'] . PHP_EOL;
-	            $return .= '</div>' . PHP_EOL;
+            foreach ( $messages as $msg) {
+                $return .= "<div class=\"alert-message {$msg['type']}\">" . PHP_EOL;
+                $return .= $msg['message'] . PHP_EOL;
+                $return .= '</div>' . PHP_EOL;
             }
             $return .= '<!-- FIM Mensagens -->' . PHP_EOL;
         }

@@ -1,11 +1,17 @@
 <?php
 /**
- * @author Rodrigo
+ * @category   RW
+ * @package    RW_Search
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses       Zend_Search_Lucene
  */
 class RW_Search extends Zend_Search_Lucene
 {
     /**
-     * Retorna o indice utilizado vrificando se ele já está criado e usando o Stemmer em portugues
+     * Retorna o indice utilizado verificando se ele já está criado e usando o Stemmer em portugues
      * @param string $index
      * @return Zend_Search_Lucene_Interface
      */
@@ -75,7 +81,7 @@ class RW_Search extends Zend_Search_Lucene
     static public function fixHighlight($texto) {
         return preg_replace('(b style=)', 'b class="hightlight" data-temp=', $texto);
     }
-	
+
     static public function simples($str)
     {
         $text = strip_tags($str);

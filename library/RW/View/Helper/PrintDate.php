@@ -2,10 +2,14 @@
 /**
  * Imprime a data no formato correto
  *
- * @uses viewHelper Zend_View_Helper
- * @author Rodrigo
- * @version
+ * @category   RW
+ * @package    RW_View
+ * @subpackage Helper
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  *
+ * @uses viewHelper Zend_View_Helper
  */
 class RW_View_Helper_PrintDate extends Zend_View_Helper_Abstract
 {
@@ -17,8 +21,8 @@ class RW_View_Helper_PrintDate extends Zend_View_Helper_Abstract
      * @param string $format Formato para apresentar a data
      *
      */
-    public function printDate($d = null, $format = "dd/MM/yyyy") {
-
+    public function printDate($d = null, $format = "dd/MM/yyyy")
+    {
         if (strpos($d, '/')) {
             $temp = explode('/', $d);
             $d = $temp[2].'-'.$temp[1].'-'.$temp[0];

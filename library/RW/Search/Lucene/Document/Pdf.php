@@ -3,7 +3,7 @@
  * Implemantação do Zend_Search_Lucene_Document para PDF
  *
  * @author Rodrigo $Author$
- * @version $Rev$ $Date$
+ * @version $Id$
  *
  * @todo não lembro de onde copiei e o que alterei
  */

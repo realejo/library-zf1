@@ -2,8 +2,13 @@
 /**
  * Verifica os spams mais comuns e se passar verifica se é um SPAM no AKISMET
  *
- * @author Rodrigo
- * @uses Zend_Service_Akismet
+ * @category   RW
+ * @package    RW_Spam
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses       Zend_Service_Akismet
  */
 class RW_Spam
 {

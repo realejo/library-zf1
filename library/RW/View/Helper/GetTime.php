@@ -2,10 +2,14 @@
 /**
  * Calcula o tempo da data até a hora atual
  *
- * @uses viewHelper Zend_View_Helper
- * @author Rodrigo
- * @version
+ * @category   RW
+ * @package    RW_View
+ * @subpackage Helper
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  *
+ * @uses viewHelper Zend_View_Helper
  */
 class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
 {
@@ -17,7 +21,8 @@ class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
      * @param string $format Formatdo para apresentar a data
      *
      */
-    public function getTime($d) {
+    public function getTime($d)
+    {
         $now = time();
         $date = new Zend_Date($d, Zend_Date::ISO_8601);
         $time = $now - $date->getTimestamp();

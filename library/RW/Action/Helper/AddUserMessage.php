@@ -4,9 +4,14 @@
  *
  * Grava as mensagens ao usuário
  *
- * @author Rodrigo $Author$
- * @version $Rev$ $Date$
- * @uses viewHelper Zend_View_Helper
+ * @category   RW
+ * @package    RW_Controller
+ * @subpackage RW_Controller_Action_Helper
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses 	   Zend_Controller_Action_Helper
  */
 class RW_Controller_Action_Helper_AddUserMessage extends Zend_Controller_Action_Helper_Abstract
 {

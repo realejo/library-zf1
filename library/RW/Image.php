@@ -2,9 +2,11 @@
 /**
  * Classe com funções comuns para tratamenteo de imagens
  *
- * @author Rodrigo $Author$
- * @version $Rev$ $Date$
- * @copyright 2011 (c) Realejo (http://realejo.com.br)
+ * @category   RW
+ * @package    RW_Image
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  */
 class RW_Image
 {
@@ -14,7 +16,7 @@ class RW_Image
     protected  $_image = null;
 
     /**
-     * mime types válidos
+     * Mime types válidos
      * @var array
      */
     protected $_fileTypes = array(
@@ -34,7 +36,7 @@ class RW_Image
     );
 
     /**
-     * path original da imagem
+     * Path original da imagem
      * @var string
      */
     private $_path;
@@ -97,7 +99,7 @@ class RW_Image
 		        return true;
 		        break;
         }
-        // tipo não identificado ou não valido
+        // Tipo não identificado ou não valido
         return false;
     }
 
@@ -119,6 +121,7 @@ class RW_Image
 
     /**
      * Verifica se tem alguma imagem carregada
+     * @return boolean
      */
     public function isLoaded() {
         return !is_null($this->_image);
@@ -162,33 +165,30 @@ class RW_Image
      * @param string $file
      * @param boolean $close fecha o arquivo ou mantem na memoria
      *
-     */
-
-    /**
      * @codeCoverageIgnore
      */
     public function sendScreen($close = true)
     {
+
        // @codeCoverageIgnoreStart
-        header('Content-Type: image/'. $this->mimeType);
+       // Define o header de acordo com o file type
+       header('Content-Type: image/'. $this->mimeType);
        // @codeCoverageIgnoreEnd
 
-    	// Define o header de acordo com o file type
-
         // Salva a transparencia (alpha channel) dos PNGs
-        if ($this->mimeType == 'png')
-            imagesavealpha( $this->_image, true );
+        if ($this->mimeType == 'png') imagesavealpha( $this->_image, true );
 
         // Define a função de acordo com o file type
         $imageFunction = "image" . $this->mimeType;
 
-         // @codeCoverageIgnoreStart
-         // Envia para o browser
-         $imageFunction($this->_image);
-         // @codeCoverageIgnoreEnd
+        // @codeCoverageIgnoreStart
+        // Envia para o browser
+        $imageFunction($this->_image);
+        // @codeCoverageIgnoreEnd
 
         // fecha o arquivo
         if ($close) $this->close();
+
         return true;
     }
 

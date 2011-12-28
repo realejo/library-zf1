@@ -2,14 +2,17 @@
 /**
  * Calcula o tempo da data até o dia atual
  *
- * @uses viewHelper Zend_View_Helper
- * @author Rodrigo
- * @version
+ * @category   RW
+ * @package    RW_View
+ * @subpackage Helper
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
  *
+ * @uses viewHelper Zend_View_Helper
  */
 class RW_View_Helper_GetDays extends Zend_View_Helper_Abstract
 {
-
     /**
      * @param date $d data a ser comparada
      */

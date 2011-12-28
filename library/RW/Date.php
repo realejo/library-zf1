@@ -1,4 +1,13 @@
 <?php
+/**
+ * @category   RW
+ * @package    RW_Date
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses       Zend_Date
+ */
 class RW_Date extends Zend_Date
 {
     const QUARTER = 'Q';

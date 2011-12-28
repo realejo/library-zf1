@@ -1,7 +1,14 @@
 <?php
 /**
  * Adiciona a CDATA ao SimpleXML
- * @author Rodrigo
+ *
+ * @category   RW
+ * @package    RW_SimpleXMLExtended
+ * @author     Realejo $Author$
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ *
+ * @uses 	   SimpleXMLElement
  */
 class RW_SimpleXMLExtended extends SimpleXMLElement
 {
