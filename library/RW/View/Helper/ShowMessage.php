@@ -31,7 +31,7 @@ class RW_View_Helper_ShowMessage extends Zend_View_Helper_Abstract
      */
     public function showMessage($messages = null)  {
 
-        // Verifica se fopi enviado alguma mensagem
+        // Verifica se foi enviado alguma mensagem
         if ( is_null($messages) ) {
             // Recupera as mensagens gravadas na sessão
             $messages = $this->_userSession->messages;

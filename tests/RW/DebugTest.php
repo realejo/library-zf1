@@ -40,10 +40,9 @@ class DebugTest extends PHPUnit_Framework_TestCase
     public function testLog ()
     {
         // TODO Auto-generated DebugTest::testLog()
-        //$this->markTestIncomplete("log test not implemented");
+        $this->markTestIncomplete("log test not implemented");
         $logger = new Zend_Log();
         RW_Debug::log('MENSAGEM DE ERROR', 1);
-        $this->assertClassHasAttribute('_priorities', 'Zend_Log');
     }
     /**
      * Tests RW_Debug::logToFile()

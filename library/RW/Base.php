@@ -98,15 +98,12 @@ class RW_Base
             if(!is_array($allowattributes))
                 $allowattributes = explode(",",$allowattributes);
 
-
-            echo strripos($string, 'style');
-            die();
-
             foreach($allowattributes as $aa){
-            	$rep = '/([^>]*) ('.$aa.')(=)(\'.*\'|".*")/i';
-            	$string = preg_replace($rep, '$1 $2_-_-$4', $string);
-            	if (preg_match($rep,$string) > 0) {
-            		$string = preg_replace($rep, '$1 $2_-_-$4', $string);
+
+            	$count = substr_count($string, $aa);
+            	for ($i=0; $i<$count; $i++) {
+	            	 $rep = '/([^>]*) ('.$aa.')(=)(\'.*\'|".*")/i';
+	            	 $string = preg_replace($rep, '$1 $2_-_-$4', $string);
             	}
             }
         }
@@ -150,10 +147,6 @@ class RW_Base
 	 * @return string
      */
     static public function seourl($string, $space="-") {
-
-        if (function_exists('iconv')) {
-            $string = @iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-        }
 
         $string = self::RemoveAcentos(strtolower(trim($string)));
         $string = preg_replace('([_|\s]+)', '-', $string); // change all spaces and underscores to a hyphen

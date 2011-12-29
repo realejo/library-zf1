@@ -49,6 +49,11 @@ class DateTest extends PHPUnit_Framework_TestCase
     {
       $date = new RW_Date('26/12/2011 14:00:00');
       $this->assertTrue(RW_Date::toMySQL($date) === '2011-12-26 14:00:00');
+
+      $date = '26/12/2011 14:00:00';
+      $this->assertTrue(RW_Date::toMySQL($date) === '2011-12-26 14:00:00');
+
+
     }
     /**
      * Tests RW_Date::diff()
@@ -58,6 +63,11 @@ class DateTest extends PHPUnit_Framework_TestCase
         $DATE_FORMAT = 'dd/MM/yyyy HH:mm:ss';
 
     	$date1 = new RW_Date('27/12/2011 14:00:00', $DATE_FORMAT);
+
+    	//setando segundos por padrão
+    	$date2 = new RW_Date('27/12/2011 14:00:27', $DATE_FORMAT);
+		$this->assertTrue(RW_Date::diff($date2, $date1) === 27);
+
 
     	//segundos
     	$date2 = new RW_Date('27/12/2011 14:00:27', $DATE_FORMAT);

@@ -17,6 +17,9 @@ class FileTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         // TODO Auto-generated FileTest::setUp()
         $this->RW_File = new RW_File(/* parameters */);
+
+        $this->filePath = realpath(__DIR__ . '/_files/');
+
     }
     /**
      * Cleans up the environment after running a test.
@@ -39,10 +42,11 @@ class FileTest extends PHPUnit_Framework_TestCase
      */
     public function testReadfile_chunked ()
     {
-        // TODO Auto-generated FileTest::testReadfile_chunked()
-        $this->markTestIncomplete(
-        "readfile_chunked test not implemented");
-        RW_File::readfile_chunked(/* parameters */);
+
+    	$file = $this->filePath .'/testFile.txt';
+    	ob_start();
+        $this->assertEquals(31, RW_File::readfile_chunked($file));
+        ob_end_clean();
     }
 }
 

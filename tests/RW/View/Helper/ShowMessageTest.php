@@ -1,5 +1,6 @@
 <?php
 require_once 'RW/View/Helper/ShowMessage.php';
+require_once 'RW/Action/Helper/AddUserMessage.php';
 /**
  * RW_View_Helper_ShowMessage test case.
  */
@@ -14,9 +15,14 @@ class ShowMessageTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp ()
     {
+    	Zend_Session::$_unitTestEnabled = true;
         parent::setUp();
         // TODO Auto-generated ShowMessageTest::setUp()
-        $this->RW_View_Helper_ShowMessage = new RW_View_Helper_ShowMessage(/* parameters */);
+        $this->_userSession 					 = new Zend_Session_Namespace('cms');
+        $this->RW_View_Helper_ShowMessage 		 = new RW_View_Helper_ShowMessage();
+        $this->RW_Action_Helper_AddUserMessage   = new RW_Controller_Action_Helper_AddUserMessage();
+
+
     }
     /**
      * Cleans up the environment after running a test.
@@ -40,17 +46,68 @@ class ShowMessageTest extends PHPUnit_Framework_TestCase
     public function test__construct ()
     {
         // TODO Auto-generated ShowMessageTest->test__construct()
-        $this->markTestIncomplete("__construct test not implemented");
-        $this->RW_View_Helper_ShowMessage->__construct(/* parameters */);
+        $this->RW_View_Helper_ShowMessage->__construct();
+        Zend_Session::namespaceIsset('cms');
+
     }
     /**
      * Tests RW_View_Helper_ShowMessage->showMessage()
      */
     public function testShowMessage ()
     {
-        // TODO Auto-generated ShowMessageTest->testShowMessage()
-        $this->markTestIncomplete("showMessage test not implemented");
-        $this->RW_View_Helper_ShowMessage->showMessage(/* parameters */);
+
+    	$type1	= 'notice';
+    	$message1 = 'apenas um teste';
+
+    	$return1 = '';
+        $return1 = PHP_EOL . '<!-- Mensagens -->' . PHP_EOL;
+        $return1 .= "<div class=\"alert-message $type1\">" . PHP_EOL;
+        $return1 .= $message1 . PHP_EOL;
+        $return1 .= '</div>' . PHP_EOL;
+        $return1 .= '<!-- FIM Mensagens -->' . PHP_EOL;
+
+
+        $type2	= 'warning';
+    	$message2 = 'outra mensagem';
+
+    	$return2 = '';
+        $return2 = PHP_EOL . '<!-- Mensagens -->' . PHP_EOL;
+
+        $return2 .= "<div class=\"alert-message $type1\">" . PHP_EOL;
+        $return2 .= $message1 . PHP_EOL;
+        $return2 .= '</div>' . PHP_EOL;
+
+        $return2 .= "<div class=\"alert-message $type2\">" . PHP_EOL;
+        $return2 .= $message2 . PHP_EOL;
+        $return2 .= '</div>' . PHP_EOL;
+
+        $return2 .= '<!-- FIM Mensagens -->' . PHP_EOL;
+
+
+        // grava uma mensagem no session
+    	$this->RW_Action_Helper_AddUserMessage->direct($type1, $message1);
+
+
+        // retorna uma mensagem do session
+        $this->assertEquals($return1, $this->RW_View_Helper_ShowMessage->showMessage());
+
+        // Grava duas mensagens no session
+    	$this->RW_Action_Helper_AddUserMessage->direct($type1, $message1);
+    	$this->RW_Action_Helper_AddUserMessage->direct($type2, $message2);
+
+        // retorna duas mensagem do session
+        $this->assertEquals($return2, $this->RW_View_Helper_ShowMessage->showMessage());
+
+
+        // retorna nenhuma mensagem pois o session está vazio
+        $this->assertEquals('' , $this->RW_View_Helper_ShowMessage->showMessage());
+
+        // retorna nenhuma mensagem pois o valor é inválido
+        $this->assertEquals('' , $this->RW_View_Helper_ShowMessage->showMessage('teste pra dar erro'));
+
+        // retorna mensagem forçada
+        $this->assertEquals($return1, $this->RW_View_Helper_ShowMessage->showMessage(array('type'=>$type1,'message'=>$message1)));
+        $this->assertEquals($return2, $this->RW_View_Helper_ShowMessage->showMessage(array(array('type'=>$type1,'message'=>$message1),array('type'=>$type2,'message'=>$message2))));
     }
 }
 

@@ -75,24 +75,18 @@ class RW_Date extends Zend_Date
         {
             case 'a':
                 return floor($diff / 31536000); # 60*60*24*365
-                break;
             case 'm':
                 return floor($diff / 2592000); # 60*60*24*30
-                break;
             case 'w':
                 return floor($diff / 604800); # 60*60*24*7
-                break;
             case 'd':
                 return floor($diff / 86400); # 60*60*24
-                break;
             case 'h':
                 return floor($diff / 3600);  # 60*60
-                break;
             case 'n':
                 return floor($diff / 60);
-                break;
             case 's':
-            default:
+            default :
                 return $diff;
         }
     }

@@ -13,7 +13,7 @@ class RW_Version
     /**
      * Zend Framework version identification - see compareVersion()
      */
-    CONST VERSION = '1.0';
+    CONST VERSION = '1.0.0';
 
     /**
      * The latest stable version Zend Framework available
@@ -42,7 +42,6 @@ class RW_Version
     /**
      * Fetches the version of the latest stable release
      *
-     * @link http://framework.zend.com/download/latest
      * @return string
      */
     public static function getLatest()
@@ -50,7 +49,7 @@ class RW_Version
         if (null === self::$_latestVersion) {
             self::$_latestVersion = 'not available';
 
-            $handle = fopen('http://framework.zend.com/api/zf-version', 'r');
+            $handle = fopen('http://realejo.rw/api/rwlib-version', 'r');
             if (false !== $handle) {
                 self::$_latestVersion = stream_get_contents($handle);
                 fclose($handle);

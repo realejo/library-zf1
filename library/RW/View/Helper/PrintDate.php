@@ -34,7 +34,6 @@ class RW_View_Helper_PrintDate extends Zend_View_Helper_Abstract
             switch($format) {
                 case 'complete':
                     $format = 'dd/MM/yyyy HH:mm:ss';
-                    break;
             }
 
             return $date->toString($format);

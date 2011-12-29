@@ -40,8 +40,14 @@ class ResumoTest extends PHPUnit_Framework_TestCase
     public function testResumo ()
     {
         // TODO Auto-generated ResumoTest->testResumo()
-        $this->markTestIncomplete("resumo test not implemented");
-        $this->RW_View_Helper_Resumo->resumo(/* parameters */);
+        //$this->markTestIncomplete("resumo test not implemented");
+        $dados =   'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum
+			        Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum
+			        Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum
+			        Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum
+			        Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum';
+        $texto = $this->RW_View_Helper_Resumo->resumo($dados);
+        $this->assertEquals('197', strlen($texto));
     }
 }
 

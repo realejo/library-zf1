@@ -40,8 +40,18 @@ class PrintDateTest extends PHPUnit_Framework_TestCase
     public function testPrintDate ()
     {
         // TODO Auto-generated PrintDateTest->testPrintDate()
-        $this->markTestIncomplete("printDate test not implemented");
-        $this->RW_View_Helper_PrintDate->printDate(/* parameters */);
+       // $this->markTestIncomplete("printDate test not implemented");
+    	$dataCompleto = '2011-12-29 18:10:00';
+    	$data 		  = '2011-12-29';
+    	$dataBarra 	  = '29/12/2011';
+    	$dataHiphen   = '2011-12-29';
+
+    	$this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataHiphen , 'complete'));
+    	$this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataBarra , 'complete'));
+        $this->assertEquals('29/12/2011 18:10:00', $this->RW_View_Helper_PrintDate->printDate($dataCompleto , 'complete'));
+        $this->assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($data));
+        $this->assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($dataBarra));
+        $this->assertNull($this->RW_View_Helper_PrintDate->printDate());
     }
 }
 
