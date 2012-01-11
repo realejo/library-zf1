@@ -56,8 +56,11 @@ class RW_TableExtractor {
 
     public function loadHTML($file)
     {
+
         $htmlHandle = fopen($file ,'r');
+
         $this->source = fread($htmlHandle, filesize($file));
+
         fclose($htmlHandle);
     }
 
@@ -72,6 +75,7 @@ class RW_TableExtractor {
 
 
     function cleanHTML() {
+
 
         // php 4 compatibility functions
         if(!function_exists('stripos')) {
@@ -95,6 +99,7 @@ class RW_TableExtractor {
             $startSearch = stripos($this->source, $this->anchor);
         }
 
+
         // extract table
         $startTable = stripos($this->source, '<table', $startSearch);
         $endTable = stripos($this->source, '</table>', $startTable) + 8;
@@ -106,6 +111,7 @@ class RW_TableExtractor {
             }
         }
 
+        var_dump($table);
         // lowercase all table related tags
         $table = preg_replace_callback('/<(\/?)(table|tr|th|td)/is', 'lcase_tags', $table);
 
@@ -125,9 +131,12 @@ class RW_TableExtractor {
 
     function prepareArray() {
 
+
+
         // split table into individual elements
         $pattern = '/(<\/?(?:tr|td).*?>)/is';
         $table = preg_split($pattern, $this->cleanHTML, -1, PREG_SPLIT_DELIM_CAPTURE);
+        var_dump($table);
 
         // define array for new table
         $tableCleaned = array();
@@ -138,9 +147,9 @@ class RW_TableExtractor {
         $trOpen = false;
         $tdOpen = false;
 
+
         // loop through table
         foreach($table as $item) {
-
             // trim item
             $item = str_replace(' ', '', $item);
             $item = trim($item);
@@ -239,6 +248,8 @@ class RW_TableExtractor {
 
         // define array to store table data
         $tableData = array();
+
+        var_dump($this->headerRow);
 
         // get column headers
         if($this->headerRow) {

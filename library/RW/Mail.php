@@ -467,10 +467,16 @@ class RW_Mail
         return true;
     } // end of check_utf8
 
+    /**
+     * Verifica se é um email válido
+     * @uses Zend_Validate
+     *
+     * @param string $email Email a ser verificado
+     *
+     * @return boolean
+     */
     static function isEmail($email) {
-        if(!preg_match('/^[A-Za-z0-9\._\-+]+@[A-Za-z0-9_\-+]+(\.[A-Za-z0-9_\-+]+)+$/',$email))
-            return false;
-        return true;
+        return Zend_Validate::is($email, 'EmailAddress');
     }
 
     private function _extractText($html)

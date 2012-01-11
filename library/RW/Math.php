@@ -25,17 +25,18 @@ class RW_Math
             return $moda;
         }
 
+
         // Calcular quantidade de ocorrencias de cada valor
         $ocorrencias = array();
         foreach ($a as $valor) {
             $valor_str = var_export($valor, true);
             if (!isset($ocorrencias[$valor_str])) {
                 $ocorrencias[$valor_str] = array(
-                    'valor'       => $valor,
-                    'ocorrencias' => 0
+                    'ocorrencias' => 0,
+                    'valor'       => $valor
                 );
             }
-            $ocorrencias[$valor_str]['ocorrencias'] += 1;
+            $ocorrencias[$valor_str]['ocorrencias'] = $ocorrencias[$valor_str]['ocorrencias'] + 1;
         }
 
         // Determinar maior ocorrencia

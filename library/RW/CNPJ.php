@@ -32,6 +32,7 @@ class RW_CNPJ
                 $controle_1 = 9;
             }
         }
+
         $resto = $dig_1 % 11;
         $dig_1 = 11 - $resto;
         if (($resto == 0) || ($resto == 1)){

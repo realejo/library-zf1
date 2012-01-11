@@ -10,7 +10,6 @@ define('APPLICATION_ENV','testing');
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(realpath(dirname(__FILE__) . '/../library')),
-    realpath('/srv/library/PHPUnit/3.6'),
     realpath('/srv/sites/library/Zend/1.11.11-optimized'),
     get_include_path()
 )));

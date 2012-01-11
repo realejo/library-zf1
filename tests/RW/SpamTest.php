@@ -39,9 +39,21 @@ class SpamTest extends PHPUnit_Framework_TestCase
      */
     public function testIsSpam ()
     {
-        // TODO Auto-generated SpamTest::testIsSpam()
+
+        // TODO Auto-generated SpamTest->testChkTrigger()
         $this->markTestIncomplete("isSpam test not implemented");
         RW_Spam::isSpam(/* parameters */);
+
+
+/*    	$this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui'));
+    	$this->assertEquals(true, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está cialis htaccess lesbian'));
+    	$this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está cialis'));
+    	$this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está htaccess'));
+    	$this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está lesbian'));
+    	$this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está'));
+    	$this->assertEquals(true, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está porn fuckin bondage pennis windows free nursing'));
+    	$this->assertEquals(true, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está porn nipples lesbian <script> metabo acomplia'));
+*/
     }
     /**
      * Tests RW_Spam->chkTrigger()
@@ -49,8 +61,22 @@ class SpamTest extends PHPUnit_Framework_TestCase
     public function testChkTrigger ()
     {
         // TODO Auto-generated SpamTest->testChkTrigger()
-        $this->markTestIncomplete("chkTrigger test not implemented");
-        $this->RW_Spam->chkTrigger(/* parameters */);
+        //$this->markTestIncomplete("chkTrigger test not implemented");
+       // $this->RW_Spam->chkTrigger(/* parameters */);
+        $texto1 = 'aqui estamos para testar está cialis viagra diazepam';
+        $texto2 = 'aqui estamos para testar está lesbian nipples casino';
+        $texto3 = 'aqui estamos para testar está hazzard nude online wedding free sex';
+        $texto4 = 'aqui estamos';
+
+        $this->assertEquals(false, $this->RW_Spam->chkTrigger($texto4));
+        $this->assertEquals(true,  $this->RW_Spam->chkTrigger($texto1));
+        $this->assertEquals(true,  $this->RW_Spam->chkTrigger($texto2));
+        $this->assertEquals(true,  $this->RW_Spam->chkTrigger($texto3));
+
+
+
+
+
     }
 }
 

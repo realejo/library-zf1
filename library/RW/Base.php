@@ -6,71 +6,72 @@
  * @package    RW_Base
  * @author     Realejo $Author$
  * @version    $Id$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Base
 {
     static public $charTable = array(
- 		'À' => 'A',
-		'Á' => 'A',
-		'Â' => 'A',
-		'Ã' => 'A',
-		'Ä' => 'A',
-		'Å' => 'A',
-		'Æ' => 'AE',
-		'Ç' => 'C',
-		'È' => 'E',
-		'É' => 'E',
-		'Ê' => 'E',
-		'Ë' => 'E',
-		'Ì' => 'I',
-		'Í' => 'I',
-		'Î' => 'I',
-		'Ï' => 'I',
-		'Ñ' => 'N',
-		'Ò' => 'O',
-		'Ó' => 'O',
-		'Ô' => 'O',
-		'Õ' => 'O',
-		'Ö' => 'O',
-		'Ù' => 'U',
-		'Ú' => 'U',
-		'Û' => 'U',
-		'Ü' => 'U',
-		'Ý' => 'Y',
-		'Ÿ' => 'Y',
-		'à' => 'a',
-		'á' => 'a',
-		'â' => 'a',
-		'ã' => 'a',
-		'ä' => 'a',
-		'å' => 'a',
-		'æ' => 'ae',
-		'ç' => 'c',
-		'è' => 'e',
-		'é' => 'e',
-		'ê' => 'e',
-		'ë' => 'e',
-		'ì' => 'i',
-		'í' => 'i',
-		'î' => 'i',
-		'ï' => 'i',
-		'ñ' => 'n',
-		'ò' => 'o',
-		'ó' => 'o',
-		'ô' => 'o',
-		'õ' => 'o',
-		'ö' => 'o',
-		'ù' => 'u',
-		'ú' => 'u',
-		'û' => 'u',
-		'ü' => 'u',
-		'ý' => 'y',
-		'ÿ' => 'y'
+         'À' => 'A',
+        'Á' => 'A',
+        'Â' => 'A',
+        'Ã' => 'A',
+        'Ä' => 'A',
+        'Å' => 'A',
+        'Æ' => 'AE',
+        'Ç' => 'C',
+        'È' => 'E',
+        'É' => 'E',
+        'Ê' => 'E',
+        'Ë' => 'E',
+        'Ì' => 'I',
+        'Í' => 'I',
+        'Î' => 'I',
+        'Ï' => 'I',
+        'Ñ' => 'N',
+        'Ò' => 'O',
+        'Ó' => 'O',
+        'Ô' => 'O',
+        'Õ' => 'O',
+        'Ö' => 'O',
+        'Ù' => 'U',
+        'Ú' => 'U',
+        'Û' => 'U',
+        'Ü' => 'U',
+        'Ý' => 'Y',
+        'Ÿ' => 'Y',
+        'à' => 'a',
+        'á' => 'a',
+        'â' => 'a',
+        'ã' => 'a',
+        'ä' => 'a',
+        'å' => 'a',
+        'æ' => 'ae',
+        'ç' => 'c',
+        'è' => 'e',
+        'é' => 'e',
+        'ê' => 'e',
+        'ë' => 'e',
+        'ì' => 'i',
+        'í' => 'i',
+        'î' => 'i',
+        'ï' => 'i',
+        'ñ' => 'n',
+        'ò' => 'o',
+        'ó' => 'o',
+        'ô' => 'o',
+        'õ' => 'o',
+        'ö' => 'o',
+        'ù' => 'u',
+        'ú' => 'u',
+        'û' => 'u',
+        'ü' => 'u',
+        'ý' => 'y',
+        'ÿ' => 'y'
     );
 
     /**
-     * remove os acentos pelas letras correspondetes
+     * Remove os acentos pelas letras correspondetes
+     *
      * @param string $subject
      *
      * @return string
@@ -85,8 +86,10 @@ class RW_Base
 
         return $subject;
     }
+
     /**
      * Strip tags com tags e atributos permitidos
+     *
      * @param str $string
      * @param str $allowtags
      * @param str $allowattributes
@@ -100,11 +103,11 @@ class RW_Base
 
             foreach($allowattributes as $aa){
 
-            	$count = substr_count($string, $aa);
-            	for ($i=0; $i<$count; $i++) {
-	            	 $rep = '/([^>]*) ('.$aa.')(=)(\'.*\'|".*")/i';
-	            	 $string = preg_replace($rep, '$1 $2_-_-$4', $string);
-            	}
+                $count = substr_count($string, $aa);
+                for ($i=0; $i<$count; $i++) {
+                     $rep = '/([^>]*) ('.$aa.')(=)(\'.*\'|".*")/i';
+                     $string = preg_replace($rep, '$1 $2_-_-$4', $string);
+                }
             }
         }
 
@@ -112,7 +115,7 @@ class RW_Base
     }
 
     /**
-     * remove os caracteres que não podem estar no nome do arquivo
+     * Remove os caracteres que não podem estar no nome do arquivo
      * @todo remover acentos e não apaga-los
      *
      * @param string $file
@@ -139,12 +142,12 @@ class RW_Base
     }
 
     /**
-     *  Transforma uma string em url friendly
-	 *
+     * Transforma uma string em url friendly
+     *
      * @param str $string
      * @param str $space
-	 *
-	 * @return string
+     *
+     * @return string
      */
     static public function seourl($string, $space="-") {
 
@@ -157,7 +160,6 @@ class RW_Base
         return trim($string);
 
     }
-
 
     /**
      * Extrai o código da url considerando o primeiro hifen ou virgula
@@ -232,19 +234,42 @@ class RW_Base
         foreach ($temp as $i=>$k) {
             if (array_key_exists($k, $labels)) $temp[$i] = $labels[$k];
         }
-	    $csv = array(mb_strtoupper(implode(';',$temp), 'UTF-8'));
+        $csv = array(mb_strtoupper(implode(';',$temp), 'UTF-8'));
 
-	    // Constroi o CSV
-	    foreach($array as $row) {
-	        // Remove as chaves não usadas
-	        $row = array_diff_key($row, $exclude);
+        // Constroi o CSV
+        foreach($array as $row) {
+            // Remove as chaves não usadas
+            $row = array_diff_key($row, $exclude);
 
-	        // Coloca no CSV
-	        $csv[] =  '"'. implode('";"',$row) .'"';
-	    }
+            // Coloca no CSV
+            $csv[] =  '"'. implode('";"',$row) .'"';
+        }
 
-	    $csv = implode("\n", $csv);
+        $csv = implode("\n", $csv);
 
-	    return $csv;
+        return $csv;
+    }
+
+    /**
+     * Detecta se está em UTF-8 e converte se necessário
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function toUTF8($string)
+    {
+        /**
+         * Verifica se está em UTF-8
+         *
+         * O truque é que se converter de UTF-8 para UTF-8 ele apaga os caracteres,
+         * então muda o tamanho do strlen. Mas não funciona com mb_strlen
+         */
+        if (strlen($string) != strlen(mb_convert_encoding($string, 'UTF-8', 'UTF-8'))) {
+            $string = mb_convert_encoding($string, 'UTF-8');
+        }
+
+        // Retorna a string
+        return $string;
     }
 }

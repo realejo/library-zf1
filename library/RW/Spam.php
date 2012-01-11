@@ -57,7 +57,7 @@ class RW_Spam
 				while ($pos < strlen($texto)) {
 					$p = strpos($texto, $tagsHard[$t], $pos);
 					if ($p) {
-						$spamLevel += 3;
+						$spamLevel = $spamLevel + 3;
 						$pos = $p+1;
 					} else {
 						break;
@@ -76,7 +76,7 @@ class RW_Spam
     				while ($pos < strlen($texto)) {
     					$p = strpos($texto, $tagsMedium[$t], $pos);
     					if ($p !== false) {
-    						$spamLevel += 2;
+    						$spamLevel = $spamLevel + 2;
     						$pos = $p+1;
     					} else {
     						break;
@@ -96,7 +96,7 @@ class RW_Spam
     				while ($pos < strlen($texto)) {
     					$p = strpos($texto, $tagsLight[$t], $pos);
     					if ($p !== false) {
-    						$spamLevel += 1;
+    						$spamLevel = $spamLevel + 1;
     						$pos = $p+1;
     					} else {
     						break;
