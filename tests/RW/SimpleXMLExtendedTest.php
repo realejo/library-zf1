@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/SimpleXMLExtended.php';
 /**
  * RW_SimpleXMLExtended test case.
+ *
+ * @category   RW
+ * @package    RW_SimpleXMLExtended
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/SimpleXMLExtended.php';
+
 class SimpleXMLExtendedTest extends PHPUnit_Framework_TestCase
 {
     /**

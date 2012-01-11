@@ -5,9 +5,9 @@
  * @category   RW
  * @package    RW_View
  * @subpackage Helper
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper
  */
@@ -37,7 +37,7 @@ class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
             $time = round(floatval($time) / 86400) . ' dias';
         } elseif ($time > 1209600 && $time <= 2592000) { //60*60*24*(7*4)
             $time = round(floatval($time) / 604800) . ' semanas';
-        } elseif ($time > 2592000 && $time <= 5184000) { //60*60*24*30 && 60*60*24*30*2 
+        } elseif ($time > 2592000 && $time <= 5184000) { //60*60*24*30 && 60*60*24*30*2
             $time = round(floatval($time) / 2592000) . ' mês';
         } elseif ($time > 5184000 && $time < 31104000) { //60*60*24*30*2  && 60*60*24*30*12
             $time = round(floatval($time) / 2592000) . ' meses';

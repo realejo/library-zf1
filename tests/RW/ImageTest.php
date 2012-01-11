@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/Image.php';
 /**
  * RW_Image test case.
+ *
+ * @category   RW
+ * @package    RW_Image
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/Image.php';
+
 class ImageTest extends PHPUnit_Framework_TestCase
 {
     /**

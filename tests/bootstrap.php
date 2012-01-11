@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * Bootstrap para os testes do PHPUnit
+ *
+ * @category   RW
+ * @package    RW_SimpleXMLExtended
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ */
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));

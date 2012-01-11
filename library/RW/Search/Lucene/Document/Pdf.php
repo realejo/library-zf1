@@ -2,8 +2,11 @@
 /**
  * Implemantação do Zend_Search_Lucene_Document para PDF
  *
- * @author Rodrigo $Author$
- * @version $Id$
+ * @category   RW
+ * @package    RW_Search
+ * @author     Realejo/Rodrigo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @todo não lembro de onde copiei e o que alterei
  */

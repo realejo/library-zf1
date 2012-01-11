@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/Debug.php';
 /**
  * RW_Debug test case.
+ *
+ * @category   RW
+ * @package    RW_Debug
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/Debug.php';
+
 class DebugTest extends PHPUnit_Framework_TestCase
 {
     /**

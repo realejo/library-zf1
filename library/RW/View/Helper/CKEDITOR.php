@@ -5,9 +5,9 @@
  * @category   RW
  * @package    RW_View
  * @subpackage Helper
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper
  *

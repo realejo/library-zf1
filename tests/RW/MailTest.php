@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/Mail.php';
 /**
  * RW_Mail test case.
+ *
+ * @category   RW
+ * @package    RW_Mail
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/Mail.php';
+
 class MailTest extends PHPUnit_Framework_TestCase
 {
     /**

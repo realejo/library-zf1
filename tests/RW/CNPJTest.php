@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/CNPJ.php';
 /**
  * RW_CNPJ test case.
+ *
+ * @category   RW
+ * @package    RW_CNPJ
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/CNPJ.php';
+
 class CNPJTest extends PHPUnit_Framework_TestCase
 {
     /**

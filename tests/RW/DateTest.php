@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/Date.php';
 /**
  * RW_Date test case.
+ *
+ * @category   RW
+ * @package    RW_Date
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/Date.php';
+
 class DateTest extends PHPUnit_Framework_TestCase
 {
     /**

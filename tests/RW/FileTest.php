@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/File.php';
 /**
  * RW_File test case.
+ *
+ * @category   RW
+ * @package    RW_File
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/File.php';
+
 class FileTest extends PHPUnit_Framework_TestCase
 {
     /**

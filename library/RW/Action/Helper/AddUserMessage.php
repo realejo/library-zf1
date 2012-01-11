@@ -7,9 +7,9 @@
  * @category   RW
  * @package    RW_Controller
  * @subpackage RW_Controller_Action_Helper
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses 	   Zend_Controller_Action_Helper
  */

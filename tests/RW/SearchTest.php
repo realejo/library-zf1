@@ -1,11 +1,20 @@
 <?php
-require_once 'RW/Search.php';
 /**
  * RW_Search test case.
+ *
+ * @category   RW
+ * @package    RW_Search
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/Search.php';
+
 class SearchTest extends PHPUnit_Framework_TestCase
 {
-	
+
     /**
      * @var RW_Search
      */

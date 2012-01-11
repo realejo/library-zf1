@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/Spam.php';
 /**
  * RW_Spam test case.
+ *
+ * @category   RW
+ * @package    RW_Spam
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/Spam.php';
+
 class SpamTest extends PHPUnit_Framework_TestCase
 {
     /**

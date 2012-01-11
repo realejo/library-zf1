@@ -4,9 +4,9 @@
  *
  * @category   RW
  * @package    RW_Base
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Base
 {

@@ -1,8 +1,17 @@
 <?php
-require_once 'RW/CPF.php';
 /**
  * RW_CPF test case.
+ *
+ * @category   RW
+ * @package    RW_CPF
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/CPF.php';
+
 class CPFTest extends PHPUnit_Framework_TestCase
 {
     /**

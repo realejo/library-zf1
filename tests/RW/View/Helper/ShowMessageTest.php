@@ -1,9 +1,18 @@
 <?php
-require_once 'RW/View/Helper/ShowMessage.php';
-require_once 'RW/Action/Helper/AddUserMessage.php';
 /**
  * RW_View_Helper_ShowMessage test case.
+ *
+ * @category   RW
+ * @package    RW_View_Helper
+ * @subpackage UnitTests
+ * @author     Realejo
+ * @version    $Id$
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
+
+require_once 'RW/View/Helper/ShowMessage.php';
+require_once 'RW/Action/Helper/AddUserMessage.php';
+
 class ShowMessageTest extends PHPUnit_Framework_TestCase
 {
     /**

@@ -4,10 +4,9 @@
  *
  * @category   RW
  * @package    RW_Mail
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @version    $Rev$ $Date$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @todo impedir que o email va para o cliente sem querer. Deixar tudo no "drop folder"
  * @todo header injection

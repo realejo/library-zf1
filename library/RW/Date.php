@@ -2,9 +2,9 @@
 /**
  * @category   RW
  * @package    RW_Date
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses       Zend_Date
  */
@@ -41,7 +41,7 @@ class RW_Date extends Zend_Date
 	            $datetime = explode(' ', $d);
 	            $date = explode('/', $datetime[0]);
 	            $sql = sprintf("%04d-%02d-%02d", $date[2], $date[1], $date[0]);
-	
+
 	            if (isset($datetime[1])) $sql .= ' ' . $datetime[1];
 	        }
 	        return $sql;

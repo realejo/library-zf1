@@ -4,9 +4,9 @@
  *
  * @category   RW
  * @package    RW_Math
- * @author     Realejo $Author$
+ * @author     Realejo
  * @version    $Id$
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.relaejo.com.br)
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @see http://rubsphp.blogspot.com/2011/06/funcoes-estatisticas-em-php.html
  */
