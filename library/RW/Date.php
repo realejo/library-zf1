@@ -32,16 +32,20 @@ class RW_Date extends Zend_Date
      */
     static public function toMySQL($d)
     {
-        if ($d instanceof Zend_Date) {
-            $sql = $d->toString('yyyy-MM-dd HH:mm:ss');
-        } else {
-            $datetime = explode(' ', $d);
-            $date = explode('/', $datetime[0]);
-            $sql = sprintf("%04d-%02d-%02d", $date[2], $date[1], $date[0]);
-
-            if (isset($datetime[1])) $sql .= ' ' . $datetime[1];
-        }
-        return $sql;
+    	if(empty($d)){
+    		return null;
+    	}else{
+	        if ($d instanceof Zend_Date) {
+	            $sql = $d->toString('yyyy-MM-dd HH:mm:ss');
+	        } else {
+	            $datetime = explode(' ', $d);
+	            $date = explode('/', $datetime[0]);
+	            $sql = sprintf("%04d-%02d-%02d", $date[2], $date[1], $date[0]);
+	
+	            if (isset($datetime[1])) $sql .= ' ' . $datetime[1];
+	        }
+	        return $sql;
+    	}
     }
 
     /**
