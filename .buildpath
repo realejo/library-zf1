@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
-	<buildpathentry including="library/|tests/" kind="src" path=""/>
+	<buildpathentry excluding="**/.svn*" including="library/|tests/" kind="src" path=""/>
 	<buildpathentry kind="con" path="com.zend.php.phpunit.CONTAINER"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 	<buildpathentry kind="con" path="org.zend.php.framework.CONTAINER"/>
