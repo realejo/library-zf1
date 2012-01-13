@@ -10,95 +10,93 @@
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper
- *
- * @todo verificar o JQuery Adapter
  */
 class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 {
 
-    private $_ckeditor;
-    private $_ckfinder;
-    private $_useJQuery = false;
-
     /**
-     * Reduz o texto eliminando o html
+     * Cria o JavaScript necessário para utilizar o CKEditor
      *
-     * @param string $texto texto a ser resumido
-     * @param int $size número de caracteres máximo
+     * @param string|array $campos  Nomes dos campos para colocar o CKEditor
+     * @param array        $userOptions (OPTIONAL) Configurações extras
+     *
+     * @return string
+     *
+     * - Ele sempre considera que o JQuery está presente e irá colocar no document.ready()
+     * 	  Ex: $(document).ready(function(){ Código do CKEDITOR  });
+     *
+     * - Ele verifica se existe a configuração do ckeditor no application.ini
+     *    Ex: cms.htmleditor.ckeditor = 3.6.2
+     *
+     * - Ele só irá configura o CKFinder se ele estiver definido no application.ini
+     *    Ex: cms.htmleditor.ckfinder = 2.1.1
      *
      */
-    public function CKEDITOR($campos, $view, $options = null) {
-        $config = new Zend_Config_Ini(APPLICATION_PATH . "/../configs/application.ini", APPLICATION_ENV);
-        $ckeditor = $this->_ckeditor = '/admin/js/_' . $config->cms->htmleditor->ckeditor;
-        $ckfinder = $this->_ckfinder = '/admin/js/_' . $config->cms->htmleditor->ckfinder;
+    public function CKEDITOR($campos, $userOptions = null)
+    {
+        // Localiza o arquivo de configuração
+        $config = realpath(APPLICATION_PATH . "/configs/application.ini");
+        if (empty($config)) { $config = realpath(APPLICATION_PATH . "/../configs/application.ini"); }
+        if (empty($config)) { throw new Exception ('Arquivo de configuração não encontrado em RW_View_Helper_CKEDITOR'); }
 
+        // Carrega a configuração do Application
+        $config = new Zend_Config_Ini($config, APPLICATION_ENV);
+
+        // Verifica a versão do CKEditor
+        if ( isset($config->cms->htmleditor->ckeditor) ) {
+            $ckeditor = $this->_ckeditor = '/js/_' . $config->cms->htmleditor->ckeditor;
+        } else {
+            throw new Exception('Configuração do CKEditor não encontrada no application.ini em RW_View_Helper_CKEDITOR');
+        }
+
+        // Verifica se deve usar o CKFinder
+        if (isset($config->cms->htmleditor->ckfinder) && !empty($config->cms->htmleditor->ckfinder)) {
+            $ckfinder = '/js/_' . $config->cms->htmleditor->ckfinder;
+        } else {
+            $ckfinder = false;
+        }
+
+        // Verifica os inputs que deve colocar o CKEditor
         if ( !is_array($campos) && is_string($campos) ) $campos = array($campos);
 
-        if ( !is_null($options) && is_array($options)) {
-            if (isset($options['useJQuery'])) $this->_useJQuery = (bool) $options['useJQuery'];
+        // Cria a configuração da opções
+        $options = array();
+
+        // Verifica o CKFinder
+        if ($ckfinder !== false) {
+            $options['filebrowserBrowseUrl']       = $this->_ckfinder . '/ckfinder.html';
+            $options['filebrowserImageBrowseUrl']  = $this->_ckfinder . '/ckfinder.html?Type=Images';
+            $options['filebrowserUploadUrl']       = $this->_ckfinder . '/core/connector/php/connector.php?command=QuickUpload&type=Files';
+            $options['filebrowserImageUploadUrl']  = $this->_ckfinder . '/core/connector/php/connector.php?command=QuickUpload&type=Images';
         }
 
+        // Verifica as outras opções
+        $options = array_replace($options , $userOptions);
+
+        // Formata as configurações
+        $options = (empty($options)) ? '{}' : Zend_Json::encode($options);
+
+        // Carrega as opções para cada campo
         $configs = '';
-        if ($this->_useJQuery) {
-            $configs = '';
-            foreach($campos as $c)
-                $configs .= $this->_getConfig_JQuery($c);
+        foreach($campos as $c)
+            $configs .= "$( '$c' ).ckeditor(function() {}, $options);";
 
-            $html = <<<JQUERY
-                $(document).ready(function(){
-                    $.getScript("$ckeditor/ckeditor_basic.js", function(){
-                        $.getScript("$ckeditor/adapters/jquery.js", function(){
-                            $configs
-                        });
-                    });
-                });
-JQUERY;
+        // Cria a configuração do CKEditor
+        $html = "$(document).ready(function(){ $configs });";
 
-        } else {
+        // Carrega a biblioteca do CKEditor
+        $this->view->headScript()->appendFile(
+            $ckeditor . '/ckeditor.js',
+            'text/javascript'
+        );
 
-            $view->headScript()->appendFile(
-                $ckeditor . '/ckeditor_basic.js',
-                'text/javascript'
-            );
-            foreach($campos as $c)
-                $configs .= $this->_getConfig_HTML($c);
+        // Carrega o JQuery Adapter
+        $this->view->headScript()->appendFile(
+            $ckeditor . '/adapters/jquery.js',
+            'text/javascript'
+        );
 
-            $html = <<<HTML
-                $(document).ready(function(){
-                    $configs
-                });
-HTML;
-        }
-
+        // retornar o código do CKEditor
         return $html;
     }
-
-    private function _getConfig_HTML($campo) {
-        $ckfinder = $this->_ckfinder;
-
-        $html = <<<HTML
-           CKEDITOR.replace( '$campo', {
-                filebrowserBrowseUrl      : '$ckfinder/ckfinder.html',
-                filebrowserImageBrowseUrl : '$ckfinder/ckfinder.html?Type=Images',
-                filebrowserUploadUrl      : '$ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-                filebrowserImageUploadUrl : '$ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
-            });
-HTML;
-
-        return $html;
-    }
-
-    private function _getConfig_JQuery($campo) {
-        $ckfinder = $this->_ckfinder;
-
-        $html = <<<JQUERY
-           $( '$campo' ).ckeditor(function(){ $.noop(), {
-                filebrowserBrowseUrl      : '$ckfinder/ckfinder.html',
-                filebrowserImageBrowseUrl : '$ckfinder/ckfinder.html?Type=Images',
-                filebrowserUploadUrl      : '$ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-                filebrowserImageUploadUrl : '$ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
-            }});
-JQUERY;
-
-        return $html;
-    }}
+}
