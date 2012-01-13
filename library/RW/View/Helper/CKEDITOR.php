@@ -1,6 +1,6 @@
 <?php
 /**
- * CKEDITOR helper
+ * CKEDITOR Helper
  *
  * @category   RW
  * @package    RW_View
@@ -77,12 +77,12 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         $options = (empty($options)) ? '{}' : Zend_Json::encode($options);
 
         // Carrega as opções para cada campo
-        $configs = '';
+        $config = '';
         foreach($campos as $c)
-            $configs .= "$( '$c' ).ckeditor(function() {}, $options);";
+            $config .= "$( '$c' ).ckeditor(function() {}, $options);";
 
         // Cria a configuração do CKEditor
-        $html = "$(document).ready(function(){ $configs });";
+        $script = "$(document).ready(function(){ $config });";
 
         // Carrega a biblioteca do CKEditor
         $this->view->headScript()->appendFile(
@@ -96,7 +96,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
             'text/javascript'
         );
 
-        // retornar o código do CKEditor
-        return $html;
+        // Carrega o código CKEditor
+        $this->view->headScript()->appendScript($script);
     }
 }
