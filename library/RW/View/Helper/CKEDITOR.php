@@ -2,6 +2,8 @@
 /**
  * CKEDITOR Helper
  *
+ * Cria o JavaScript necessário para utilizar o CKEditor*
+ *
  * @category   RW
  * @package    RW_View
  * @subpackage Helper
@@ -23,7 +25,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
      * @return string
      *
      * - Ele sempre considera que o JQuery está presente e irá colocar no document.ready()
-     * 	  Ex: $(document).ready(function(){ Código do CKEDITOR  });
+     *    Ex: $(document).ready(function(){ Código do CKEDITOR  });
      *
      * - Ele verifica se existe a configuração do ckeditor no application.ini
      *    Ex: cms.htmleditor.ckeditor = 3.6.2
@@ -78,23 +80,18 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 
         // Carrega as opções para cada campo
         $config = '';
-        foreach($campos as $c)
+        foreach($campos as $c) {
             $config .= "$( '$c' ).ckeditor(function() {}, $options);";
+        }
 
         // Cria a configuração do CKEditor
         $script = "$(document).ready(function(){ $config });";
 
         // Carrega a biblioteca do CKEditor
-        $this->view->headScript()->appendFile(
-            $ckeditor . '/ckeditor.js',
-            'text/javascript'
-        );
+        $this->view->headScript()->appendFile($ckeditor . '/ckeditor.js');
 
         // Carrega o JQuery Adapter
-        $this->view->headScript()->appendFile(
-            $ckeditor . '/adapters/jquery.js',
-            'text/javascript'
-        );
+        $this->view->headScript()->appendFile($ckeditor . '/adapters/jquery.js');
 
         // Carrega o código CKEditor
         $this->view->headScript()->appendScript($script);
