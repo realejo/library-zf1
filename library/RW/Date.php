@@ -32,20 +32,20 @@ class RW_Date extends Zend_Date
      */
     static public function toMySQL($d)
     {
-    	if(empty($d)){
-    		return null;
-    	}else{
-	        if ($d instanceof Zend_Date) {
-	            $sql = $d->toString('yyyy-MM-dd HH:mm:ss');
-	        } else {
-	            $datetime = explode(' ', $d);
-	            $date = explode('/', $datetime[0]);
-	            $sql = sprintf("%04d-%02d-%02d", $date[2], $date[1], $date[0]);
+        if(empty($d)){
+            return null;
+        }else{
+            if ($d instanceof Zend_Date) {
+                $sql = $d->toString('yyyy-MM-dd HH:mm:ss');
+            } else {
+                $datetime = explode(' ', $d);
+                $date = explode('/', $datetime[0]);
+                $sql = sprintf("%04d-%02d-%02d", $date[2], $date[1], $date[0]);
 
-	            if (isset($datetime[1])) $sql .= ' ' . $datetime[1];
-	        }
-	        return $sql;
-    	}
+                if (isset($datetime[1])) $sql .= ' ' . $datetime[1];
+            }
+            return $sql;
+        }
     }
 
     /**
@@ -54,13 +54,13 @@ class RW_Date extends Zend_Date
      * Sempre calculado a partir da diferença de segundos entre as datas
      *
      * Opções para $part
-     * 		a - anos
-     * 		m - meses
-     * 		w - semanas
-     * 		d - dias
-     * 		h - horas
-     * 		n - minutos
-     * 		s - segundos (padrão)
+     *         a - anos
+     *         m - meses
+     *         w - semanas
+     *         d - dias
+     *         h - horas
+     *         n - minutos
+     *         s - segundos (padrão)
      * @param Zend_Date $d1
      * @param Zend_Date $d2
      * @param string $part
@@ -110,5 +110,47 @@ class RW_Date extends Zend_Date
         } else {
             return parent::get($part, $locale);
         }
+    }
+
+
+    /**
+     * Retorna os nomes dos meses
+     *
+     * @todo usar o Zend_Locale para recuperar os nomes dos meses
+     *
+     * @return array
+     */
+    static function getMeses()
+    {
+        return array(
+            1  => 'Janeiro',
+            2  => 'Fevereiro',
+            3  => 'Março',
+            4  => 'Abril',
+            5  => 'Maio',
+            6  => 'Junho',
+            7  => 'Julho',
+            8  => 'Agosto',
+            9  => 'Setembro',
+            10 => 'Outubro',
+            11 => 'Novembro',
+            12 => 'Dezembro'
+        );
+    }
+
+    /**
+     * Retorna o nome de um mês
+     *
+     * @todo usar o Zend_Locale para recuperar os nomes dos meses
+     *
+     * @return string
+     */
+    static function getMes($m)
+    {
+        // Recupera os meses
+        $meses = self::getMeses();
+
+        // Retorna se o mes existir
+        return (isset($meses[$m])) ? $meses[$m] : null;
     }
 }
