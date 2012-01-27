@@ -18,6 +18,7 @@ class DateTest extends PHPUnit_Framework_TestCase
      * @var RW_Date
      */
     private $RW_Date;
+
     /**
      * Prepares the environment before running a test.
      */
@@ -27,6 +28,7 @@ class DateTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated DateTest::setUp()
         $this->RW_Date = new RW_Date(/* parameters */);
     }
+
     /**
      * Cleans up the environment after running a test.
      */
@@ -36,6 +38,7 @@ class DateTest extends PHPUnit_Framework_TestCase
         $this->RW_Date = null;
         parent::tearDown();
     }
+
     /**
      * Constructs the test case.
      */
@@ -43,6 +46,7 @@ class DateTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated constructor
     }
+
     /**
      * Tests RW_Date->toString()
      */
@@ -51,19 +55,24 @@ class DateTest extends PHPUnit_Framework_TestCase
 		$date = new RW_Date('27/12/2011','dd/MM/yyyy 00:00:00');
 		$this->assertTrue($date->toString('mysql') === '2011-12-27 00:00:00');
     }
+
     /**
      * Tests RW_Date::toMySQL()
      */
     public function testToMySQL ()
     {
-      $date = new RW_Date('26/12/2011 14:00:00');
-      $this->assertTrue(RW_Date::toMySQL($date) === '2011-12-26 14:00:00');
+        $date = new RW_Date('26/12/2011 14:00:00');
+        $this->assertEquals(RW_Date::toMySQL($date),'2011-12-26 14:00:00');
 
-      $date = '26/12/2011 14:00:00';
-      $this->assertTrue(RW_Date::toMySQL($date) === '2011-12-26 14:00:00');
+        $date = '26/12/2011 14:00:00';
+        $this->assertEquals(RW_Date::toMySQL($date),'2011-12-26 14:00:00');
 
-
+        $this->assertNull(RW_Date::toMySQL(null));
+        $this->assertNull(RW_Date::toMySQL(0));
+        $this->assertNull(RW_Date::toMySQL(''));
+        $this->assertNull(RW_Date::toMySQL(array()));
     }
+
     /**
      * Tests RW_Date::diff()
      */
@@ -105,17 +114,15 @@ class DateTest extends PHPUnit_Framework_TestCase
 		//anos
 		$date2 = new RW_Date('27/12/2012 14:00:00', $DATE_FORMAT);
 		$this->assertEquals(1.0,RW_Date::diff($date2, $date1, 'a'));
-
-
     }
+
     /**
      * Tests RW_Date->get()
      *
-     * Precisa testar o trimestre
+     * Testando apenas o trimestre
      */
     public function testGet ()
     {
-
     	$date = new RW_Date('01/01/2010', 'dd/MM/yyyy');
 
     	// 1o Trimestre
@@ -151,5 +158,40 @@ class DateTest extends PHPUnit_Framework_TestCase
     	$this->assertEquals(4,$date->get('Q'), 'Dez => 4o T');
     }
 
+    /**
+     * Tests RW_Date->testGetMeses()
+     */
+    public function testGetMeses()
+    {
+    	$meses = $this->RW_Date->getMeses();
+
+    	$this->assertEquals($meses,
+	    	array(
+	            1  => 'Janeiro',
+	            2  => 'Fevereiro',
+	            3  => 'Março',
+	            4  => 'Abril',
+	            5  => 'Maio',
+	            6  => 'Junho',
+	            7  => 'Julho',
+	            8  => 'Agosto',
+	            9  => 'Setembro',
+	            10 => 'Outubro',
+	            11 => 'Novembro',
+	            12 => 'Dezembro'
+	        ));
+    }
+
+    /**
+     * Tests RW_Date->testGetMes()
+     */
+    public function testGetMes()
+    {
+    	$meses = $this->RW_Date->getMeses();
+
+    	foreach ($meses as $m=>$mes) {
+    	    $this->assertEquals($mes, $this->RW_Date->getMes($m), "getMes($m)");
+    	}
+    }
 }
 
