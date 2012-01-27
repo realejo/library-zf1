@@ -90,11 +90,9 @@ class DateTest extends PHPUnit_Framework_TestCase
 		$date2 = new RW_Date('27/12/2011 15:00:00', $DATE_FORMAT);
 		$this->assertEquals(1.0,RW_Date::diff($date2, $date1, 'h'));
 
-
 		//dias
 		$date2 = new RW_Date('30/12/2011 14:00:00', $DATE_FORMAT);
 		$this->assertEquals(3.0,RW_Date::diff($date2, $date1, 'd'));
-
 
 		//semanas
 		$date2 = new RW_Date('10/01/2012 14:00:00', $DATE_FORMAT);
@@ -112,16 +110,46 @@ class DateTest extends PHPUnit_Framework_TestCase
     }
     /**
      * Tests RW_Date->get()
+     *
+     * Precisa testar o trimestre
      */
     public function testGet ()
     {
-    	$date = new RW_Date('10/09/2012 14:00:00', 'dd/MM/yyyy HH:mm:ss');
-    	$this->assertEquals(3.0,$date->get('Q'));
+
+    	$date = new RW_Date('01/01/2010', 'dd/MM/yyyy');
+
+    	// 1o Trimestre
+    	$date->setMonth(1);
+    	$this->assertEquals(1,$date->get('Q'), 'Jan => 1o T');
+    	$date->setMonth(2);
+    	$this->assertEquals(1,$date->get('Q'), 'Fev => 1o T');
+    	$date->setMonth(3);
+    	$this->assertEquals(1,$date->get('Q'), 'Mar => 1o T');
+
+    	// 2o Trimestre
+    	$date->setMonth(4);
+    	$this->assertEquals(2,$date->get('Q'), 'Abr => 2o T');
+    	$date->setMonth(5);
+    	$this->assertEquals(2,$date->get('Q'), 'Mai => 2o T');
+    	$date->setMonth(6);
+    	$this->assertEquals(2,$date->get('Q'), 'Jun => 2o T');
+
+    	// 3o Trimestre
+    	$date->setMonth(7);
+    	$this->assertEquals(3,$date->get('Q'), 'Jul => 3o T');
+    	$date->setMonth(8);
+    	$this->assertEquals(3,$date->get('Q'), 'Ago => 3o T');
+    	$date->setMonth(9);
+    	$this->assertEquals(3,$date->get('Q'), 'Set => 3o T');
+
+    	// 4o Trimestre
+    	$date->setMonth(10);
+    	$this->assertEquals(4,$date->get('Q'), 'Out => 4o T');
+    	$date->setMonth(11);
+    	$this->assertEquals(4,$date->get('Q'), 'Nov => 4o T');
+    	$date->setMonth(12);
+    	$this->assertEquals(4,$date->get('Q'), 'Dez => 4o T');
     }
-
-
-
-
 
 }
 

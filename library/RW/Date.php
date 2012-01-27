@@ -106,7 +106,7 @@ class RW_Date extends Zend_Date
     {
         if ($part === 'Q') {
             $q = parent::get('M', $locale);
-            return ceil ($q / 4);
+            return ceil ($q / 3);
         } else {
             return parent::get($part, $locale);
         }
