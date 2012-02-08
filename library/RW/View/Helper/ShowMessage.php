@@ -54,7 +54,7 @@ class RW_View_Helper_ShowMessage extends Zend_View_Helper_Abstract
         if ( count($messages) > 0 ) {
             $return = PHP_EOL . '<!-- Mensagens -->' . PHP_EOL;
             foreach ( $messages as $msg) {
-                $return .= "<div class=\"alert-message {$msg['type']}\">" . PHP_EOL;
+                $return .= "<div class=\"alert alert-{$msg['type']}\">" . PHP_EOL;
                 $return .= $msg['message'] . PHP_EOL;
                 $return .= '</div>' . PHP_EOL;
             }
