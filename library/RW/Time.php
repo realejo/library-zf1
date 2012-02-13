@@ -19,9 +19,15 @@ class RW_Time
 
     public function __construct($time = null, $part = null)
     {
-        if (!empty($time)) $this->setTime($time, $part);
+        if (self::isTime($time) || $time instanceof Zend_Date) $this->setTime($time, $part);
     }
 
+    /**
+     * Grava o tempo de acordo com o formato
+     *
+     * @param string $time
+     * @param string $part OPCIONAL Formato informado
+     */
     public function setTime($time, $part = null)
     {
         // Verifica se é Zend_date
@@ -30,7 +36,10 @@ class RW_Time
         	$part = 'h:m:s';
         }
 
-        if (strpos($time, ':') !== false || !empty($part)) {
+        if (!self::isTime($time)) {
+            throw new Exception("Tempo $time inválido");
+
+        } elseif (strpos($time, ':') !== false || !empty($part)) {
         	if ( empty($part) ) {
         		$part = (substr_count($time, ':') == 1) ? 'm:s' : 'h:m:s';
         	} else {
@@ -57,11 +66,12 @@ class RW_Time
         	// Considera que é um numero
         	$this->_time = (int) $time;
         }
+
         return $this;
     }
 
     /**
-     * Retorna apenas um pedaço
+     * Retorna apenas um pedaço do tempo
      *
      * @param  string $part Pedaço desejado
      * @return string
@@ -72,8 +82,6 @@ class RW_Time
         $s = $this->_time % 60;
         $m = ( ($this->_time - $s)/60 ) % 60;
         $h = ($this->_time - 60*$m - $s) / (60*60);
-
-        //echo "h=$h, $m=$m, s=$s, time=". $this->_time ."\n";
 
         // Retorna o part
         switch ($part) {
@@ -89,6 +97,12 @@ class RW_Time
     }
 
 
+    /**
+     * Retorna o tempo formatado
+     *
+     * @param string $format OPCIONAL formato a ser retornado
+     * @return string
+     */
     public function toString($format = 'hh:mm:ss')
     {
         $s = $this->_time % 60;
@@ -106,137 +120,229 @@ class RW_Time
     }
 
 
+    /**
+     * Retorna o total de segundos do tempo
+     *
+     * @return time
+     */
     public function getSeconds()
     {
         return $this->_time;
     }
 
+    /**
+     * Grava os segundos do tempo
+     *
+     * @param int $seconds
+     * @return RW_Time
+     */
     public function setSeconds($seconds)
     {
     	$this->_time -= $this->get(RW_Time::SECOND);
     	$this->_time += $seconds;
-    	return $this;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
     }
 
+    /**
+     * Recupera o total de minutos
+     *
+     * @return int
+     */
     public function getMinutes()
     {
         return  $this->_time/60;
     }
 
+    /**
+     * Grava os minutos do tempo
+     *
+     * @param int $minutes
+     * @return RW_Time
+     */
     public function setMinutes($minutes)
     {
     	$this->_time -= $this->get(RW_Time::MINUTE)*60;
     	$this->_time += $minutes*60;
-    	return $this;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
     }
 
+
+    /**
+     * Retorna o total de horas do tempo
+     *
+     * @return int
+     */
     public function getHours()
     {
     	return  $this->_time/(60*60);
     }
 
+    /**
+     * Grava as horas no tempo
+     *
+     * @param int $hours
+     * @return RW_Time
+     */
     public function setHours($hours)
     {
     	$this->_time -= $this->get(RW_Time::HOUR)*60*60;
     	$this->_time += $hours*60*60;
-    	return $this;
-    }
 
-    public function addTime($time, $part = null)
-    {
-        $time = new RW_Time($time, $part);
-        $this->_time += $time->getSeconds();
-        return $this;
-    }
-
-    public function subTime($time, $part = null)
-    {
-        $time = new RW_Time($time, $part);
-        $this->_time -= $time->getSeconds();
-        return $this;
-    }
-
-    public function addSeconds($seconds)
-    {
-        $this->_time += $seconds;
-        return $this;
-    }
-
-    public function subSeconds($seconds)
-    {
-        $this->_time -= $seconds;
-        return $this;
-    }
-
-    public function addMinutes($minutes)
-    {
-        $this->_time += $minutes*60;
-        return $this;
-    }
-
-    public function subMinutes($minutes)
-    {
-        $this->_time -= $minutes*60;
-        return $this;
-    }
-
-    public function addHours($hours)
-    {
-        $this->_time += $hours*60*60;
-        return $this;
-    }
-
-    public function subHours($hours)
-    {
-        $this->_time -= $hours*60*60;
+        // Retorna o RW_Time para manter a cadeia
         return $this;
     }
 
     /**
+     * Adiciona um tempo
      *
-     * Retorna a diferença entre duas datas ($d1-$d2)
-     * Sempre calculado a partir da diferença de segundos entre as datas
-     *
-     * Opções para $part
-     *         a - anos
-     *         m - meses
-     *         w - semanas
-     *         d - dias
-     *         h - horas
-     *         n - minutos
-     *         s - segundos (padrão)
-     * @param Zend_Date $d1
-     * @param Zend_Date $d2
-     * @param string $part
+     * @param string|RW_Time $time Tempo a ser adicionado
+     * @param string $part         OPICIONAL caso seja passado um string e não RW_Time
+     * @return RW_Time
      */
-    static function diff(Zend_Date $d1, Zend_Date $d2, $part = null)
+    public function addTime($time, $part = null)
     {
-        if ( $d1 instanceof Zend_Date)
-            $d1 = $d1->get(Zend_Date::TIMESTAMP);
+         // Verifica se é um objeto RW_Time
+        if (!($time instanceof RW_Time) )
+            $time = new RW_Time($time, $part);
 
-        if ( $d2 instanceof Zend_Date)
-            $d2 = $d2->get(Zend_Date::TIMESTAMP);
+        // Adicina o tempo
+        $this->_time += $time->getSeconds();
 
-        $diff = $d1 - $d2;
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
 
-        switch ($part)
-        {
-            case 'a':
-                return floor($diff / 31536000); # 60*60*24*365
-            case 'm':
-                return floor($diff / 2592000); # 60*60*24*30
-            case 'w':
-                return floor($diff / 604800); # 60*60*24*7
-            case 'd':
-                return floor($diff / 86400); # 60*60*24
-            case 'h':
-                return floor($diff / 3600);  # 60*60
-            case 'n':
-                return floor($diff / 60);
-            case 's':
-            default :
-                return $diff;
-        }
+    /**
+     * Subtrai um tempo
+     *
+     * @param string|RW_Time $time Tempo a ser subtraído
+     * @param string $part         OPICIONAL caso seja passado um string e não RW_Time
+     * @return RW_Time
+     */
+    public function subTime($time, $part = null)
+    {
+        // Verifica se é um objeto RW_Time
+        if (!($time instanceof RW_Time) )
+            $time = new RW_Time($time, $part);
+
+        // Subtrai o tempo
+        $this->_time -= $time->getSeconds();
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Adiciona segundos
+     *
+     * @param int $seconds
+     * @return RW_Time
+     */
+    public function addSeconds($seconds)
+    {
+        // Adiciona os segundos
+        $this->_time += $seconds;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Subtrai segundos
+     *
+     * @param int $seconds
+     * @return RW_Time
+     */
+    public function subSeconds($seconds)
+    {
+        // Subtrai os segundos
+        $this->_time -= $seconds;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Adiciona minutes
+     *
+     * @param int $minutes
+     * @return RW_Time
+     */
+    public function addMinutes($minutes)
+    {
+        // Adiciona os minutos passados
+        $this->_time += $minutes*60;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Subtrai minutos
+     *
+     * @param int $minutes
+     * @return RW_Time
+     */
+    public function subMinutes($minutes)
+    {
+        // Subtrai os minutos passados
+        $this->_time -= $minutes*60;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Adiciona horas
+     *
+     * @param int $hours
+     * @return RW_Time
+     */
+    public function addHours($hours)
+    {
+        // Adiciona as horas passadas
+        $this->_time += $hours*60*60;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Subtrai horas
+     *
+     * @param int $hours
+     * @return RW_Time
+     */
+    public function subHours($hours)
+    {
+        // Subtrai as horas passadas
+        $this->_time -= $hours*60*60;
+
+        // Retorna o RW_Time para manter a cadeia
+        return $this;
+    }
+
+    /**
+     * Valida se o tempo
+     *
+     * @param string $time
+     * @return boolean
+     */
+    public static function isTime($time)
+    {
+        // Remove espaços caso haja
+        $time = trim($time);
+
+        // Verifica se é valida
+        return (preg_match('/^(\d{1,2}):(\d{1,2}):(\d{1,2})$/', $time) == 1
+        		|| preg_match('/^(\d{1,2}):(\d{1,2})$/', $time) == 1
+        		|| preg_match('/^(\d*)$/', $time) == 1
+        		|| preg_match('/^(\d*)\.(\d*)$/', $time) == 1
+        );
     }
 
 }
