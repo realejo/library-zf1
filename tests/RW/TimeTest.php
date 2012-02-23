@@ -286,7 +286,6 @@ class TimeTest extends PHPUnit_Framework_TestCase
         $this->assertSame('24', $time->get(RW_Time::MINUTE_SHORT));
         $this->assertSame('0',  $time->get(RW_Time::HOUR_SHORT));
 
-
         /**
          * Zend_Date
          */
@@ -311,6 +310,35 @@ class TimeTest extends PHPUnit_Framework_TestCase
         $this->assertSame('45',       $time->toString('m'));
         $this->assertSame('13',       $time->toString('h'));
         $this->assertSame('=> 13',    $time->toString('=> h'));
+
+        $this->assertSame('13:45:03', $time->toString());
+        $this->assertSame('13:45:03', $time->toString('Shh:mm:ss'));
+        $this->assertSame('13:45:3',  $time->toString('Sh:m:s'));
+        $this->assertSame('3',        $time->toString('Ss'));
+        $this->assertSame('03',       $time->toString('Sss'));
+        $this->assertSame('45',       $time->toString('Sm'));
+        $this->assertSame('13',       $time->toString('Sh'));
+        $this->assertSame('=> 13',    $time->toString('=> Sh'));
+
+        $time = new RW_Time(-49503); // 13:45:3,
+        $this->assertSame('-13:45:03', $time->toString());
+        $this->assertSame('13:45:03', $time->toString('hh:mm:ss'));
+        $this->assertSame('13:45:3',  $time->toString('h:m:s'));
+        $this->assertSame('3',        $time->toString('s'));
+        $this->assertSame('03',       $time->toString('ss'));
+        $this->assertSame('45',       $time->toString('m'));
+        $this->assertSame('13',       $time->toString('h'));
+        $this->assertSame('=> 13',    $time->toString('=> h'));
+        $this->assertSame('-',        $time->toString('S'));
+
+        $this->assertSame('-13:45:03', $time->toString('Shh:mm:ss'));
+        $this->assertSame('-13:45:3',  $time->toString('Sh:m:s'));
+        $this->assertSame('-3',        $time->toString('Ss'));
+        $this->assertSame('-03',       $time->toString('Sss'));
+        $this->assertSame('-45',       $time->toString('Sm'));
+        $this->assertSame('-13',       $time->toString('Sh'));
+        $this->assertSame('=> -13',    $time->toString('=> Sh'));
+
     }
 
 
@@ -635,6 +663,15 @@ class TimeTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(RW_Time::isTime('3'));
         $this->assertTrue(RW_Time::isTime(3));
 
+        $this->assertTrue(RW_Time::isTime('-13:27:30'));
+        $this->assertTrue(RW_Time::isTime('-13:27:3'));
+        $this->assertTrue(RW_Time::isTime('-13:2:3'));
+        $this->assertTrue(RW_Time::isTime('-1:2:3'));
+        $this->assertTrue(RW_Time::isTime('-27:3'));
+        $this->assertTrue(RW_Time::isTime('-27:30'));
+        $this->assertTrue(RW_Time::isTime('-3'));
+        $this->assertTrue(RW_Time::isTime(-3));
+
         $this->assertFalse(RW_Time::isTime('13:27:3a'));
         $this->assertFalse(RW_Time::isTime('13:27a:3'));
         $this->assertFalse(RW_Time::isTime('13a:27:3'));
@@ -644,6 +681,24 @@ class TimeTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(RW_Time::isTime(':27:3'));
         $this->assertFalse(RW_Time::isTime('13:27:'));
         $this->assertFalse(RW_Time::isTime('13::3'));
+
+        $this->assertFalse(RW_Time::isTime('-13:27:3a'));
+        $this->assertFalse(RW_Time::isTime('-13:27a:3'));
+        $this->assertFalse(RW_Time::isTime('-13a:27:3'));
+        $this->assertFalse(RW_Time::isTime('-13a:2:3'));
+        $this->assertFalse(RW_Time::isTime('-13a:2:3'));
+        $this->assertFalse(RW_Time::isTime('-13:33:33:33'));
+        $this->assertFalse(RW_Time::isTime('-:27:3'));
+        $this->assertFalse(RW_Time::isTime('-13:27:'));
+        $this->assertFalse(RW_Time::isTime('-13::3'));
+
+        $this->assertFalse(RW_Time::isTime('--13:27:30'));
+        $this->assertFalse(RW_Time::isTime('--13:27:3'));
+        $this->assertFalse(RW_Time::isTime('--13:2:3'));
+        $this->assertFalse(RW_Time::isTime('--1:2:3'));
+        $this->assertFalse(RW_Time::isTime('--27:3'));
+        $this->assertFalse(RW_Time::isTime('--27:30'));
+        $this->assertFalse(RW_Time::isTime('--3'));
     }
 
 }

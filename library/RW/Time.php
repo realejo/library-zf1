@@ -1,5 +1,9 @@
 <?php
 /**
+ * Trabalha com horas independente do dia
+ *
+ * @todo o que fazer com tempo negativo? o que deve retornar no get()?
+ *
  * @category   RW
  * @package    RW_Time
  * @author     Realejo
@@ -14,6 +18,7 @@ class RW_Time
     CONST MINUTE_SHORT = 'm';
     CONST SECOND 	   = 'ss';
     CONST SECOND_SHORT = 's';
+    CONST SIGNED       = 'S';
 
     private $_time = 0;
 
@@ -27,6 +32,7 @@ class RW_Time
      *
      * @param string $time
      * @param string $part OPCIONAL Formato informado
+     *
      */
     public function setTime($time, $part = null)
     {
@@ -60,7 +66,6 @@ class RW_Time
         			$s = $aTime[$i];
         		}
         	}
-
         	$this->_time = $s + 60*$m + 60*60*$h;
         } else {
         	// Considera que é um numero
@@ -103,12 +108,25 @@ class RW_Time
      * @param string $format OPCIONAL formato a ser retornado
      * @return string
      */
-    public function toString($format = 'hh:mm:ss')
+    public function toString($format = 'Shh:mm:ss')
     {
-        $s = $this->_time % 60;
-        $m = ( ($this->_time - $s)/60 ) % 60;
-        $h = ($this->_time - 60*$m - $s) / (60*60);
+        // Define o tempo a ser usado
+        $time = $this->_time;
 
+        // Verifica o sinal
+        if ($this->_time < 0) {
+            $format = str_replace('S', '-', $format);
+            $time = -$time;
+        } else {
+            $format = str_replace('S', '', $format);
+        }
+
+        // Calcula os tempos
+        $s = $time % 60;
+        $m = ( ($time - $s)/60 ) % 60;
+        $h = ($time - 60*$m - $s) / (60*60);
+
+        // Imprime o formato escolhido
         $format = str_replace(array('ss','s','mm','m','hh','h'),
         					  array(
         					 	str_pad($s, 2, '0', STR_PAD_LEFT), $s,
@@ -116,6 +134,8 @@ class RW_Time
         					 	str_pad($h, 2, '0', STR_PAD_LEFT), $h
         					 ),
         					 $format);
+
+        // Retorna a hora formatada
         return $format;
     }
 
@@ -338,10 +358,10 @@ class RW_Time
         $time = trim($time);
 
         // Verifica se é valida
-        return (preg_match('/^(\d{1,2}):(\d{1,2}):(\d{1,2})$/', $time) == 1
-        		|| preg_match('/^(\d{1,2}):(\d{1,2})$/', $time) == 1
-        		|| preg_match('/^(\d*)$/', $time) == 1
-        		|| preg_match('/^(\d*)\.(\d*)$/', $time) == 1
+        return (preg_match('/^(-?)(\d{1,2}):(\d{1,2}):(\d{1,2})$/', $time) == 1
+        		|| preg_match('/^(-?)(\d{1,2}):(\d{1,2})$/', $time) == 1
+        		|| preg_match('/^(-?)(\d*)$/', $time) == 1
+        		|| preg_match('/^(-?)(\d*)\.(\d*)$/', $time) == 1
         );
     }
 
