@@ -18,6 +18,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
      * @var RW_Base
      */
     private $RW_Base;
+
     /**
      * Prepares the environment before running a test.
      */
@@ -27,6 +28,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated RW_BaseTest::setUp()
         $this->RW_Base = new RW_Base(/* parameters */);
     }
+
     /**
      * Cleans up the environment after running a test.
      */
@@ -36,6 +38,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->RW_Base = null;
         parent::tearDown();
     }
+
     /**
      * Constructs the test case.
      */
@@ -43,6 +46,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated constructor
     }
+
     /**
      * Tests RW_Base::RemoveAcentos()
      */
@@ -53,6 +57,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $retorno = 'AAAAAAAECEEEEIIIINOOOOOUUUUYYaaaaaaaeceeeeiiiinooooouuuuyy';
         $this->assertEquals($retorno, RW_Base::RemoveAcentos($string));
     }
+
     /**
      * Tests RW_Base::strip_tags_attributes()
      */
@@ -71,6 +76,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     	$equals2 = '<p style_-_-"text-align:center">Paragraph</p><strong style_-_-"color:red">Bold</strong><span style_-_-"color:red">Red</span><a style_-_-"color:red" href="#">Header</a>';
     	$this->assertEquals($equals2, RW_Base::strip_tags_attributes($str2,$allow2,$allowatributs2));
     }
+
     /**
      * Tests RW_Base::CleanFileName()
      */
@@ -79,14 +85,43 @@ class BaseTest extends PHPUnit_Framework_TestCase
     	$filename = '#$%@#%$ãoçáàbácôíxêchôçú';
         $this->assertEquals('aocaabacoixechocu', RW_Base::CleanFileName($filename));
     }
+
     /**
-     * Tests RW_Base::cleanInput()
+     * Tests RW_Base::testSanitize()
      */
-    public function testCleanInput ()
+    public function testSanitize()
     {
-        $inputname = '#$%@#%$ãoçáàbácôíxêchôçú';
-        $this->assertEquals('obcxch', RW_Base::cleanInput($inputname));
+        $this->assertEquals("uma frase com aáeéiíoóuú e espaços",$this->RW_Base->sanitize("uma frase com aáeéiíoóuú e espaços"));
+        $this->assertEquals("áéíóú123",$this->RW_Base->sanitize("áéíóú123"));
+        $this->assertEquals("áéíóú123",$this->RW_Base->sanitize("áéíóú123\n"));
+
+        // Array
+        $teste = array('linha1'=>"áéíóú123-", 'linha2'=> "áéíóú123\n", 'linha3'=> "áéíóú123\n");
+
+        $resultado = array('linha1'=>"áéíóú123-", 'linha2'=> "áéíóú123", 'linha3'=> "áéíóú123");
+        $this->assertEquals($resultado,$this->RW_Base->sanitize($teste));
+
+        $resultado = array('linha1'=>"áéíóú123-", 'linha2'=> "áéíóú123\n", 'linha3'=> "áéíóú123");
+        $this->assertEquals($resultado,$this->RW_Base->sanitize($teste,array('ignore'=>'linha2')));
+
+        // Nomes com orkutify
+        $this->assertEquals('Ana P.',$this->RW_Base->sanitize('Ana ▒ ▒ ▒ P.'));
+        $this->assertEquals('Luiz M.',$this->RW_Base->sanitize('Luiz M. ♪♫'));
+        $this->assertEquals('Luiz áéúíó M.',$this->RW_Base->sanitize('Luiz áéúíó M. ♪♫'));
+        $this->assertEquals('Thamyris Mendonça',$this->RW_Base->sanitize('•●๋• Thamyris Mendonça •●๋•'));
+        $this->assertEquals('FERNANDA FIGHT',$this->RW_Base->sanitize('☠ FERNANDA FIGHT ☠ '));
+
+        // Especiais
+        $this->assertEquals('',$this->RW_Base->sanitize(null));
+        $this->assertEquals('',$this->RW_Base->sanitize("\n"));
+
+        // Caracteres escondidos ou inválidos
+        $this->assertEquals("bigbob !",$this->RW_Base->sanitize("bigbob ­­ !")); // não é hifen!
+        $this->assertEquals("bigbob!",$this->RW_Base->sanitize("bigbob­­!")); // não é hifen!
+        $this->assertEquals("!!",$this->RW_Base->sanitize("!­­!")); // não é hifen!
+        $this->assertEquals("!--!",$this->RW_Base->sanitize("!--!")); // é hifen!
     }
+
     /**
      * Tests RW_Base::seourl()
      */
@@ -96,21 +131,20 @@ class BaseTest extends PHPUnit_Framework_TestCase
     	$urlRetorno = 'fazendo-uma-tremenda-bagunca-e-uma-grande-confusao';
         $this->assertEquals($urlRetorno, RW_Base::seourl($url));
     }
+
     /**
      * Tests RW_Base::getSEOID()
      */
     public function testGetSEOID ()
     {
-    	$url1 		= 'http://www.teste.com.br/aqui/-teste';
-    	$url2 		= 'http://www.teste.com.br/aqui/,teste';
-    	$url3 		= 'http://www.teste.com.br/aqui/,teste-asd';
-    	$url4 		= 'http://www.teste.com.br/aqui/-teste,asd';
-    	$urlRetorno = 'http://www.teste.com.br/aqui/';
-        $this->assertEquals($urlRetorno, RW_Base::getSEOID($url1));
-        $this->assertEquals($urlRetorno, RW_Base::getSEOID($url2));
-        $this->assertEquals($urlRetorno, RW_Base::getSEOID($url3));
-        $this->assertEquals($urlRetorno, RW_Base::getSEOID($url4));
+        $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla,bla-bla'));
+        $this->assertEquals('123', $this->RW_Base->getSEOID('123,bla-bla-bla'));
+
+        $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla-bla-bla', '-'));
+        $this->assertEquals('123-bla-bla-bla', $this->RW_Base->getSEOID('123-bla-bla-bla', ','));
+        $this->assertEquals('123-bla', $this->RW_Base->getSEOID('123-bla,bla-bla',','));
     }
+
     /**
      * Tests RW_Base::CleanHTML()
      */
@@ -121,6 +155,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $retorno = 'ParagraphBold<br><span style="color:red">Red</span><a href="#">Header</a>';
         $this->assertEquals($retorno, RW_Base::CleanHTML($str,$allow));
     }
+
     /**
      * Tests RW_Base::getCSV()
      */

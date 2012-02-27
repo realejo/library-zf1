@@ -18,6 +18,7 @@ class MailTest extends PHPUnit_Framework_TestCase
      * @var RW_Mail
      */
     private $RW_Mail;
+
     /**
      * Prepares the environment before running a test.
      */
@@ -27,6 +28,7 @@ class MailTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated MailTest::setUp()
         $this->RW_Mail = new RW_Mail(/* parameters */);
     }
+
     /**
      * Cleans up the environment after running a test.
      */
@@ -36,6 +38,7 @@ class MailTest extends PHPUnit_Framework_TestCase
         $this->RW_Mail = null;
         parent::tearDown();
     }
+
     /**
      * Constructs the test case.
      */
@@ -43,6 +46,7 @@ class MailTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated constructor
     }
+
     /**
      * Tests RW_Mail->__construct()
      */
@@ -52,6 +56,7 @@ class MailTest extends PHPUnit_Framework_TestCase
         $this->markTestIncomplete("__construct test not implemented");
         $this->RW_Mail->__construct(/* parameters */);
     }
+
     /**
      * Tests RW_Mail->SendEmail()
      */
@@ -61,6 +66,7 @@ class MailTest extends PHPUnit_Framework_TestCase
         $this->markTestIncomplete("SendEmail test not implemented");
         $this->RW_Mail->SendEmail(/* parameters */);
     }
+
     /**
      * Tests RW_Mail->sendFeedback()
      */
@@ -70,6 +76,7 @@ class MailTest extends PHPUnit_Framework_TestCase
         $this->markTestIncomplete("sendFeedback test not implemented");
         $this->RW_Mail->sendFeedback(/* parameters */);
     }
+
     /**
      * Tests RW_Mail::isEmail()
      */

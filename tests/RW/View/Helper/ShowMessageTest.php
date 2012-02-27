@@ -70,7 +70,7 @@ class ShowMessageTest extends PHPUnit_Framework_TestCase
 
     	$return1 = '';
         $return1 = PHP_EOL . '<!-- Mensagens -->' . PHP_EOL;
-        $return1 .= "<div class=\"alert-message $type1\">" . PHP_EOL;
+        $return1 .= "<div class=\"alert alert-$type1\">" . PHP_EOL;
         $return1 .= $message1 . PHP_EOL;
         $return1 .= '</div>' . PHP_EOL;
         $return1 .= '<!-- FIM Mensagens -->' . PHP_EOL;
@@ -82,11 +82,11 @@ class ShowMessageTest extends PHPUnit_Framework_TestCase
     	$return2 = '';
         $return2 = PHP_EOL . '<!-- Mensagens -->' . PHP_EOL;
 
-        $return2 .= "<div class=\"alert-message $type1\">" . PHP_EOL;
+        $return2 .= "<div class=\"alert alert-$type1\">" . PHP_EOL;
         $return2 .= $message1 . PHP_EOL;
         $return2 .= '</div>' . PHP_EOL;
 
-        $return2 .= "<div class=\"alert-message $type2\">" . PHP_EOL;
+        $return2 .= "<div class=\"alert alert-$type2\">" . PHP_EOL;
         $return2 .= $message2 . PHP_EOL;
         $return2 .= '</div>' . PHP_EOL;
 

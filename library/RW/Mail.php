@@ -70,9 +70,9 @@ class RW_Mail
         $this->_name       = $config->cms->email->name;
         $this->_email      = $config->cms->email->email;
         $this->_returnPath = $config->cms->email->returnPath;
-        $this->_type       = ($isException)? 'exception' : $config->cms->email->type;
-        $this->_username   = $config->cms->email->smtp->username;
-        $this->_password   = $config->cms->email->smtp->password;
+        $this->_type       = ($isException) ? 'exception' : $config->cms->email->type;
+        $this->_username   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->username : '';
+        $this->_password   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->password : '';
 
         // Configura o método de envio
         if ($this->_type == 'exception') {

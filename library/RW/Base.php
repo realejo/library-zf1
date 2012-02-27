@@ -10,64 +10,6 @@
  */
 class RW_Base
 {
-    static public $charTable = array(
-         'À' => 'A',
-        'Á' => 'A',
-        'Â' => 'A',
-        'Ã' => 'A',
-        'Ä' => 'A',
-        'Å' => 'A',
-        'Æ' => 'AE',
-        'Ç' => 'C',
-        'È' => 'E',
-        'É' => 'E',
-        'Ê' => 'E',
-        'Ë' => 'E',
-        'Ì' => 'I',
-        'Í' => 'I',
-        'Î' => 'I',
-        'Ï' => 'I',
-        'Ñ' => 'N',
-        'Ò' => 'O',
-        'Ó' => 'O',
-        'Ô' => 'O',
-        'Õ' => 'O',
-        'Ö' => 'O',
-        'Ù' => 'U',
-        'Ú' => 'U',
-        'Û' => 'U',
-        'Ü' => 'U',
-        'Ý' => 'Y',
-        'Ÿ' => 'Y',
-        'à' => 'a',
-        'á' => 'a',
-        'â' => 'a',
-        'ã' => 'a',
-        'ä' => 'a',
-        'å' => 'a',
-        'æ' => 'ae',
-        'ç' => 'c',
-        'è' => 'e',
-        'é' => 'e',
-        'ê' => 'e',
-        'ë' => 'e',
-        'ì' => 'i',
-        'í' => 'i',
-        'î' => 'i',
-        'ï' => 'i',
-        'ñ' => 'n',
-        'ò' => 'o',
-        'ó' => 'o',
-        'ô' => 'o',
-        'õ' => 'o',
-        'ö' => 'o',
-        'ù' => 'u',
-        'ú' => 'u',
-        'û' => 'u',
-        'ü' => 'u',
-        'ý' => 'y',
-        'ÿ' => 'y'
-    );
 
     /**
      * Remove os acentos pelas letras correspondetes
@@ -78,13 +20,9 @@ class RW_Base
      */
     static public function RemoveAcentos($subject)
     {
-
-        foreach (self::$charTable as $search => $replace)
-        {
-            $subject = str_replace($search, $replace, $subject);
-        }
-
-        return $subject;
+        $specialChars = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ');
+        $correctChars = array('A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'IJ', 'ij', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'OE', 'oe', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'AE', 'ae', 'O', 'o');
+        return str_replace($specialChars, $correctChars, $subject);
     }
 
     /**
@@ -129,16 +67,69 @@ class RW_Base
         return strtolower(preg_replace($search, $replace, $subject));
     }
 
-    static public function cleanInput($string){
-        $subject = preg_replace('/\s+/', '_', trim($string));
-        $search  = array( "([\40])" , "([^a-zA-Z0-9_])", "(-{2,})" );
-        $replace = array("-", "", "-");
+    /**
+     * Remove os caracteres ilegais
+     *
+     * @todo un-orkutify?
+     * @todo colocar no RWLBI?
+     * @todo deveria ser um Zend_Filter?
+     * @todo HTMLPurifier?
+     *
+     * @param array|string $words
+     * @param array $options
+     *
+     * @return array|string
+     */
+    static public function sanitize($words, $options = null)
+    {
+        // Verifica se é um array
+        $isArray = true;
+        if (!is_array($words)) {
+            $isArray = false;
+            $words = array($words);
+        }
 
-        $subject = preg_replace($search, $replace, $subject);
-        $subject = str_replace('_', ' ', trim($subject));
-        return $subject;
+        // Verifica se $options é um array
+        if ( empty($options) ) {$options = array();}
+        elseif (!is_array($options)) {$options = array($options);}
+
+        // Verifica se o ignore é um array
+        if (!isset($options['ignore'])) {
+            $options['ignore'] = array();
+        } elseif (isset($options['ignore']) && !is_array($options['ignore'])) {
+            $options['ignore'] = array($options['ignore']);
+        }
+
+        // Faz o filtro
+        foreach ($words as $k=>$v) {
+            // Verifica se deve ignorar
+            if (in_array($k, $options['ignore']) || $v === null) continue;
+
+            // Faz o filtro
+            $v = filter_var($v, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+
+            // Verifica o filtro de URL
+            if ( isset($options['url']) || in_array('url', $options) ) {
+                $v = filter_var($v, FILTER_SANITIZE_URL);
+            }
+
+            // Verifica o white list
+            $specialChars = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ');
+            $pattern = '/[^A-Za-z0-9_\`\~\!\@\#\$\%\^\*\(\)\; \,\.\'\/\_\-' . implode('',$specialChars) . ']/iu';
+            $v = preg_replace($pattern,'', $v);
+
+            // Verifica o black list
 
 
+            // Remove os espaços a mais
+            $v = preg_replace('/\s+/', ' ', $v);
+
+            // Coloca de volta na lista
+            $words[$k] = trim($v);
+        }
+
+        // Retorna as palavras filtradas
+        return ($isArray) ? $words : $words[0];
     }
 
     /**
@@ -163,30 +154,39 @@ class RW_Base
 
     /**
      * Extrai o código da url considerando o primeiro hifen ou virgula
-     * @param str $string
+     *
+     * @param  $seo string
+     *
      * @return string
      */
-    static public function getSEOID($url)
+    static public function getSEOID($seo, $delimiter = null)
     {
-        $delimiter = null;
-        if (strpos($url,',') && strpos($url,'-')) {
-            $delimiter = (strpos($url,',')<strpos($url,'-')) ? ',':'-';
+        // Define o delimitador
+        if ( empty($delimiter) ) {
+            if (strpos($seo,',') && strpos($seo,'-')) {
+                $delimiter = (strpos($seo,',') < strpos($seo,'-')) ? ',':'-';
 
-        } elseif (strpos($url,',')) {
-            $delimiter = ',';
+            } elseif (strpos($seo,',')) {
+                $delimiter = ',';
 
-        } elseif (strpos($url,'-')) {
-            $delimiter = '-';
-        }
-
-        if (!is_null($delimiter)) {
-            if (strpos($url,$delimiter)) {
-                $url = explode($delimiter,$url);
-                $url = $url[0];
+            } elseif (strpos($seo,'-')) {
+                $delimiter = '-';
             }
         }
 
-        return $url;
+        // Verifica se há um delimitador
+        if (!empty($delimiter)) {
+
+            // Verifica se ele está presente
+            if (strpos($seo, $delimiter)) {
+                // Extrai a parte antes do delimitador
+                $seo = explode($delimiter, $seo);
+                $seo = $seo[0];
+            }
+        }
+
+        // Retorna o ID
+        return $seo;
     }
 
     public static function CleanHTML($html,  $allowable_tags = null)
