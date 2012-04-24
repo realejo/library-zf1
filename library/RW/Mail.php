@@ -32,8 +32,8 @@ class RW_Mail
      */
     private $_email;
 
-    /*
-     * Return Path de configuração. precisa ser um do mesmo domínio
+    /**
+     * ReturnPath de configuração. precisa ser um do mesmo domínio
      * @var string
      */
     private $_returnPath;
@@ -49,6 +49,7 @@ class RW_Mail
      * @var string
      */
     private $_username;
+
     /**
      *  @var string
      */

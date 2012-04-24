@@ -43,7 +43,7 @@ class RW_Time
         }
 
         if (!self::isTime($time)) {
-            throw new Exception("Tempo $time inválido");
+            throw new Exception("Tempo '$time' inválido");
 
         } elseif (strpos($time, ':') !== false || !empty($part)) {
         	if ( empty($part) ) {

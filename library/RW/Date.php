@@ -32,9 +32,9 @@ class RW_Date extends Zend_Date
      */
     static public function toMySQL($d)
     {
-        if(empty($d)){
+        if (empty($d)) {
             return null;
-        }else{
+        } else {
             if ($d instanceof Zend_Date) {
                 $sql = $d->toString('yyyy-MM-dd HH:mm:ss');
             } else {

@@ -24,7 +24,7 @@ class TimeTest extends PHPUnit_Framework_TestCase
     protected function setUp ()
     {
         parent::setUp();
-        //$this->RW_Time = new RW_Time(/* parameters */);
+        $this->RW_Time = new RW_Time(/* parameters */);
     }
     /**
      * Cleans up the environment after running a test.
@@ -398,6 +398,20 @@ class TimeTest extends PHPUnit_Framework_TestCase
         $this->assertSame('32:27:03', $time->setHours(32)->toString());
     }
 
+    /**
+     * Tests RW_Time::setTime()
+     */
+    public function testSetTimeException() {
+        try {
+            $this->RW_Time->setTime('abcde');
+        }
+
+        catch (Exception $expected) {
+            return;
+        }
+
+        $this->fail('Exception não foi enviada.');
+    }
 
     /**
      * Tests RW_Time::getSeconds()
