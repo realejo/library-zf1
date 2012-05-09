@@ -140,7 +140,11 @@ class RW_Base
      *
      * @return string
      */
-    static public function seourl($string, $space="-") {
+    static public function seourl($string, $space="-")
+    {
+        if (function_exists('iconv')) {
+            $string = @iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        }
 
         $string = self::RemoveAcentos(strtolower(trim($string)));
         $string = preg_replace('([_|\s]+)', '-', $string); // change all spaces and underscores to a hyphen
@@ -161,6 +165,8 @@ class RW_Base
      */
     static public function getSEOID($seo, $delimiter = null)
     {
+        $seo = self::getSafeSEO($seo);
+
         // Define o delimitador
         if ( empty($delimiter) ) {
             if (strpos($seo,',') && strpos($seo,'-')) {
@@ -187,6 +193,32 @@ class RW_Base
 
         // Retorna o ID
         return $seo;
+    }
+
+    /**
+     * Extrai o código válido ([A-Za-z0-9_])
+     *
+     * @param str $string
+     * @return string
+     */
+    static public function getSafeID($codigo)
+    {
+        $codigo = strip_tags($codigo);
+        $codigo = preg_replace('/[^A-Za-z0-9_]/', '', $codigo);
+        return trim($codigo);
+    }
+
+    /**
+     * Extrai o seo da URL excluíndo caracteres inválidos
+     *
+     * @param str $string
+     * @return string
+     */
+    static public function getSafeSEO($url)
+    {
+        $url = strip_tags($url);
+        $url = preg_replace('/[^,A-Za-z0-9_-]/', '', $url);
+        return trim($url);
     }
 
     public static function CleanHTML($html,  $allowable_tags = null)
