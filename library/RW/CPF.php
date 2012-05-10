@@ -16,7 +16,7 @@ class RW_CPF
      */
     static function valid($cpf)
     {
-        $cpf = str_pad(preg_replace('/[^0-9]/', '', $cpf), 11, '0', STR_PAD_LEFT);
+        $cpf = self::unformat($cpf);
 
         if (strlen($cpf) != 11 ||
             $cpf == '00000000000' ||
@@ -50,11 +50,25 @@ class RW_CPF
      */
     static function format($cpf)
     {
-        if ( !is_null($cpf) && $cpf != '') {
-            $cpf = str_pad(preg_replace('/[^0-9]/', '', $cpf), 11, '0', STR_PAD_LEFT);
+        if ( !empty($cpf) ) {
+            $cpf = self::unformat($cpf);
             $cpf = substr($cpf,0,3) . '.' . substr($cpf,3,3) . '.' . substr($cpf,6,3) . '-' . substr($cpf,9,2);
         }
         return $cpf;
 
+    }
+
+    /**
+     * Formata o CPF no padrão 00000000000
+     *
+     * @param string $cpf
+     * @return string
+     */
+    static function unformat($cpf)
+    {
+        if ( !is_null($cpf) && $cpf != '') {
+            $cpf = str_pad(preg_replace('/[^0-9]/', '', $cpf), 11, '0', STR_PAD_LEFT);
+        } else $cpf = '';
+        return $cpf;
     }
 }
