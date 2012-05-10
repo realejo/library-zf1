@@ -75,29 +75,35 @@ class RW_Image
         	case IMAGETYPE_JPEG:
 		        # JPEG:
 		        $im = imagecreatefromjpeg($file);
-		        $this->mimeType = 'jpeg';
-		        $this->_image 	= $im;
-		        $this->_path 	= $file;
-		        return true;
+				if ($im !== false) {
+					$this->mimeType = 'jpeg';
+					$this->_image 	= $im;
+					$this->_path 	= $file;
+					return true;
+				}
 		        break;
 
 		     case IMAGETYPE_GIF:
 		        # GIF:
 		        $im = imagecreatefromgif($file);
-		        $this->mimeType = 'gif';
-		        $this->_image 	= $im;
-		        $this->_path 	= $file;
-		        return true;
+				if ($im !== false) {
+					$this->mimeType = 'gif';
+					$this->_image 	= $im;
+					$this->_path 	= $file;
+					return true;
+				}
 		        break;
 
 	        case IMAGETYPE_PNG:
 		        # PNG:
 	        	$im = imagecreatefrompng($file);
-		        $this->mimeType = 'png';
-		        $this->_image 	= $im;
-		        $this->_path 	= $file;
-		        return true;
-		        break;
+				if ($im !== false) {
+					$this->mimeType = 'png';
+					$this->_image 	= $im;
+					$this->_path 	= $file;
+					return true;
+				}
+				break;
         }
         // Tipo não identificado ou não valido
         return false;
@@ -117,6 +123,8 @@ class RW_Image
             $this->_image = null;
             return true;
         }
+
+        return false;
     }
 
     /**
@@ -136,6 +144,11 @@ class RW_Image
      */
     public function save($file = null, $close = false)
     {
+        // Verifica se tem imagem carregada
+        if (!$this->isLoaded()) {
+            throw new Exception('Imagem não carregada em RW_Image::save();');
+        }
+
         if ($file === true) {
             $file  = null;
             $close = true;
@@ -169,6 +182,10 @@ class RW_Image
      */
     public function sendScreen($close = true)
     {
+        // Verifica se tem imagem carregada
+        if (!$this->isLoaded()) {
+            throw new Exception('Imagem não carregada em RW_Image::sendScreen();');
+        }
 
        // @codeCoverageIgnoreStart
        // Define o header de acordo com o file type
@@ -189,6 +206,7 @@ class RW_Image
         // fecha o arquivo
         if ($close) $this->close();
 
+
         return true;
     }
 
@@ -204,15 +222,14 @@ class RW_Image
      */
     public function resize($w, $h, $crop = false, $force = false)
     {
-        // Verifica se a imagem está carregada
-        if ( empty($this->_image)) {
-            //throw new Exception('Imagem não carregada em RW_Image::resize()');
-            return false;
-        } else {
-            // recupera os tamanhos da imagem
-            $newwidth  = $width  = imagesx($this->_image);
-            $newheight = $height = imagesy($this->_image);
+        // Verifica se tem imagem carregada
+        if (!$this->isLoaded()) {
+            throw new Exception('Imagem não carregada em RW_Image::resize();');
         }
+
+        // Recupera os tamanhos da imagem
+        $newwidth  = $width  = imagesx($this->_image);
+        $newheight = $height = imagesy($this->_image);
 
         // Verifica se é para fazer o crop
         if ($crop) {
@@ -327,6 +344,11 @@ class RW_Image
      */
     public function removeMetadata()
     {
+        // Verifica se tem imagem carregada
+        if (!$this->isLoaded()) {
+            throw new Exception('Imagem não carregada em RW_Image::removeMetadata();');
+        }
+
         $width  = imagesx($this->_image);
         $height = imagesy($this->_image);
         $this->resize($width, $height, false, true);
