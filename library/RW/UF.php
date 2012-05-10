@@ -8,7 +8,7 @@
  * @version    $Id$
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-class UF
+class RW_UF
 {
     public $uf = array(
         'AC' => 'Acre',
