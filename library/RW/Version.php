@@ -13,7 +13,7 @@ class RW_Version
     /**
      * Zend Framework version identification - see compareVersion()
      */
-    CONST VERSION = '1.0.1';
+    CONST VERSION = '1.0.2';
 
     /**
      * The latest stable version Zend Framework available
