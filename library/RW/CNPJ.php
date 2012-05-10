@@ -16,7 +16,7 @@ class RW_CNPJ
      */
     static function valid($cnpj)
     {
-        $cnpj = str_pad(preg_replace('/[^0-9]/', '', $cnpj), 14, '0', STR_PAD_LEFT);
+        $cnpj = self::unformat($cnpj);
 
         $dig_1 = 0;
         $dig_2 = 0;
@@ -65,10 +65,24 @@ class RW_CNPJ
     static function format($cnpj)
     {
         if ( !is_null($cnpj) && $cnpj != '') {
-            $cnpj = str_pad(preg_replace('/[^0-9]/', '', $cnpj), 14, '0', STR_PAD_LEFT);
+            $cnpj = self::unformat($cnpj);
             $cnpj = substr($cnpj,0,2) . '.' . substr($cnpj,2,3) . '.' . substr($cnpj,5,3) . '/' . substr($cnpj,8,4) . '-' . substr($cnpj,12,2);
         }
         return $cnpj;
 
+    }
+
+    /**
+     * Formata o CPF no padrão 00000000000
+     *
+     * @param string $cpf
+     * @return string
+     */
+    static function unformat($cnpj)
+    {
+        if ( !empty($cnpj) ) {
+            $cnpj = str_pad(preg_replace('/[^0-9]/', '', $cnpj), 14, '0', STR_PAD_LEFT);
+        } else $cnpj = '';
+        return $cnpj;
     }
 }
