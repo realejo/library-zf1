@@ -89,12 +89,12 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         $script = "$(document).ready(function(){ $config });";
 
         // Carrega a biblioteca do CKEditor
-        $this->view->headScript()->appendFile($ckeditor . '/ckeditor.js');
+        $this->view->headScript()->appendFile($ckeditor . '/ckeditor.js', 'text/javascript', array('minify_disabled' => true));
 
         // Carrega o JQuery Adapter
-        $this->view->headScript()->appendFile($ckeditor . '/adapters/jquery.js');
+        $this->view->headScript()->appendFile($ckeditor . '/adapters/jquery.js', 'text/javascript', array('minify_disabled' => true));
 
         // Carrega o código CKEditor
-        $this->view->headScript()->appendScript($script);
+        $this->view->headScript()->appendScript($script, 'text/javascript', array('minify_disabled' => true));
     }
 }
