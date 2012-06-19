@@ -8,7 +8,7 @@
  * @version    $Id$
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
- * @todo impedir que o email va para o cliente sem querer. Deixar tudo no "drop folder"
+ * @todo impedir que o email vá para o cliente sem querer. Deixar tudo no "drop folder"
  * @todo header injection
  * foreach($_REQUEST as $fields => $value)
  *      if(eregi("TO:", $value) || eregi("CC:", $value) || eregi("CCO:", $value) || eregi("Content-Type", $value))
@@ -19,7 +19,6 @@
  */
 class RW_Mail
 {
-
     /**
      * Nome padrão para os emails enviados pelo site.
      * @var strine
@@ -253,6 +252,31 @@ class RW_Mail
         if ( !is_null($msgHtml) ) $oMailer->setBodyHtml($msgHtml);
         if ( is_null($msgText) && is_null($msgHtml) ) die("Não foi possível definir o corpo da mensagem.");
 
+        // Verifica se tem anexos
+        if (is_array($opt) && isset($opt['anexos']) && is_array($opt['anexos']) ) {
+            foreach ($opt['anexos'] as $filename=>$f) {
+                // Verifica se é um arquivou o anexo na memória
+                if ($f instanceof Zend_Mime_Part) {
+                    if (is_null($f->disposition))
+                        $f->disposition = Zend_Mime::DISPOSITION_INLINE;
+
+                    $oMailer->addAttachment($f);
+
+                    // Verifica se o arquivo existe
+                } elseif (is_string($f) && file_exists($f)) {
+                    // Verifica se deve trocar o nome do arquivo
+                    if (is_numeric($filename)) {
+                        $filename = array_pop(explode(DIRECTORY_SEPARATOR.$f));
+                    }
+
+                    // Coloca o anexo na mensagem
+                    $file = file_get_contents($f);
+                    $at = $oMailer->createAttachment($file);
+                    $at->filename = $filename;
+                }
+            }
+        }
+
         //Envia o email
         $oMailer->send();
     }
@@ -346,7 +370,7 @@ class RW_Mail
             $html .= "</table>";
         }
 
-        // coloca a assinatura
+        // Coloca a assinatura
         if (isset($text) && $text != '') {
             $text .= "\n\n";
             $text .= 'Realejo Feedback v1.0' . "\n";
@@ -415,15 +439,14 @@ class RW_Mail
         if ($config['verificar'] == 1 && APPLICATION_ENV != 'production') {
             die('<hr/>email enviado');
         }
-
     }
 
     /**
      * Remove o encoding UTF-8 para não gerar caracteres inválidos no email
-     *
-     * @param array|str $str
-     * @return array|str
      * @todo não detecta UTF-8 depois de utf8_decode
+     *
+     * @param array|string  $str Texto a ser corrigido
+     * @return array|string
      */
     private function _fixEncoding($str) {
         if ( is_array($str) ) {
@@ -441,11 +464,13 @@ class RW_Mail
 
     /**
      * Verifica se está no padrão UTF-8
-     *
-     * @param str $str
      * @todo descobrir pq não funciona mb_check_encoding
+     *
+     * @param  string $str Texto para indentificar se é UTF8
+     * @return boolean
      */
-    private function _check_utf8($str) {
+    private function _check_utf8($str)
+    {
         $len = strlen($str);
         for($i = 0; $i < $len; $i++){
             $c = ord($str[$i]);
@@ -465,20 +490,26 @@ class RW_Mail
             }
         }
         return true;
-    } // end of check_utf8
+    }
 
     /**
      * Verifica se é um email válido
+     *
      * @uses Zend_Validate
-     *
      * @param string $email Email a ser verificado
-     *
      * @return boolean
      */
-    static function isEmail($email) {
+    static function isEmail($email)
+    {
         return Zend_Validate::is($email, 'EmailAddress');
     }
 
+    /**
+     * Extrai um texto de um HTML com quebras de linhas
+     *
+     * @param string $html HTML para ser transformado em TXT
+     * @return string
+     */
     private function _extractText($html)
     {
         $text = str_replace("\n", '', $html);

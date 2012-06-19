@@ -17,20 +17,41 @@ class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
     /**
      * Imprime a data no formato correto
      *
-     * @param date $d data a ser impressa
-     * @param string $format Formatdo para apresentar a data
+     * @param date   $d      Data a ser impressa
+     * @param string $format Formato da data
+     * @param string $locale Localização da data
      *
      */
-    public function getTime($d)
+    public function getTime($d, $format = null, $locale = null)
     {
+        // Define o formato
+        if (!isset($format)) {
+            $format = Zend_Date::ISO_8601;
+        } elseif ($format == 'twitter') {
+            $format = 'EEE MMM dd HH:mm:ss ZZZ yyyy';
+            $locale = 'en_US';
+        } elseif ($format == 'fb') {
+            $format = 'EEE, MMM dd yyyy HH:mm:ss ZZZ';
+            $locale = 'en_US';
+        }
+
+        // Cria a data
+        $date = new Zend_Date($d, $format, $locale);
+        $date->setLocale('pt_BR')->setTimezone('America/Sao_Paulo');
+        if ($date->get('Y') == 0) $date->set(date('Y'), 'Y');
+        //echo "<br/><b>$d  => " . $date->get('Y') .'</b>';
+
+        // Calcula a diferença
         $now = time();
-        $date = new Zend_Date($d, Zend_Date::ISO_8601);
         $time = $now - $date->getTimestamp();
 
+        // Formata a hora
         if ($time < 60) {
             $time .= ' segundos';
         } elseif ($time < 3600) { //60*60
             $time = round(floatval($time) / 60) . ' minutos';
+        } elseif ($time < 7200) { //60*60*2
+            $time = round(floatval($time) / 3660) . ' hora';
         } elseif ($time < 86400) { //60*60*24
             $time = round(floatval($time) / 3660) . ' horas';
         } elseif ($time < 604800) { //60*60*24*30

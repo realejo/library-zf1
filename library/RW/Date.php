@@ -28,7 +28,9 @@ class RW_Date extends Zend_Date
 
     /**
      * Transforma data no formato d/m/a para o formato a-m-d
+     *
      * @param string|Zend_Date $d data a se transformada para o formato do MYSQL
+     * @return string
      */
     static public function toMySQL($d)
     {
@@ -49,7 +51,6 @@ class RW_Date extends Zend_Date
     }
 
     /**
-     *
      * Retorna a diferença entre duas datas ($d1-$d2)
      * Sempre calculado a partir da diferença de segundos entre as datas
      *
@@ -61,9 +62,11 @@ class RW_Date extends Zend_Date
      *         h - horas
      *         n - minutos
      *         s - segundos (padrão)
+     *
      * @param Zend_Date $d1
      * @param Zend_Date $d2
      * @param string $part
+     * @return int
      */
     static function diff(Zend_Date $d1, Zend_Date $d2, $part = null)
     {
@@ -101,6 +104,7 @@ class RW_Date extends Zend_Date
      * @param  string              $part    OPTIONAL Part of the date to return, if null the timestamp is returned
      * @param  string|Zend_Locale  $locale  OPTIONAL Locale for parsing input
      * @return string  date or datepart
+     * @return string|int
      */
     public function get($part = null, $locale = null)
     {

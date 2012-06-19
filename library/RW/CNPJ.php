@@ -12,7 +12,9 @@ class RW_CNPJ
 {
     /**
      * Verifica se o CNPJ é valido
-     * @param string $cnpj
+     *
+     * @param string $cnpj CNPJ com ou sem formatação
+     * @return boolean
      */
     static function valid($cnpj)
     {
@@ -60,7 +62,9 @@ class RW_CNPJ
 
     /**
      * Formata o CNPJ no padrão 00.000.000/0000-00
-     * @param string $cnpj
+     *
+     * @param string $cnpj CNPJ com ou sem formatação
+     * @return string
      */
     static function format($cnpj)
     {
@@ -73,7 +77,7 @@ class RW_CNPJ
     }
 
     /**
-     * Formata o CPF no padrão 00000000000
+     * Remove a formatação do CNPJ, reduzindo a apenas numeros
      *
      * @param string $cpf
      * @return string

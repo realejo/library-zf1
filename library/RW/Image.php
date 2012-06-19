@@ -11,6 +11,7 @@
 class RW_Image
 {
     /**
+     * Imagem carregada
      * @var binary image
      */
     protected  $_image = null;
@@ -47,8 +48,13 @@ class RW_Image
      */
     public $mimeType;
 
-
-    public function __construct($image = null) {
+    /**
+     * Carrega aimagem ao criar a classe
+     *
+     * @param string $image Endereço da imagem
+     */
+    public function __construct($image = null)
+    {
         if (!is_null($image)) $this->open($image);
     }
 
@@ -69,11 +75,10 @@ class RW_Image
         }
 
         /**
-         * Tenta verifica o formato e tenta abrir
+         * Tenta identificar o formato e abrir a imagem
          */
         switch (exif_imagetype($file)){
         	case IMAGETYPE_JPEG:
-		        # JPEG:
 		        $im = imagecreatefromjpeg($file);
 				if ($im !== false) {
 					$this->mimeType = 'jpeg';
@@ -84,7 +89,6 @@ class RW_Image
 		        break;
 
 		     case IMAGETYPE_GIF:
-		        # GIF:
 		        $im = imagecreatefromgif($file);
 				if ($im !== false) {
 					$this->mimeType = 'gif';
@@ -95,7 +99,6 @@ class RW_Image
 		        break;
 
 	        case IMAGETYPE_PNG:
-		        # PNG:
 	        	$im = imagecreatefrompng($file);
 				if ($im !== false) {
 					$this->mimeType = 'png';
@@ -105,6 +108,7 @@ class RW_Image
 				}
 				break;
         }
+
         // Tipo não identificado ou não valido
         return false;
     }
@@ -131,16 +135,17 @@ class RW_Image
      * Verifica se tem alguma imagem carregada
      * @return boolean
      */
-    public function isLoaded() {
+    public function isLoaded()
+    {
         return !is_null($this->_image);
     }
 
     /**
      * Salva a imagem que está carregada na memória
      *
-     * @param string $file
-     * @param boolean $close fecha o arquivo ou mantem na memoria
-     *
+     * @param string  $file  Endereço do arquivo para salvar a imagem
+     * @param boolean $close Fecha o arquivo ou mantem na memória
+     * @return boolean
      */
     public function save($file = null, $close = false)
     {

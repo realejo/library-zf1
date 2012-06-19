@@ -12,7 +12,9 @@ class RW_CPF
 {
     /**
      * Verifica se o CPF é valido
-     * @param string $cpf
+     *
+     * @param string   $cpf CPF com ou sem formatação
+     * @return boolean
      */
     static function valid($cpf)
     {
@@ -46,7 +48,9 @@ class RW_CPF
 
     /**
      * Formata o CPF no padrão 000.000.000-00
-     * @param string $cpf
+     *
+     * @param string $cpf CPF com ou sem formatação
+     * @return string
      */
     static function format($cpf)
     {
@@ -59,7 +63,7 @@ class RW_CPF
     }
 
     /**
-     * Formata o CPF no padrão 00000000000
+     * Remove a formatação do CPF, reduzindo a apenas numeros
      *
      * @param string $cpf
      * @return string

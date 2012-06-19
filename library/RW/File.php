@@ -16,7 +16,8 @@ class RW_File
      * @param bool    $retbytes
      * @param int     $chunk     Size (in bytes) of tiles chunk (1024*1024 = 1048576)
      */
-    static public function readfile_chunked($filename, $retbytes = TRUE, $chunk = 1048576) {
+    static public function readfile_chunked($filename, $retbytes = TRUE, $chunk = 1048576)
+    {
         define('CHUNK_SIZE', 1024*1024); //
 
         $buffer = '';
