@@ -11,7 +11,8 @@
 class RW_Version
 {
     /**
-     * Zend Framework version identification - see compareVersion()
+     * RWLIB indentificador de versão
+     * @see compareVersion()
      */
     CONST VERSION = '1.1.0';
 

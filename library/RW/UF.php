@@ -93,7 +93,7 @@ class RW_UF
      */
     static public function getUFs($regiao = null)
     {
-        $uf = new UF();
+        $uf = new RW_UF();
         if (is_null($regiao)) {
             return $uf->uf;
         } else {
@@ -117,7 +117,7 @@ class RW_UF
      */
     static public function getRegioes()
     {
-        $uf = new UF();
+        $uf = new RW_UF();
         return $uf->regioes;
     }
 
@@ -128,7 +128,7 @@ class RW_UF
      */
     static public function getUFRegiao()
     {
-        $uf = new UF();
+        $uf = new RW_UF();
         return $uf->UFRegiao;
     }
 
@@ -139,7 +139,7 @@ class RW_UF
      */
     static public function getPaises()
     {
-        $uf = new UF();
+        $uf = new RW_UF();
         return $uf->ufExterior;
     }
 
