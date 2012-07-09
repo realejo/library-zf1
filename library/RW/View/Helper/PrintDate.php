@@ -13,30 +13,35 @@
  */
 class RW_View_Helper_PrintDate extends Zend_View_Helper_Abstract
 {
-
     /**
      * Imprime a data no formato correto
      *
      * @param date $d data a ser impressa
      * @param string $format Formato para apresentar a data
      *
+     * @return string
      */
     public function printDate($d = null, $format = "dd/MM/yyyy")
     {
-        if (strpos($d, '/')) {
+        // Verifica se alguma data foi passada
+        if (empty($d)|| is_null($d)) return '';
+
+        // Verifica se a data já está no formato com barras dd/MM/yyyy
+        if (strpos($d, '/') !== false) {
             $temp = explode('/', $d);
             $d = $temp[2].'-'.$temp[1].'-'.$temp[0];
         }
-        if ( !is_null($d) ) {
-            $date = new Zend_Date($d, Zend_Date::ISO_8601);
 
-            // formatos predefinidos
-            switch($format) {
-                case 'complete':
-                    $format = 'dd/MM/yyyy HH:mm:ss';
-            }
+        // Cria a data no Zend_Date
+        $date = new Zend_Date($d, Zend_Date::ISO_8601);
 
-            return $date->toString($format);
-        } else return null;
+        // Verifica se é um foramto prédefinido
+        switch($format) {
+            case 'complete':
+                $format = 'dd/MM/yyyy HH:mm:ss';
+        }
+
+        // Retorna a data formatada
+        return $date->toString($format);
     }
 }
