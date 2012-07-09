@@ -237,8 +237,21 @@ class RW_Base
         return trim($texto);
     }
 
+    /**
+     * Transforma um array em um CSV.
+     * As chaves do primeiro item do array serão usadas como titulo das colunas
+     * do CSV a ser criado
+     *
+     * @param array $array   Array com os dados a serem transformados em CSV
+     * @param array $exclude Lista de campos que não devem ser incluídos no CSV
+     * @param array $labels  Titulo alterantido para as chaves definidas no primeiro item
+     * @return string
+     */
     public static function getCSV($array, $exclude = array(), $labels = array())
     {
+        // Verifica se há dados para gerar o CSV
+        if (!is_array($array) || empty($array)) return '';
+
         // Recuperar o primeiro registro para ter os nomes dos campos
         $keys = array_keys($array);
         $keys = array_keys($array[$keys[0]]);
