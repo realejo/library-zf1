@@ -111,7 +111,7 @@ class RW_TableExtractor {
             }
         }
 
-        var_dump($table);
+        //var_dump($table);
         // lowercase all table related tags
         $table = preg_replace_callback('/<(\/?)(table|tr|th|td)/is', 'lcase_tags', $table);
 
@@ -136,7 +136,7 @@ class RW_TableExtractor {
         // split table into individual elements
         $pattern = '/(<\/?(?:tr|td).*?>)/is';
         $table = preg_split($pattern, $this->cleanHTML, -1, PREG_SPLIT_DELIM_CAPTURE);
-        var_dump($table);
+        //var_dump($table);
 
         // define array for new table
         $tableCleaned = array();
@@ -249,7 +249,7 @@ class RW_TableExtractor {
         // define array to store table data
         $tableData = array();
 
-        var_dump($this->headerRow);
+        //var_dump($this->headerRow);
 
         // get column headers
         if($this->headerRow) {
