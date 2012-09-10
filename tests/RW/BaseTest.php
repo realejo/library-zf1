@@ -130,6 +130,18 @@ class BaseTest extends PHPUnit_Framework_TestCase
     	$url 		= 'fazendo uma tremenda bagunça e uma GRANDE confusão';
     	$urlRetorno = 'fazendo-uma-tremenda-bagunca-e-uma-grande-confusao';
         $this->assertEquals($urlRetorno, RW_Base::seourl($url));
+
+        $url 		= utf8_decode('fazendo uma tremenda bagunça e uma GRANDE confusão');
+    	$urlRetorno = 'fazendo-uma-tremenda-bagunca-e-uma-grande-confusao';
+        $this->assertEquals($urlRetorno, RW_Base::seourl($url));
+    }
+
+    /**
+     * Tests RW_Base::getSafeSEO()
+     */
+    public function testGetSafeSEO ()
+    {
+        $this->assertEquals('123-bla,blsdsa-bla', $this->RW_Base->getSafeSEO(' 123-bla,blsds   a-bla '));
     }
 
     /**

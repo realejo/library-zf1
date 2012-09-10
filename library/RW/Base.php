@@ -142,11 +142,11 @@ class RW_Base
      */
     static public function seourl($string, $space="-")
     {
-        if (function_exists('iconv')) {
-            $string = @iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-        }
+        // Passa apra UTF8
+        $string = self::toUTF8(trim($string));
 
-        $string = self::RemoveAcentos(strtolower(trim($string)));
+        // remove os acentos considerando o UTF8
+        $string = self::RemoveAcentos(mb_strtolower($string,'UTF8'));
         $string = preg_replace('([_|\s]+)', '-', $string); // change all spaces and underscores to a hyphen
         $string = preg_replace('([^a-z0-9-])', '', $string); // remove all non-numeric characters except the hyphen
         $string = preg_replace('([-]+)', '-', $string); // replace multiple instances of the hyphen with a single instance
