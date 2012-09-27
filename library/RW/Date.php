@@ -165,20 +165,35 @@ class RW_Date extends Zend_Date
      * 
      * @return string;
      */
-    static function getSemana($d)
+    static public function getSemana($d = null)
     {
-    	$nome_semana = array('domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sabado');
+    	// Configura a semana
+    	$nome_semana = array('domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado');
     	
-    	if (is_array($d)) {
-	    	$temp = $d['ano']."-".$d['mes']."-".$d['dia'];
+    	if (is_string($d)) $tempData = strlen($d) > 1 ? $d : (int) $d;   
+    	
+    	// Verifica se foi passado uma data
+    	if (is_array($d) || is_string($tempData)) {
+    		// Configura a data
+    		if (is_array($d)) {
+    			$temp = $d['ano']."-".$d['mes']."-".$d['dia'];
+    			
+    		} else {
+    			$temp = self::toMySQL($d);
+    			
+    		}
+    		// converte para a semnana
 	        $w = date('w', strtotime($temp));
 	        
+	        // Retorna qual é a semana
 	        return $nome_semana[$w];
-	        
-    	} elseif (is_numeric($d)) {
+
+	    // Verifica se é um semana
+    	} elseif (is_numeric($tempData)) {
     		return isset($nome_semana[$d]) ? $nome_semana[$d] : null; 
     		
     	} else {
+    		// Retorna as semanas
     		return $nome_semana;
     		
     	}

@@ -66,6 +66,9 @@ class DateTest extends PHPUnit_Framework_TestCase
 
         $date = '26/12/2011 14:00:00';
         $this->assertEquals(RW_Date::toMySQL($date),'2011-12-26 14:00:00');
+        
+        $date = ('10/09/2012 14:00:00');
+        $this->assertEquals(RW_Date::toMySQL($date),'2012-09-10 14:00:00');
 
         $this->assertNull(RW_Date::toMySQL(null));
         $this->assertNull(RW_Date::toMySQL(0));
@@ -192,6 +195,15 @@ class DateTest extends PHPUnit_Framework_TestCase
     	foreach ($meses as $m=>$mes) {
     	    $this->assertEquals($mes, $this->RW_Date->getMes($m), "getMes($m)");
     	}
+    }
+    
+    public function testGetSemana()
+    {
+    	$data = date('w');
+    	$this->assertEquals($this->RW_Date->getSemana($data), 'quinta');
+    	
+    	$data = '10/09/2012';
+    	$this->assertEquals($this->RW_Date->getSemana($data), 'segunda');
     }
 }
 

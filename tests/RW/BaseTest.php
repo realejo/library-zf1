@@ -155,6 +155,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla-bla-bla', '-'));
         $this->assertEquals('123-bla-bla-bla', $this->RW_Base->getSEOID('123-bla-bla-bla', ','));
         $this->assertEquals('123-bla', $this->RW_Base->getSEOID('123-bla,bla-bla',','));
+        
+        $this->assertEquals('agora', $this->RW_Base->getSEOID('ágora-sim', '-'));
     }
 
     /**

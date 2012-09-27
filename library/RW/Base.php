@@ -165,6 +165,9 @@ class RW_Base
      */
     static public function getSEOID($seo, $delimiter = null)
     {
+    	// Remove acentos
+    	$seo = self::RemoveAcentos($seo);
+    	
         $seo = self::getSafeSEO($seo);
 
         // Define o delimitador
@@ -316,5 +319,40 @@ class RW_Base
 
         // Retorna a string
         return $string;
+    }
+    /**
+     * Retorna se dev e usar o cache
+     *
+     * @param string   $chave      Chave do cache
+     * @param opcional $configfile Nome do arquivo de configuração
+     *
+     * @return boolean|null  Retorna TRUE|FALSE se a chave existir ou retorna nulo
+     */
+    public static function getCacheConfig($chave, $configfile = 'application')
+    {
+        // Define o provavel caminho
+        $config_path = APPLICATION_PATH . "/configs/$configfile.ini";
+
+        // Verifica o caminho alternativo
+        if (!file_exists($config_path)) {
+            $config_path = APPLICATION_PATH . "/../configs/$configfile.ini";
+        }
+
+        // Verifica se o arquivo de config existe
+        if (file_exists($config_path)) {
+
+            // Carrega o arquivo
+            $config = new Zend_Config_Ini($config_path, APPLICATION_ENV);
+
+            // Verifica se exsite a chave
+            if (isset($config->cache->$chave)) {
+
+                // Retorna a chave
+                return (boolean) $config->cache->$chave;
+            }
+        }
+
+        // retorna que não há chave configurada
+        return null;
     }
 }
