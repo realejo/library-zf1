@@ -157,4 +157,30 @@ class RW_Date extends Zend_Date
         // Retorna se o mes existir
         return (isset($meses[$m])) ? $meses[$m] : null;
     }
+    
+    /**
+     * Retornar qual é a semana
+     * 
+     * @var $d Array||int
+     * 
+     * @return string;
+     */
+    static function getSemana($d)
+    {
+    	$nome_semana = array('domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sabado');
+    	
+    	if (is_array($d)) {
+	    	$temp = $d['ano']."-".$d['mes']."-".$d['dia'];
+	        $w = date('w', strtotime($temp));
+	        
+	        return $nome_semana[$w];
+	        
+    	} elseif (is_numeric($d)) {
+    		return isset($nome_semana[$d]) ? $nome_semana[$d] : null; 
+    		
+    	} else {
+    		return $nome_semana;
+    		
+    	}
+    }
 }
