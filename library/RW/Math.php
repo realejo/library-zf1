@@ -89,4 +89,14 @@ class RW_Math
         return $mediana;
     }
 
+    /**
+     * Verifica o sinal de um número
+     * @param int $number número
+     * @return Returns 1 if a is positive, -1 if a is negative, and 0 if a is zero.
+     * @see gmp_sign()
+     */
+    static function sign( $number )
+    {
+        return ( $number > 0 ) ? 1 : ( ( $number < 0 ) ? -1 : 0 );
+    }
 }
