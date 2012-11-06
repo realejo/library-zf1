@@ -1,10 +1,18 @@
 <?php
+/**
+ * Funções para se acessar o wiki através de usuários preconfigurados
+ *
+ * @category   RW
+ * @author     Realejo
+ * @version    $Id: Math.php 41 2012-10-01 19:24:51Z rodrigo $
+ * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ */
 class RW_Mediawiki
 {
     /**
      * Recupera o usuário a ser usado
      */
-    static function getUser($userType = 'read')
+    static function getUser($userType = 'leitor')
     {
         // Carrega as configurações do config
         $configpath = APPLICATION_PATH . "/../configs/application.ini";
@@ -37,8 +45,25 @@ class RW_Mediawiki
                 );
     }
 
-    static function login($url, $user, $password)
+    /**
+     * Faz o login na wiki usando a API
+     *
+     * @param string $url
+     * @param string $user
+     * @param string $password
+     *
+     * @return boolean|string   Retorna TRUE ou o erro encontrado
+     */
+    static function login($url, $user = null, $password = null)
     {
+        // Se não foi fornecido um usuário/senha, irá considerar que a url é o tipo de usuário
+        if (is_null($user)) {
+            $usuario  = self::getUser($url);
+            $url      = $usuario['apiurl'];
+            $user     = $usuario['user_name'];
+            $password = $usuario['user_password'];
+        }
+
         // Cria o cliente
         $client = new Zend_Http_Client();
 
@@ -81,8 +106,31 @@ class RW_Mediawiki
         }
     }
 
-    static function logout($url)
+    /**
+     * Faz o logou da WIKI e remove os cookies
+     * @param string $url (OPCIONAL) URL da API da wiki, se não fornecida irá utilizar a do application.ini
+     * @throws Exception
+     */
+    static function logout($url = null)
     {
+        // Carrega as configurações do config
+        $configpath = APPLICATION_PATH . "/../configs/application.ini";
+        if ( !file_exists($configpath) ) {
+            // procura dentro do application
+            $configpath = APPLICATION_PATH . "/configs/application.ini";
+        }
+
+        if ( !file_exists($configpath) ) {
+            require_once 'Zend/Config/Exception.php';
+            throw new Exception("Arquivo de configuração application.ini não encontrado do diretório /configs");
+        }
+
+        // Instância o arquivo aplication.ini
+        $config = new Zend_Config_Ini($configpath, APPLICATION_ENV);
+
+        // Recupera as configurações
+        $apiurl = (is_null($url)) ? $config->wiki->apiurl : $url;
+
         // Cria o cliente
         $client = new Zend_Http_Client();
 
@@ -93,7 +141,7 @@ class RW_Mediawiki
         }
 
         // Faz o logout
-        $client->setUri($url);
+        $client->setUri($apiurl);
         $client->setHeaders('Accept-Encoding', 'none');
         $client->setParameterPost('action',    'logout');
         $client->setParameterPost('format',     'php');

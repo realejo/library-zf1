@@ -66,10 +66,10 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 
         // Verifica o CKFinder
         if ($ckfinder !== false) {
-            $options['filebrowserBrowseUrl']       = $this->_ckfinder . '/ckfinder.html';
-            $options['filebrowserImageBrowseUrl']  = $this->_ckfinder . '/ckfinder.html?Type=Images';
-            $options['filebrowserUploadUrl']       = $this->_ckfinder . '/core/connector/php/connector.php?command=QuickUpload&type=Files';
-            $options['filebrowserImageUploadUrl']  = $this->_ckfinder . '/core/connector/php/connector.php?command=QuickUpload&type=Images';
+            $options['filebrowserBrowseUrl']       = $ckfinder . '/ckfinder.html';
+            $options['filebrowserImageBrowseUrl']  = $ckfinder . '/ckfinder.html?Type=Images';
+            $options['filebrowserUploadUrl']       = $ckfinder . '/core/connector/php/connector.php?command=QuickUpload&type=Files';
+            $options['filebrowserImageUploadUrl']  = $ckfinder . '/core/connector/php/connector.php?command=QuickUpload&type=Images';
         }
 
         // Verifica as outras opções
