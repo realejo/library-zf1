@@ -31,9 +31,9 @@ class RW_Image
      * @var array
      */
     protected $_imageQuality = array(
-        'png'   =>  9,
-        'jpeg'  =>  90,
-        'gif'   =>  90
+        'png'   =>  10,
+        'jpeg'  =>  100,
+        'gif'   =>  100
     );
 
     /**
@@ -358,5 +358,39 @@ class RW_Image
         $height = imagesy($this->_image);
         $this->resize($width, $height, false, true);
         return true;
+    }
+
+    /**
+     * Altera a qualidade padrão das imagens (100%).
+     *
+     * @param int    $quality Qualidade da imagem de 0 a 100
+     * @param string $format  OPCIONAL Formato a ser definido a nova qualidade (png, jpg ou gif)
+     *
+     * @return RW_Image
+     */
+    public function setImageQuality($quality, $format = null)
+    {
+        // Passa o formato para minusculo se existir
+        if (!is_null($format)) $format = strtolower($format);
+
+        // Verifica se foi informado um formato específico
+        if (!is_null($format)) {
+            // Verifica se o formato é valido
+            if (array_key_exists($format, $this->_imageQuality)) {
+                if ($format === 'png') $quality /= 10;
+                $this->_imageQuality = $quality;
+            } else {
+                throw new Exception("Formato de imagem $format inválido");
+            }
+
+        // Altera todos os formatos
+        } else {
+           $this->_imageQuality['jpg'] = $quality;
+           $this->_imageQuality['gif'] = $quality;
+           $this->_imageQuality['png'] = $quality/10;
+        }
+
+        // Mantem a cadeia
+        return $this;
     }
 }
