@@ -20,6 +20,9 @@ class RW_CNPJ
     {
         $cnpj = self::unformat($cnpj);
 
+        // Verifica se não é inválido
+        if ($cnpj == '00000000000000') return false;
+
         $dig_1 = 0;
         $dig_2 = 0;
         $controle_1 = 5;
