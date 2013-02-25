@@ -10,6 +10,13 @@
  */
 class RW_Backup
 {
+    /**
+     * Cria um dump das tabelas do banco de dados.
+     *
+     * @param array $tables OPCIONAL Tabelas para criar o backuop.
+     *                      Se não informado será feito backup de todas as tabelas.
+     * @throws Exception
+     */
     static public function create($tables = null)
     {
         // Carrega as configurações do config
@@ -33,8 +40,8 @@ class RW_Backup
         $dbpass	= $config->resources->db->params->password;
         $dbname = $config->resources->db->params->dbname;
 
-        // Criando o diretório dos dumps
-        $dumpPath = realpath(APPLICATION_PATH . '/../data/dumps');
+        // Define o diretório dos dumps
+        $dumpPath = self::getPath();
 
         // Verifica se é para criar um dump com um arquivo por tabela ou um arquivo único
         if (empty($tables)) {
@@ -73,12 +80,21 @@ class RW_Backup
             // Cria um ZIP com os SQL criados e os apaga
             $command = "zip -mjq  $backupPath.zip $zipTables";
             system($command);
-
-            // Retorna o arquivo criado
-            $backupFile;
         }
+
+        // Retorna o arquivo criado
+        return $backupPath . '.zip';
     }
 
+    /**
+     * Cria um script para fazer um restore a partir dos dumps contidos no ZIP
+     *
+     * @param string $file nome do arquivo ZIP dentro da pasta dumps
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
     static public function restore($file)
     {
         // Carrega as configurações do config
@@ -102,10 +118,10 @@ class RW_Backup
         $dbpass	= 'PASSWORD'; //$config->resources->db->params->password;
         $dbname = $config->resources->db->params->dbname;
 
-        // Criando o diretório dos dumps
-        $dumpPath = realpath(APPLICATION_PATH . '/../data/dumps');
+        // Recupera o diretório dos dumps
+        $dumpPath = self::getPath();
 
-        // Cria o caminho do arquivo
+        // Define o caminho do arquivo
 		$filepath = $dumpPath.'/'.str_replace('.zip', '', $file);
 
         // Verifica se o zip existe
@@ -208,5 +224,15 @@ class RW_Backup
 
 	    // Retorna o comando ao usuário
 	    return $script;
+    }
+
+    /**
+     * Retorna o caminho padrão até a pasta onde são salvas os arquivos de backup
+     *
+     * @return string
+     */
+    static public function getPath()
+    {
+        return realpath(APPLICATION_PATH . '/../data/dumps');
     }
 }
