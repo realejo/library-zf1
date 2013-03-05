@@ -73,8 +73,14 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         }
 
         // Verifica as outras opções
-        if (!empty($userOptions) && is_array($userOptions) )
-            $options = array_replace($options , $userOptions);
+        if (!empty($userOptions) && is_array($userOptions) ) {
+            // SOMENTE PHP >=5.3.0 $options = array_replace($options , $userOptions);
+            foreach ($options as $c=>$v) {
+                if (isset($userOptions[$c])) {
+                    $options[$c] = $userOptions[$c];
+                }
+            }
+        }
 
         // Formata as configurações
         $options = (empty($options)) ? '{}' : Zend_Json::encode($options);
