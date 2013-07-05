@@ -157,45 +157,61 @@ class RW_Date extends Zend_Date
         // Retorna se o mes existir
         return (isset($meses[$m])) ? $meses[$m] : null;
     }
-    
+
     /**
      * Retornar qual é a semana
-     * 
+     *
      * @var $d Array||int
-     * 
+     *
      * @return string;
      */
     static public function getSemana($d = null)
     {
     	// Configura a semana
     	$nome_semana = array('domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado');
-    	
-    	if (is_string($d)) $tempData = strlen($d) > 1 ? $d : (int) $d;   
-    	
+
+    	if (is_string($d)) $tempData = strlen($d) > 1 ? $d : (int) $d;
+
     	// Verifica se foi passado uma data
     	if (is_array($d) || is_string($tempData)) {
     		// Configura a data
     		if (is_array($d)) {
     			$temp = $d['ano']."-".$d['mes']."-".$d['dia'];
-    			
+
     		} else {
     			$temp = self::toMySQL($d);
-    			
+
     		}
     		// converte para a semnana
 	        $w = date('w', strtotime($temp));
-	        
+
 	        // Retorna qual é a semana
 	        return $nome_semana[$w];
 
 	    // Verifica se é um semana
     	} elseif (is_numeric($tempData)) {
-    		return isset($nome_semana[$d]) ? $nome_semana[$d] : null; 
-    		
+    		return isset($nome_semana[$d]) ? $nome_semana[$d] : null;
+
     	} else {
     		// Retorna as semanas
     		return $nome_semana;
-    		
+
     	}
+    }
+
+    /**
+     * Verifica se é uma string de data válida e retorna o array dela
+     *
+     * @param string $date
+     * @param string $format OPCIONAL
+     * @return array|NULL
+     */
+    static function getData($date, $format = 'dd/MM/yyyy')
+    {
+        if (!empty($date) && parent::isDate($date, $format)) {
+            return Zend_Locale_Format::getDate($date, array('date_format'=>$format));
+        }
+
+        return null;
     }
 }
