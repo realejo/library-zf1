@@ -182,7 +182,9 @@ class RW_Mail
         // Nome e Email do Destinatario
         if (is_array($toEmail)) {
             foreach ($toEmail as $e=>$n) {
-                if ($n != $e) {
+                if (is_numeric($e) && self::isEmail($n)) {
+                    $oMailer->addTo($n);
+                } elseif ($n != $e) {
                     $oMailer->addTo($e, $n);
                 } else {
                     $oMailer->addTo($e);
