@@ -19,16 +19,19 @@ class RW_Backup
      */
     static public function create($tables = null)
     {
+        // Verifica se a constante da marca esta definida
+        $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
+
         // Carrega as configurações do config
-        $configpath = APPLICATION_PATH . "/../configs/application.ini";
+        $configpath = APPLICATION_PATH . "/../configs/application$marca.ini";
         if ( !file_exists($configpath) ) {
             // procura dentro do application
-            $configpath = APPLICATION_PATH . "/configs/application.ini";
+            $configpath = APPLICATION_PATH . "/configs/application$marca.ini";
         }
 
         if ( !file_exists($configpath) ) {
             require_once 'Zend/Config/Exception.php';
-            throw new Exception("Arquivo de configuração application.ini não encontrado do diretório /configs");
+            throw new Exception("Arquivo de configuração application$marca.ini não encontrado do diretório /configs");
         }
 
         // Instância o arquivo aplication.ini
@@ -97,16 +100,19 @@ class RW_Backup
      */
     static public function restore($file)
     {
+        // Verifica se a constante da marca esta definida
+        $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
+
         // Carrega as configurações do config
-        $configpath = APPLICATION_PATH . "/../configs/application.ini";
+        $configpath = APPLICATION_PATH . "/../configs/application$marca.ini";
         if ( !file_exists($configpath) ) {
             // procura dentro do application
-            $configpath = APPLICATION_PATH . "/configs/application.ini";
+            $configpath = APPLICATION_PATH . "/configs/application$marca.ini";
         }
 
         if ( !file_exists($configpath) ) {
             require_once 'Zend/Config/Exception.php';
-            throw new Exception("Arquivo de configuração application.ini não encontrado do diretório /configs");
+            throw new Exception("Arquivo de configuração application$marca.ini não encontrado do diretório /configs");
         }
 
         // Instância o arquivo aplication.ini

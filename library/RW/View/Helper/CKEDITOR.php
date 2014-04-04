@@ -36,9 +36,12 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
      */
     public function CKEDITOR($campos, $userOptions = null)
     {
+        // Verifica se a constante da marca esta definida
+        $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
+
         // Localiza o arquivo de configuração
-        $config = realpath(APPLICATION_PATH . "/configs/application.ini");
-        if (empty($config)) { $config = realpath(APPLICATION_PATH . "/../configs/application.ini"); }
+        $config = realpath(APPLICATION_PATH . "/configs/application$marca.ini");
+        if (empty($config)) { $config = realpath(APPLICATION_PATH . "/../configs/application$marca.ini"); }
         if (empty($config)) { throw new Exception ('Arquivo de configuração não encontrado em RW_View_Helper_CKEDITOR'); }
 
         // Carrega a configuração do Application
@@ -48,7 +51,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         if ( isset($config->cms->htmleditor->ckeditor) ) {
             $ckeditor = $this->_ckeditor = '/js/_' . $config->cms->htmleditor->ckeditor;
         } else {
-            throw new Exception('Configuração do CKEditor não encontrada no application.ini em RW_View_Helper_CKEDITOR');
+            throw new Exception('Configuração do CKEditor não encontrada no application'.$marca.'.ini em RW_View_Helper_CKEDITOR');
         }
 
         // Verifica se deve usar o CKFinder
