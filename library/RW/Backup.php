@@ -239,6 +239,9 @@ class RW_Backup
      */
     static public function getPath()
     {
-        return realpath(APPLICATION_PATH . '/../data/dumps');
+        // Verifica se a constante da marca esta definida
+        $marca = (defined('MARCA')) ? '/'.BFFC_Marca::getCssClass(MARCA) : '' ;
+
+        return realpath(APPLICATION_PATH . '/../data'.$marca.'/dumps');
     }
 }
