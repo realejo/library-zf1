@@ -5,7 +5,7 @@
  * @category   RW
  * @package    RW_CPF
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: CPF.php 33 2012-06-19 14:18:04Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_CPF

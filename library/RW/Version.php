@@ -5,7 +5,7 @@
  * @category   RW
  * @package    RW_Version
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: Version.php 54 2014-04-14 23:03:23Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Version

@@ -8,7 +8,7 @@
  * @package    RW_View
  * @subpackage Helper
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: CKEDITOR.php 53 2014-04-04 22:32:03Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper

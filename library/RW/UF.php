@@ -5,7 +5,7 @@
  * @category   RW
  * @package    RW_UF
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: UF.php 34 2012-06-19 14:21:55Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_UF

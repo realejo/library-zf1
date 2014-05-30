@@ -6,7 +6,7 @@
  * @package    RW_View
  * @subpackage Helper
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: GetDays.php 7 2012-01-11 17:15:57Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper

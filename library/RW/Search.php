@@ -3,7 +3,7 @@
  * @category   RW
  * @package    RW_Search
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: Search.php 7 2012-01-11 17:15:57Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses       Zend_Search_Lucene

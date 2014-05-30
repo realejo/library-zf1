@@ -5,7 +5,7 @@
  * @category   RW
  * @package    RW_View
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: Twitterify.php 31 2012-05-14 18:14:30Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_Twitterify extends Zend_View_Helper_Abstract

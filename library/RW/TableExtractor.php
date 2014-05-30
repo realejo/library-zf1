@@ -5,7 +5,7 @@
  * @category   RW
  * @package    RW_TAbleExtractor
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: TableExtractor.php 37 2012-09-04 22:04:11Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 

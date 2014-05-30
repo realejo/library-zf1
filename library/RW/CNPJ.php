@@ -5,7 +5,7 @@
  * @category   RW
  * @package    RW_CNPJ
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: CNPJ.php 46 2012-11-26 16:10:22Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_CNPJ

@@ -6,7 +6,7 @@
  * @package    RW_Base
  * @subpackage UnitTests
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: BaseTest.php 40 2012-09-27 20:32:46Z diego $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 

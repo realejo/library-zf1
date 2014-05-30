@@ -6,7 +6,7 @@
  * @package    RW_View
  * @subpackage Helper
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: PrintTime.php 31 2012-05-14 18:14:30Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses RW_Time

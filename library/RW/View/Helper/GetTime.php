@@ -6,7 +6,7 @@
  * @package    RW_View
  * @subpackage Helper
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: GetTime.php 33 2012-06-19 14:18:04Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
  * @uses viewHelper Zend_View_Helper

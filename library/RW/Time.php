@@ -7,7 +7,7 @@
  * @category   RW
  * @package    RW_Time
  * @author     Realejo
- * @version    $Id$
+ * @version    $Id: Time.php 31 2012-05-14 18:14:30Z rodrigo $
  * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Time
