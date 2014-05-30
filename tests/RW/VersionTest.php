@@ -13,34 +13,15 @@ require_once 'RW/Version.php';
 
 class VersionTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var RW_Version
-     */
-    private $RW_Version;
-    /**
-     * Prepares the environment before running a test.
-     */
-    protected function setUp ()
+    public function testGetLatest()
     {
-        parent::setUp();
-        // TODO Auto-generated VersionTest::setUp()
-        $this->RW_Version = new RW_Version(/* parameters */);
+        $this->assertNotEmpty(RW_Version::getLatest());
     }
-    /**
-     * Cleans up the environment after running a test.
-     */
-    protected function tearDown ()
+
+    public function testCompareVersion()
     {
-        // TODO Auto-generated VersionTest::tearDown()
-        $this->RW_Version = null;
-        parent::tearDown();
-    }
-    /**
-     * Constructs the test case.
-     */
-    public function __construct ()
-    {
-        // TODO Auto-generated constructor
+        $this->assertEquals(0, RW_Version::compareVersion(RW_Version::VERSION));
+        $this->assertContains(RW_Version::compareVersion(RW_Version::getLatest()), array(-1,0,1));
     }
 }
 
