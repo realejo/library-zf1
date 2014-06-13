@@ -17,6 +17,7 @@ class RW_Backup
     static public function create($tables = null)
     {
         // Verifica se a constante da marca esta definida
+        //@todo remover referencia a BBFC
         $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
 
         // Carrega as configurações do config

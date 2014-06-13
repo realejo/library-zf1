@@ -37,6 +37,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
     public function CKEDITOR($campos, $userOptions = null)
     {
         // Verifica se a constante da marca esta definida
+        //@todo remover referencia a BBFC
         $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
 
         // Localiza o arquivo de configuração
