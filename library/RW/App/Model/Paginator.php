@@ -1,15 +1,14 @@
 <?php
 /**
- * Gerenciador do paginator utilizado pelo App_Model
+ * Gerenciador do paginator utilizado pelo RW_App_Model
  *
  * Ele é usado apenas para guarda a configuração da paginação. O paginator é
  * criado direto na consulta no retorno do fetchAll
  *
- * @author     Realejo
- * @version    $Id: Paginator.php 256 2014-01-28 16:47:13Z rodrigo $
- * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-class App_Model_Paginator
+class RW_App_Model_Paginator
 {
     private $_paginator   = array(
             'PageRange'         => 10,

@@ -3,26 +3,25 @@
  * Model com acesso ao BD, Cache e Paginator padronizado.
  * Também permite que tenha acesso ao Loader
  *
- * @author     Realejo
- * @version    $Id: Model.php 313 2014-04-14 18:31:13Z rodrigo $
- * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-class App_Model
+class RW_App_Model
 {
     /**
-     * @var App_Loader
+     * @var RW_App_Loader
      */
     private $_loader;
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
-     * @var App_Model_Paginator
+     * @var RW_App_Model_Paginator
      */
     private $_paginator;
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
-     * @var App_Model_Cache
+     * @var RW_App_Model_Cache
      */
     private $_cache;
 
@@ -65,12 +64,12 @@ class App_Model
     protected $htmlSelectOptionData;
 
     /**
-     * @return App_Loader
+     * @return RW_App_Loader
      */
     public function getLoader()
     {
         if (!isset($this->_loader)) {
-            $this->setLoader(new App_Loader());
+            $this->setLoader(new RW_App_Loader());
         }
 
         return $this->_loader;
@@ -444,7 +443,7 @@ class App_Model
      */
     public function getCache()
     {
-        $cache = $this->getLoader()->getModel('App_Model_Cache');
+        $cache = $this->getLoader()->getModel('RW_App_Model_Cache');
         return $cache->getFrontend(get_class($this));
     }
 
@@ -478,12 +477,12 @@ class App_Model
     /**
      * Retorna o frontend para gravar o cache
      *
-     * @return App_Model_Paginator
+     * @return RW_App_Model_Paginator
      */
     public function getPaginator()
     {
         if (!isset($this->_paginator)) {
-            $this->_paginator = new App_Model_Paginator();
+            $this->_paginator = new RW_App_Model_Paginator();
         }
 
         $this->usePaginator = true;

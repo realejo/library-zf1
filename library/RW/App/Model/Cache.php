@@ -4,11 +4,10 @@
  *
  * Ele cria automaticamente a pasta de cache, dentro de data/cache, baseado no nome da classe
  *
- * @author     Realejo
- * @version    $Id: Cache.php 256 2014-01-28 16:47:13Z rodrigo $
- * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-class App_Model_Cache
+class RW_App_Model_Cache
 {
      /**
       * Configura o cache
@@ -43,7 +42,7 @@ class App_Model_Cache
      {
          // Verifica se a pasta de cache existe
          if (defined('APPLICATION_DATA') === false) {
-             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em App_Model_Cache::getCacheRoot()');
+             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Cache::getCacheRoot()');
          }
 
          // retorna a pasta raiz do cache

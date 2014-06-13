@@ -2,11 +2,10 @@
 /**
  * Gerenciador de tabelas e model carregados para evitar que sejam carregados na memória mais de uma vez
  *
- * @author     Realejo
- * @version    $Id: Loader.php 313 2014-04-14 18:31:13Z rodrigo $
- * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-class App_Loader
+class RW_App_Loader
 {
     /**
      * @var array
@@ -45,7 +44,7 @@ class App_Loader
      * @param string $class
      * @param mixed $object
      *
-     * @return App_Loader
+     * @return RW_App_Loader
      */
     public function setModel($class, $object)
     {
@@ -81,7 +80,7 @@ class App_Loader
     {
         // Verifica se existe uma tabela definida
         if (empty($table)) {
-            throw new Exception("Tabela não definida em App_Loader::getTable()");
+            throw new Exception("Tabela não definida em RW_App_Loader::getTable()");
         }
 
         // Verifica se a tabela já foi previamente carregada
