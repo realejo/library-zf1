@@ -6,7 +6,7 @@
  * @link      http://github.com/realejo/library-zf1
  * @copyright Copyright (c) 2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-class RW_App_Model
+class RW_App_Model_Base
 {
     /**
      * @var RW_App_Loader

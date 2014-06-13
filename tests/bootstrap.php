@@ -5,10 +5,9 @@
  * @link      http://github.com/realejo/library-zf1
  * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-
 // Define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+    || define('APPLICATION_PATH', realpath(__DIR__. '/assets/application'));
 
 // Define application environment
 define('APPLICATION_ENV', 'testing');
@@ -19,6 +18,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path()
 )));
 
+require_once 'BaseTestCase.php';
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance();
 

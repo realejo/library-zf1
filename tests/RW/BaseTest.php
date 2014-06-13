@@ -5,8 +5,6 @@
  * @link      http://github.com/realejo/library-zf1
  * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-require_once 'RW/Base.php';
-
 class BaseTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -179,4 +177,3 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($retorno3, RW_Base::getCSV($array,array('escolaridade')));
     }
 }
-
