@@ -2,11 +2,8 @@
 /**
  * Classe com funções comuns para tratamenteo de imagens
  *
- * @category   RW
- * @package    RW_Image
- * @author     Realejo
- * @version    $Id: Image.php 44 2012-11-20 13:10:17Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Image
 {

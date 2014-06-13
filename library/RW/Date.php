@@ -1,12 +1,8 @@
 <?php
 /**
- * @category   RW
- * @package    RW_Date
- * @author     Realejo
- * @version    $Id: Date.php 51 2013-07-05 21:09:29Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
  *
- * @uses       Zend_Date
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Date extends Zend_Date
 {

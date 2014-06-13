@@ -2,14 +2,9 @@
 /**
  * RW_Base test case.
  *
- * @category   RW
- * @package    RW_Base
- * @subpackage UnitTests
- * @author     Realejo
- * @version    $Id: BaseTest.php 40 2012-09-27 20:32:46Z diego $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-
 require_once 'RW/Base.php';
 
 class BaseTest extends PHPUnit_Framework_TestCase
@@ -155,7 +150,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla-bla-bla', '-'));
         $this->assertEquals('123-bla-bla-bla', $this->RW_Base->getSEOID('123-bla-bla-bla', ','));
         $this->assertEquals('123-bla', $this->RW_Base->getSEOID('123-bla,bla-bla',','));
-        
+
         $this->assertEquals('agora', $this->RW_Base->getSEOID('ágora-sim', '-'));
     }
 

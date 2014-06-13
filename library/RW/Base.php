@@ -2,11 +2,8 @@
 /**
  * Funcionalidades Básicas
  *
- * @category   RW
- * @package    RW_Base
- * @author     Realejo
- * @version    $Id: Base.php 40 2012-09-27 20:32:46Z diego $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Base
 {
@@ -167,7 +164,7 @@ class RW_Base
     {
     	// Remove acentos
     	$seo = self::RemoveAcentos($seo);
-    	
+
         $seo = self::getSafeSEO($seo);
 
         // Define o delimitador

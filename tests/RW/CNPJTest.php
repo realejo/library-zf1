@@ -2,14 +2,9 @@
 /**
  * RW_CNPJ test case.
  *
- * @category   RW
- * @package    RW_CNPJ
- * @subpackage UnitTests
- * @author     Realejo
- * @version    $Id: CNPJTest.php 7 2012-01-11 17:15:57Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-
 require_once 'RW/CNPJ.php';
 
 class CNPJTest extends PHPUnit_Framework_TestCase

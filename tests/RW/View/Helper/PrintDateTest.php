@@ -2,14 +2,9 @@
 /**
  * RW_View_Helper_PrintDate test case.
  *
- * @category   RW
- * @package    RW_View_Helper
- * @subpackage UnitTests
- * @author     Realejo
- * @version    $Id: PrintDateTest.php 51 2013-07-05 21:09:29Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-
 require_once 'RW/View/Helper/PrintDate.php';
 
 class PrintDateTest extends PHPUnit_Framework_TestCase

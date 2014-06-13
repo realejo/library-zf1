@@ -2,11 +2,8 @@
 /**
  * Valida e formata o CPF
  *
- * @category   RW
- * @package    RW_CPF
- * @author     Realejo
- * @version    $Id: CPF.php 33 2012-06-19 14:18:04Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_CPF
 {

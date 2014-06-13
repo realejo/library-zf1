@@ -9,7 +9,8 @@
     "homepage": "http://realejo.com.br",
     "license": "BSD-3-Clause",
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "zendframework/zf1": "1.*"
     },
     "autoload": {
         "psr-0": {

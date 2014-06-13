@@ -2,11 +2,8 @@
 /**
  * Valida e formata o CNPJ
  *
- * @category   RW
- * @package    RW_CNPJ
- * @author     Realejo
- * @version    $Id: CNPJ.php 46 2012-11-26 16:10:22Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_CNPJ
 {

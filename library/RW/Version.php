@@ -2,11 +2,8 @@
 /**
  * Classe para armazenar e recuperar a versão da biblioteca da Realejo
  *
- * @category   RW
- * @package    RW_Version
- * @author     Realejo
- * @version    $Id: Version.php 54 2014-04-14 23:03:23Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Version
 {
@@ -50,7 +47,7 @@ class RW_Version
         if (null === self::$_latestVersion) {
             self::$_latestVersion = 'not available';
 
-            $handle = fopen('https://raw.githubusercontent.com/realejo/library-zf1/master/version', 'r');
+            $handle = fopen('http://realejo.com.br/api/library-zf1-version', 'r');
             if (false !== $handle) {
                 self::$_latestVersion = stream_get_contents($handle);
                 fclose($handle);

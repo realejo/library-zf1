@@ -2,11 +2,8 @@
 /**
  * Controle de backup
  *
- * @category   RW
- * @package    RW_Base
- * @author     Realejo
- * @version    $Id: Backup.php 405 2012-09-10 19:42:32Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Backup
 {

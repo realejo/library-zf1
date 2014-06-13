@@ -2,13 +2,10 @@
 /**
  * Funções matémáticas que não existem módulo stats do PHP
  *
- * @category   RW
- * @package    RW_Math
- * @author     Realejo
- * @version    $Id: Math.php 41 2012-10-01 19:24:51Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
  * @see http://rubsphp.blogspot.com/2011/06/funcoes-estatisticas-em-php.html
+ *
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_Math
 {
