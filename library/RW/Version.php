@@ -47,7 +47,7 @@ class RW_Version
         if (null === self::$_latestVersion) {
             self::$_latestVersion = 'not available';
 
-            $handle = fopen('http://realejo.com.br/api/library-zf1-version', 'r');
+            $handle = fopen('https://raw.githubusercontent.com/realejo/library-zf1/master/version', 'r');
             if (false !== $handle) {
                 self::$_latestVersion = stream_get_contents($handle);
                 fclose($handle);
