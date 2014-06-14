@@ -13,7 +13,7 @@ class RW_CNPJ
      * @param string $cnpj CNPJ com ou sem formatação
      * @return boolean
      */
-    static function isValid($cnpj)
+    static function valid($cnpj)
     {
         $cnpj = self::unformat($cnpj);
 
