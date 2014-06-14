@@ -13,7 +13,7 @@ class RW_CPF
      * @param string   $cpf CPF com ou sem formatação
      * @return boolean
      */
-    static function valid($cpf)
+    static function isValid($cpf)
     {
         $cpf = self::unformat($cpf);
 
