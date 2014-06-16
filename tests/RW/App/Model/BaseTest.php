@@ -130,7 +130,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
     public function getBase($reset = false)
     {
         if ($this->Base === null || $reset === true) {
-            $this->Base = new RW_App_Model($this->tableName, $this->tableKeyName, $this->getAdapter());
+            $this->Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, $this->getAdapter());
         }
         return $this->Base;
     }

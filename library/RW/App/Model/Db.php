@@ -7,7 +7,7 @@
  * @license   http://unlicense.org
  */
 
-class Db extends RW_App_Model
+class RW_App_Model_Db extends RW_App_Model_Base
 {
 
     private $_lastInsertSet;
@@ -51,14 +51,7 @@ class Db extends RW_App_Model
         $this->_lastInsertSet = $set;
 
         // Grava o set no BD
-        $this->getTableGateway()->insert($set);
-
-        // Recupera a chave gerada do registro
-        if (isset($set[$this->key])) {
-            $key = $set[$this->key];
-        } else {
-            $key = $this->getTableGateway()->getAdapter()->getDriver()->getLastGeneratedValue();
-        }
+        $key = $this->getTable()->insert($set);
 
         // Grava a chave criada para referencia
         $this->_lastInsertKey = $key;
@@ -128,11 +121,8 @@ class Db extends RW_App_Model
             return false;
         }
 
-        // Define a chave a ser usada
-        $key = array( $this->key => $key );
-
         // Salva os dados alterados
-        $return = $this->getTableGateway()->update($diff, $key);
+        $return = $this->getTable()->update($diff, $key);
 
         // Limpa o cache, se necessário
         if ($this->getUseCache()) {
@@ -160,13 +150,13 @@ class Db extends RW_App_Model
         $this->_lastDeleteKey = $key;
 
         // Define a chave a ser usada
-        $key = array( $this->key => $key );
+        $key = array( $this->id => $key );
 
         // Verifica se deve marcar como removido ou remover o registro
         if ($this->useDeleted === true) {
-            $return = $this->getTableGateway()->update(array('deleted' => 1), $key);
+            $return = $this->getTable()->update(array('deleted' => 1), $key);
         } else {
-            $return = $this->getTableGateway()->delete($key);
+            $return = $this->getTable()->delete($key);
         }
 
         // Limpa o cache se necessario
@@ -180,19 +170,19 @@ class Db extends RW_App_Model
 
     public function save($dados)
     {
-        if (! isset($dados[$this->key])) {
+        if (! isset($dados[$this->id])) {
 
             return $this->insert($dados);
         } else {
             // Caso não seja, envia um Exception
-            if (! is_numeric($dados[$this->key])) {
-                throw new \Exception("Inválido o Código '{$dados[$this->key]}' em '{$this->table}'::save()");
+            if (! is_numeric($dados[$this->id])) {
+                throw new \Exception("Inválido o Código '{$dados[$this->id]}' em '{$this->table}'::save()");
             }
 
-            if ($this->fetchRow($dados[$this->key])) {
-                return $this->update($dados, $dados[$this->key]);
+            if ($this->fetchRow($dados[$this->id])) {
+                return $this->update($dados, $dados[$this->id]);
             } else {
-                throw new \Exception("{$this->key} key does not exist");
+                throw new \Exception("{$this->id} key does not exist");
             }
         }
     }

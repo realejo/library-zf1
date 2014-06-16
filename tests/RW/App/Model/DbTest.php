@@ -2,7 +2,7 @@
 /**
  * TableAdapterTest test case.
  *
- * @link      http://github.com/realejo/libraray-zf2
+ * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
@@ -10,7 +10,7 @@
 /**
  * Db test case.
  */
-class DbTest extends BaseTestCase
+class DbTest extends PHPUnit_Framework_TestCase
 {
     /**
      *
@@ -36,103 +36,90 @@ class DbTest extends BaseTestCase
      */
     private $Db;
 
-    /**
-     *
-     * @return \Zend\Db\Adapter\Adapter
-     */
     public function getAdapter()
     {
         if ($this->adapter === null) {
+
+            $config = array(
+                    'host' => '192.168.100.25',
+                    'username' => 'root',
+                    'password' => 'naodigo',
+                    'dbname' => 'test',
+                    'charset' => 'UTF8');
+
+            $db = Zend_Db::factory('Mysqli', $config);
+            Zend_Db_Table_Abstract::setDefaultAdapter($db);
             $this->adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
         }
         return $this->adapter;
     }
 
-    /**
-     *
-     * @return \Realejo\Db\TableAdapterTest
-     */
     public function createTable()
     {
         $this->getAdapter()
-             ->query("
-                 CREATE TABLE IF NOT EXISTS `{$this->tableName}`  (
-                  `{$this->tableKeyName}` int(10) unsigned NOT NULL AUTO_INCREMENT,
-                  `artist` varchar(100) NOT NULL,
-                  `title` varchar(100) NOT NULL,
-                  `deleted` tinyint(1) unsigned NOT NULL default '0',
-                  PRIMARY KEY  (`{$this->tableKeyName}`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-            Adapter::QUERY_MODE_EXECUTE);
+        ->query("
+            CREATE TABLE IF NOT EXISTS `{$this->tableName}`  (
+            `{$this->tableKeyName}` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `artist` varchar(100) NOT NULL,
+            `title` varchar(100) NOT NULL,
+            `deleted` tinyint(1) unsigned NOT NULL default '0',
+            PRIMARY KEY  (`{$this->tableKeyName}`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 
-        return $this;
+            return $this;
     }
 
-    /**
-     *
-     * @return \Realejo\Db\TableAdapterTest
-     */
     public function dropTable()
     {
-        $this->getAdapter()->query("DROP TABLE IF EXISTS {$this->tableName}", Adapter::QUERY_MODE_EXECUTE);
+        $this->getAdapter()->query("DROP TABLE IF EXISTS {$this->tableName}");
         return $this;
     }
 
-    /**
-     *
-     * @return \Realejo\Db\TableAdapterTest
-     */
     public function truncateTable()
     {
         $this->dropTable()->createTable();
         return $this;
     }
 
-
-    /**
-     * Prepares the environment before running a test.
-     */
     protected function setUp()
     {
         parent::setUp();
         $this->dropTable()->createTable();
     }
 
-    /**
-     * Cleans up the environment after running a test.
-     */
     protected function tearDown()
     {
         parent::tearDown();
         $this->dropTable();
     }
-    /**
-     * @return Db
-     */
+
     public function getDb($reset = false)
     {
         if ($this->Db === null || $reset === true) {
-            $this->Db = $this->Db($this->tableName, $this->tableKeyName, $this->getAdapter());
+            $this->Db = new RW_App_Model_Db($this->tableName, $this->tableKeyName);
         }
         return $this->Db;
     }
 
+    public function testTableName()
+    {
+        $this->assertEquals('album', $this->tableName);
+    }
+
     /**
-     * Construct sem nome da tabela
      * @expectedException Exception
      */
     public function testConstructSemTableName()
     {
-        new Db(null, $this->tableKeyName);
+        new RW_App_Model_Db(null, $this->tableKeyName);
     }
 
     /**
-     * Construct sem nome da chave
      * @expectedException Exception
      */
     public function testConstructSemKeyName()
     {
-        new Db($this->tableName, null);
+        new RW_App_Model_Db($this->tableName, null);
     }
 
     /**
@@ -156,9 +143,9 @@ class DbTest extends BaseTestCase
         $this->assertFalse($this->getDb()->insert(null), 'Verifica inclusão inválida 2');
 
         $row = array(
-                'artist' => 'Rush',
-                'title' => 'Rush',
-                'deleted' => '0'
+            'artist' => 'Rush',
+            'title' => 'Rush',
+            'deleted' => '0'
         );
 
         $id = $this->getDb()->insert($row);
@@ -174,10 +161,10 @@ class DbTest extends BaseTestCase
         $this->assertEquals($row, $this->getDb()->fetchRow(1), 'Verifica se o registro adicionado corresponde ao original pelo fetchRow()');
 
         $row = array(
-                'id' => 2,
-                'artist' => 'Rush',
-                'title' => 'Test For Echos',
-                'deleted' => '0'
+            'id' => 2,
+            'artist' => 'Rush',
+            'title' => 'Test For Echos',
+            'deleted' => '0'
         );
 
         $id = $this->getDb()->insert($row);
@@ -188,9 +175,9 @@ class DbTest extends BaseTestCase
         $this->assertEquals($row, $this->getDb()->getLastInsertSet());
 
         $row = array(
-                'artist' => 'Rush',
-                'title' => 'Moving Pictures',
-                'deleted' => '0'
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
+            'deleted' => '0'
         );
         $id = $this->getDb()->insert($row);
         $this->assertEquals(3, $id);
@@ -201,107 +188,9 @@ class DbTest extends BaseTestCase
         $this->assertCount(3, $this->getDb()->fetchAll());
         $this->assertEquals($row, $this->getDb()->fetchRow(3), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo fetchRow()');
 
-        // Teste com \Zend\Db\Sql\Expression
-        $id = $this->getDb()->insert(array('title'=>new \Zend\Db\Sql\Expression('now()')));
+        // Teste com Zend_Db_Expr
+        $id = $this->getDb()->insert(array('title'=>new Zend_Db_Expr('now()')));
         $this->assertEquals(4, $id);
-    }
-
-    /**
-     * Tests Db->update()
-     */
-    public function testUpdate()
-    {
-        // Certifica que a tabela está vazia
-        $this->assertNull($this->getDb()->fetchAll());
-
-        $row1 = array(
-            'id' => 1,
-            'artist'  => 'Não me altere',
-            'title'   => 'Rush',
-            'deleted' => 0
-        );
-
-        $row2 = array(
-            'id' => 2,
-            'artist'  => 'Rush',
-            'title'   => 'Rush',
-            'deleted' => 0
-        );
-
-        $this->getDb()->insert($row1);
-        $this->getDb()->insert($row2);
-
-        $this->assertNotNull($this->getDb()->fetchAll());
-        $this->assertCount(2, $this->getDb()->fetchAll());
-        $this->assertEquals($row1, $this->getDb()->fetchRow(1));
-        $this->assertEquals($row2, $this->getDb()->fetchRow(2));
-
-        $row = array(
-            'artist'  => 'Rush',
-            'title'   => 'Moving Pictures',
-        );
-
-        $this->getDb()->update($row, 2);
-        $row['id'] = '2';
-        $row['deleted'] = '0';
-
-        $this->assertNotNull($this->getDb()->fetchAll());
-        $this->assertCount(2, $this->getDb()->fetchAll());
-        $this->assertEquals($row, $this->getDb()->fetchRow(2), 'Alterou o 2?' );
-
-        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'Alterou o 1?');
-        $this->assertNotEquals($row2, $this->getDb()->fetchRow(2), 'O 2 não é mais o mesmo?');
-
-        unset($row['id']);
-        unset($row['deleted']);
-        $this->assertEquals($row, $this->getDb()->getLastUpdateSet(), 'Os dados diferentes foram os alterados?');
-        $this->assertEquals(array('title'=>array($row2['title'], $row['title'])), $this->getDb()->getLastUpdateDiff(), 'As alterações foram detectadas corretamente?');
-
-        $this->assertFalse($this->getDb()->update(array(), 2));
-        $this->assertFalse($this->getDb()->update(null, 2));
-
-    }
-
-    /**
-     * Tests TableAdapter->delete()
-     */
-    public function testDelete()
-    {
-        $row = array(
-            'id' => 1,
-            'artist' => 'Rush',
-            'title' => 'Rush',
-            'deleted' => 0
-        );
-        $this->getDb()->insert($row);
-
-        // Verifica se o registro existe
-        $this->assertEquals($row, $this->getDb()->fetchRow(1));
-
-        // Marca para usar o campo deleted
-        $this->getDb()->setUseDeleted(true);
-
-        // Remove o registro
-        $this->getDb()->delete(1);
-        $row['deleted'] = 1;
-
-        // Verifica se foi removido
-        $this->assertNull($this->getDb()->fetchRow(1));
-
-        // Marca para mostrar os removidos
-        $this->getDb()->setShowDeleted(true);
-
-        // Verifica se o registro existe
-        $this->assertEquals($row, $this->getDb()->fetchRow(1));
-
-        // Marca para remover o registro da tabela
-        $this->getDb()->setUseDeleted(false);
-
-        // Remove o registro
-        $this->getDb()->delete(1);
-
-        // Verifica se ele foi removido
-        $this->assertNull($this->getDb()->fetchRow(1));
     }
 }
 

@@ -12,14 +12,10 @@ defined('APPLICATION_PATH')
 // Define application environment
 define('APPLICATION_ENV', 'testing');
 
-// Ensure library/ is on include_path
-set_include_path(implode(PATH_SEPARATOR, array(
-    realpath(realpath(dirname(__FILE__) . '/../library')),
-    get_include_path()
-)));
+require_once __DIR__ . '/../vendor/autoload.php';
 
 require_once 'BaseTestCase.php';
-require_once 'Zend/Loader/Autoloader.php';
+
 Zend_Loader_Autoloader::getInstance();
 
 $locale = new Zend_Locale('pt_BR');
