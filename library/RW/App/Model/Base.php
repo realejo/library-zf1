@@ -138,6 +138,9 @@ class RW_App_Model_Base
                 $where = array($where);
             }
 
+            // Verifica as clausulas especiais se houver
+            $where = $this->getWhere($where);
+
             // processa as clausulas
             foreach($where as $id=>$w) {
                 // Zend_Db_Expr
@@ -172,6 +175,17 @@ class RW_App_Model_Base
     public function getTableSelect()
     {
         return $this->getTable()->select();
+    }
+
+    /**
+     * Processa as cluasulas especiais do where
+     *
+     * @param array $where
+     * @return array
+     */
+    public function getWhere($where)
+    {
+        return $where;
     }
 
     /**
