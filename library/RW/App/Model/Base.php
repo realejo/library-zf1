@@ -112,7 +112,7 @@ class RW_App_Model_Base
     public function getSelect($where = null, $order = null, $count = null, $offset = null)
     {
         // Retorna o select para a tabela
-        $select = $this->getTable()->select();
+        $select = $this->getTableSelect();
 
         // Verifica se existe ordem padrão
         if (empty($order) && isset($this->order)) {
@@ -162,6 +162,16 @@ class RW_App_Model_Base
         }
 
         return $select;
+    }
+
+    /**
+     * Retorna o select a ser usado no fetchAll e fetchRow
+     *
+     * @return Zend_Db_Table_Select
+     */
+    public function getTableSelect()
+    {
+        return $this->getTable()->select();
     }
 
     /**
