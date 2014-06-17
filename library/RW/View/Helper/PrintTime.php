@@ -2,14 +2,8 @@
 /**
  * Imprime as horas a partir dos segundos
  *
- * @category   RW
- * @package    RW_View
- * @subpackage Helper
- * @author     Realejo
- * @version    $Id: PrintTime.php 31 2012-05-14 18:14:30Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
- * @uses RW_Time
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_PrintTime extends Zend_View_Helper_Abstract
 {

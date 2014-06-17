@@ -2,14 +2,8 @@
 /**
  * Imprime o tamanho do arquivo
  *
- * @category   RW
- * @package    RW_View
- * @subpackage Helper
- * @author     Realejo
- * @version    $Id: FileSize.php 7 2012-01-11 17:15:57Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
- * @uses viewHelper Zend_View_Helper
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_FileSize extends Zend_View_Helper_Abstract
 {

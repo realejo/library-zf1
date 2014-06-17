@@ -4,17 +4,14 @@
  *
  * Cria o JavaScript necessário para utilizar o CKEditor*
  *
- * @category   RW
- * @package    RW_View
- * @subpackage Helper
- * @author     Realejo
- * @version    $Id: CKEDITOR.php 53 2014-04-04 22:32:03Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
- * @uses viewHelper Zend_View_Helper
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 {
+
+    // Possíveis paths onde o CKEditor po de encontrado
+    protected $availablePaths = array('/js/_', '/vendor/');
 
     /**
      * Cria o JavaScript necessário para utilizar o CKEditor
@@ -49,17 +46,30 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         $config = new Zend_Config_Ini($config, APPLICATION_ENV);
 
         // Verifica a versão do CKEditor
+        $ckeditor = false;
         if ( isset($config->cms->htmleditor->ckeditor) ) {
-            $ckeditor = $this->_ckeditor = '/js/_' . $config->cms->htmleditor->ckeditor;
-        } else {
+            foreach ($this->availablePaths as $path) {
+                if (is_dir(APPLICATION_HTTP . $path. $config->cms->htmleditor->ckeditor)) {
+                    $ckeditor = $path. $config->cms->htmleditor->ckeditor;
+                    break;
+                }
+            }
+        }
+
+        // Verifica se localizou o CKEditor
+        if ($ckeditor === false) {
             throw new Exception('Configuração do CKEditor não encontrada no application'.$marca.'.ini em RW_View_Helper_CKEDITOR');
         }
 
         // Verifica se deve usar o CKFinder
+        $ckfinder = false;
         if (isset($config->cms->htmleditor->ckfinder) && !empty($config->cms->htmleditor->ckfinder)) {
-            $ckfinder = '/js/_' . $config->cms->htmleditor->ckfinder;
-        } else {
-            $ckfinder = false;
+            foreach ($this->availablePaths as $path) {
+                if (is_dir(APPLICATION_HTTP . $path. $config->cms->htmleditor->ckfinder)) {
+                    $ckeditor = $path. $config->cms->htmleditor->ckfinder;
+                    break;
+                }
+            }
         }
 
         // Verifica os inputs que deve colocar o CKEditor

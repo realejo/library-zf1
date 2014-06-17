@@ -2,14 +2,8 @@
 /**
  * Imprime a data no formato correto
  *
- * @category   RW
- * @package    RW_View
- * @subpackage Helper
- * @author     Realejo
- * @version    $Id: PrintDate.php 36 2012-07-09 14:08:21Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
- * @uses viewHelper Zend_View_Helper
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_PrintDate extends Zend_View_Helper_Abstract
 {

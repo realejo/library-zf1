@@ -2,18 +2,11 @@
 /**
  * Calcula o tempo da data até a hora atual
  *
- * @category   RW
- * @package    RW_View
- * @subpackage Helper
- * @author     Realejo
- * @version    $Id: GetTime.php 33 2012-06-19 14:18:04Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
- * @uses viewHelper Zend_View_Helper
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
 {
-
     /**
      * Imprime a data no formato correto
      *

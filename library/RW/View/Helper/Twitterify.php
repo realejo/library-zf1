@@ -2,18 +2,15 @@
 /**
  * Twitterify
  *
- * @category   RW
- * @package    RW_View
- * @author     Realejo
- * @version    $Id: Twitterify.php 31 2012-05-14 18:14:30Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 class RW_View_Helper_Twitterify extends Zend_View_Helper_Abstract
 {
     /**
      * Formata um tweet
      *
-     * @param string $ret data a ser comparada
+     * @param string $ret texto a ser twitterficado
      * @returns string
      */
     public function twitterify($ret)
