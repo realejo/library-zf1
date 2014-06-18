@@ -36,6 +36,37 @@ class DbTest extends PHPUnit_Framework_TestCase
      */
     private $Db;
 
+    /**
+     * Valores padrões de registros.
+     * @todo usa-los ao inves de $rows em #insert.
+     */
+    protected $defaultValues = array(
+        array(
+            'id' => 1,
+            'artist' => 'Rush',
+            'title' => 'Rush',
+            'deleted' => 0
+        ),
+        array(
+            'id' => 2,
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
+            'deleted' => 0
+        ),
+        array(
+            'id' => 3,
+            'artist' => 'Dream Theater',
+            'title' => 'Images And Words',
+            'deleted' => 0
+        ),
+        array(
+            'id' => 4,
+            'artist' => 'Claudia Leitte',
+            'title' => 'Exttravasa',
+            'deleted' => 1
+        )
+    );
+
     public function getAdapter()
     {
         if ($this->adapter === null) {
@@ -191,6 +222,104 @@ class DbTest extends PHPUnit_Framework_TestCase
         // Teste com Zend_Db_Expr
         $id = $this->getDb()->insert(array('title'=>new Zend_Db_Expr('now()')));
         $this->assertEquals(4, $id);
+    }
+
+    /**
+     * Tests Db->update()
+     */
+    public function testUpdate()
+    {
+        // Certifica que a tabela está vazia
+        $this->assertNull($this->getDb()->fetchAll());
+
+        $row1 = array(
+            'id' => 1,
+            'artist'  => 'Não me altere',
+            'title'   => 'Rush',
+            'deleted' => 0
+        );
+
+        $row2 = array(
+            'id' => 2,
+            'artist'  => 'Rush',
+            'title'   => 'Rush',
+            'deleted' => 0
+        );
+
+        $this->getDb()->insert($row1);
+        $this->getDb()->insert($row2);
+
+        $this->assertNotNull($this->getDb()->fetchAll());
+        $this->assertCount(2, $this->getDb()->fetchAll());
+        $this->assertEquals($row1, $this->getDb()->fetchRow(1));
+        $this->assertEquals($row2, $this->getDb()->fetchRow(2));
+
+        $row = array(
+            'artist'  => 'Rush',
+            'title'   => 'Moving Pictures',
+        );
+
+        $this->getDb()->update($row, 2);
+        $row['id'] = '2';
+        $row['deleted'] = '0';
+
+        $this->assertNotNull($this->getDb()->fetchAll());
+        $this->assertCount(2, $this->getDb()->fetchAll());
+        $this->assertEquals($row, $this->getDb()->fetchRow(2), 'Alterou o 2?' );
+
+        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'Alterou o 1?');
+        $this->assertNotEquals($row2, $this->getDb()->fetchRow(2), 'O 2 não é mais o mesmo?');
+
+        unset($row['id']);
+        unset($row['deleted']);
+        $this->assertEquals($row, $this->getDb()->getLastUpdateSet(), 'Os dados diferentes foram os alterados?');
+        $this->assertEquals(array('title'=>array($row2['title'], $row['title'])), $this->getDb()->getLastUpdateDiff(), 'As alterações foram detectadas corretamente?');
+
+        $this->assertFalse($this->getDb()->update(array(), 2));
+        $this->assertFalse($this->getDb()->update(null, 2));
+
+    }
+
+    /**
+     * Tests TableAdapter->delete()
+     */
+    public function testDelete()
+    {
+        $row = array(
+            'id' => 1,
+            'artist' => 'Rush',
+            'title' => 'Rush',
+            'deleted' => 0
+        );
+        $this->getDb()->insert($row);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row, $this->getDb()->fetchRow(1));
+
+        // Marca para usar o campo deleted
+        $this->getDb()->setUseDeleted(true);
+
+        // Remove o registro
+        $this->getDb()->delete(1);
+        $row['deleted'] = 1;
+
+        // Verifica se foi removido
+        $this->assertNull($this->getDb()->fetchRow(1));
+
+        // Marca para mostrar os removidos
+        $this->getDb()->setShowDeleted(true);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row, $this->getDb()->fetchRow(1));
+
+        // Marca para remover o registro da tabela
+        $this->getDb()->setUseDeleted(false);
+
+        // Remove o registro
+        $this->getDb()->delete(1);
+
+        // Verifica se ele foi removido
+        $this->assertNull($this->getDb()->fetchRow(1));
     }
 }
 
