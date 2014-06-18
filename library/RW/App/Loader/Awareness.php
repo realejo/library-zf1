@@ -37,5 +37,7 @@ abstract class RW_App_Loader_Awareness
     public function setLoader($loader)
     {
         $this->_loader = $loader;
+
+        return $this->_loader;
     }
 }

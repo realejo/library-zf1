@@ -30,15 +30,24 @@ class RW_App_Loader_AwarenessTest extends PHPUnit_Framework_TestCase
      */
     public function testGetLoader ()
     {
-        $loader = RW_App_Loader_Awareness->getLoader();
+        $stub = $this->getMockForAbstractClass('RW_App_Loader_Awareness');
+        $stub->expects($this->any())
+             ->method('getLoader')
+             ->will($this->returnValue(TRUE));
+
+        $this->assertInstanceOf('RW_App_Loader', $stub->getLoader());
     }
     /**
      * Tests RW_App_Loader_Awareness->setLoader()
      */
     public function testSetLoader ()
     {
-        // TODO Auto-generated RW_App_Loader_AwarenessTest->testSetLoader()
-        $this->markTestIncomplete("setLoader test not implemented");
+        $stub = $this->getMockForAbstractClass('RW_App_Loader_Awareness');
+        $stub->expects($this->any())
+             ->method('setLoader')
+             ->will($this->returnValue(TRUE));
+
+        $this->assertEquals('RW_App_Loader', $stub->setLoader('RW_App_Loader'));
     }
 }
 
