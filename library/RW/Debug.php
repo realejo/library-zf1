@@ -14,6 +14,8 @@ class RW_Debug extends Zend_Debug
             $writer = new Zend_Log_Writer_Firebug();
             $logger = new Zend_Log($writer);
             $logger->log($message, $priority);
+
+            return $logger;
         }
     }
 
@@ -26,6 +28,8 @@ class RW_Debug extends Zend_Debug
         $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/' . $file);
         $logger = new Zend_Log($writer);
         $logger->log($message, Zend_Log::DEBUG);
+
+        return $logger;
     }
 
 
@@ -50,6 +54,10 @@ class RW_Debug extends Zend_Debug
                 "[rw_debug] $subject",
                 $message, 'html'
             );
+
+            return $oMailer;
         }
+
+        return $subject;
     }
 }

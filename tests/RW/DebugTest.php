@@ -43,28 +43,31 @@ class DebugTest extends PHPUnit_Framework_TestCase
      */
     public function testLog ()
     {
-        // TODO Auto-generated DebugTest::testLog()
-        $this->markTestIncomplete("log test not implemented");
-        $logger = new Zend_Log();
-        RW_Debug::log('MENSAGEM DE ERROR', 1);
+        if (APPLICATION_ENV != 'production') {
+            $this->assertInstanceOf('Zend_Log', $this->RW_Debug->log('Teste'));
+        }
     }
     /**
      * Tests RW_Debug::logToFile()
+     * @expectedException Exception
+     * @todo ao invés de esperar exception, verificar se o arquivo de log existe
      */
     public function testLogToFile ()
     {
-        // TODO Auto-generated DebugTest::testLogToFile()
-        $this->markTestIncomplete("logToFile test not implemented");
-        RW_Debug::logToFile(/* parameters */);
+        $this->assertInstanceOf('Zend_Log', $this->RW_Debug->logToFile('Teste'));
     }
     /**
      * Tests RW_Debug::sendError()
      */
     public function testSendError ()
     {
-        // TODO Auto-generated DebugTest::testSendError()
-        $this->markTestIncomplete("sendError test not implemented");
-        RW_Debug::sendError(/* parameters */);
+        $error = RW_Debug::sendError('Teste', 404);
+
+        $this->assertEquals('Página não encontrada', $error);
+
+        $error = RW_Debug::sendError('Teste', 500);
+
+        $this->assertEquals('Erro encontrado no site', $error);
     }
 }
 
