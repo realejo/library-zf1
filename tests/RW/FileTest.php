@@ -5,7 +5,6 @@
  * @link      http://github.com/realejo/library-zf1
  * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
-require_once 'RW/File.php';
 
 class FileTest extends PHPUnit_Framework_TestCase
 {
