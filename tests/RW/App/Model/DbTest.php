@@ -17,6 +17,7 @@ class DbTest extends PHPUnit_Framework_TestCase
      * @var string
      */
     protected $tableName = "album";
+    protected $table = "album";
 
     /**
      *
@@ -124,6 +125,11 @@ class DbTest extends PHPUnit_Framework_TestCase
         $this->dropTable();
     }
 
+    /**
+     *
+     * @param string $reset
+     * @return RW_App_Model_Db
+     */
     public function getDb($reset = false)
     {
         if ($this->Db === null || $reset === true) {
@@ -235,7 +241,7 @@ class DbTest extends PHPUnit_Framework_TestCase
         $row1 = array(
             'id' => 1,
             'artist'  => 'Não me altere',
-            'title'   => 'Rush',
+            'title'   => 'Moving Pictures',
             'deleted' => 0
         );
 
@@ -304,7 +310,8 @@ class DbTest extends PHPUnit_Framework_TestCase
         $row['deleted'] = 1;
 
         // Verifica se foi removido
-        $this->assertNull($this->getDb()->fetchRow(1));
+        $row = $this->getDb()->fetchRow(1);
+        $this->assertEquals(1, $row['deleted']);
 
         // Marca para mostrar os removidos
         $this->getDb()->setShowDeleted(true);

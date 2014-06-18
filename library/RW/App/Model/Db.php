@@ -149,9 +149,6 @@ class RW_App_Model_Db extends RW_App_Model_Base
         // Grava os dados alterados para referencia
         $this->_lastDeleteKey = $key;
 
-        // Define a chave a ser usada
-        $key = array( $this->id => $key );
-
         // Verifica se deve marcar como removido ou remover o registro
         if ($this->useDeleted === true) {
             $return = $this->getTable()->update(array('deleted' => 1), $key);

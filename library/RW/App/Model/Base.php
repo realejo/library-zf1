@@ -63,6 +63,40 @@ class RW_App_Model_Base
      */
     protected $htmlSelectOptionData;
 
+    public function __construct($table = null, $key = null, $dbAdapter = null)
+    {
+        // Verifica o nome da tabela
+        if (empty($table) && !is_string($table)) {
+            if (isset($this->table)) {
+                $table = $this->table;
+            } else {
+                throw new \Exception('Nome da tabela inválido');
+            }
+        }
+
+        // Verifica o nome da chave
+        if (empty($key) && !is_string($key)) {
+            if (isset($this->key)) {
+                $key = $this->key;
+            } else {
+                throw new \Exception('Nome da chave inválido');
+            }
+        }
+
+        // Define a chave e o nome da tabela
+        $this->key = $key;
+        $this->table = $table;
+
+        // Define o adapter padrão
+        if ( !empty($dbAdapter) ) {
+            if ($dbAdapter instanceof AdapterInterface) {
+                $this->_dbAdapter = $dbAdapter;
+            } else {
+                throw new \Exception('Adapter deve ser Zend\Db\Adapter\AdapterInterface');
+            }
+        }
+    }
+
     /**
      * @return RW_App_Loader
      */
@@ -528,11 +562,41 @@ class RW_App_Model_Base
     }
 
     /**
+     * Define se irá usar o campo deleted ou remover o registro quando usar delete()
+     *
+     * @param boolean $useDeleted
+     *
+     * @return  Realejo\App\Model\Base
+     */
+    public function setUseDeleted($useDeleted)
+    {
+        $this->useDeleted = $useDeleted;
+
+        // Mantem a cadeia
+        return $this;
+    }
+
+    /**
      * Retorna se deve usar o paginator
      * @return boolean
      */
     public function getUsePaginator()
     {
         return $this->usePaginator;
+    }
+
+    /**
+     * Define se deve retornar os registros marcados como removidos
+     *
+     * @param boolean $showDeleted
+     *
+     * @return  Realejo\App\Model\Base
+     */
+    public function setShowDeleted($showDeleted)
+    {
+        $this->showDeleted = $showDeleted;
+
+        // Mantem a cadeia
+        return $this;
     }
 }
