@@ -26,6 +26,12 @@ class RW_App_Model_Base
     private $_cache;
 
     /**
+     * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
+     * @var RW_App_Model_Upload
+     */
+    private $_upload;
+
+    /**
      * Define se deve usar o cache ou não
      * @var boolean
      */
@@ -493,6 +499,18 @@ class RW_App_Model_Base
 
         // Retorna o select
         return $select;
+    }
+
+    /**
+     * Retorna o frontend para gravar o cache
+     * @return RW_App_Model_Upload
+     */
+    public function getUpload()
+    {
+        if (!isset($this->_upload)) {
+            $this->_upload = new RW_App_Model_Upload();
+        }
+        return $this->_upload;
     }
 
     /**
