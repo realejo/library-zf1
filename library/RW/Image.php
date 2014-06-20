@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe com funções comuns para tratamenteo de imagens
+ * Classe com funções comuns para tratamento de imagens
  *
  * @link      http://github.com/realejo/library-zf1
  * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)

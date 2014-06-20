@@ -6,8 +6,6 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-use Realejo\App\Model\Cache,
-    Zend\Db\Adapter\Adapter;
 
 /**
  * Base test case.
@@ -84,7 +82,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCacheRootSemAPPLICATION_DATA()
     {
-        Cache::getCacheRoot();
+        RW_App_Model_Cache::getCacheRoot();
     }
 
     /**
@@ -95,12 +93,11 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $this->setAPPLICATION_DATA();
 
         // Recupera a pasta aonde será salva as informações
-        $path = Cache::getCacheRoot();
+        $path = RW_App_Model_Cache::getCacheRoot();
 
         // Verifica se tere o retorno correto
         $this->assertNotNull($path);
-        $this->assertEquals(realpath(APPLICATION_DATA.'/cache'), $path);
-        $this->assertTrue(file_exists($path));
+        $this->assertEquals(APPLICATION_DATA.'/cache', $path);
         $this->assertTrue(is_dir($path));
         $this->assertTrue(is_writable($path));
     }
@@ -112,12 +109,12 @@ class CacheTest extends PHPUnit_Framework_TestCase
     {
 
         // Verifica se todas as opções são iguais
-        $this->assertEquals(Cache::getCacheRoot(), Cache::getCachePath(null));
-        $this->assertEquals(Cache::getCacheRoot(), Cache::getCachePath(''));
-        $this->assertEquals(Cache::getCacheRoot(), Cache::getCachePath());
+        $this->assertEquals(RW_App_Model_Cache::getCacheRoot(), RW_App_Model_Cache::getCachePath(null));
+        $this->assertEquals(RW_App_Model_Cache::getCacheRoot(), RW_App_Model_Cache::getCachePath(''));
+        $this->assertEquals(RW_App_Model_Cache::getCacheRoot(), RW_App_Model_Cache::getCachePath());
 
         // Cria ou recupera a pasta album
-        $path = Cache::getCachePath('Album');
+        $path = RW_App_Model_Cache::getCachePath('Album');
 
         // Verifica se foi criada corretamente a pasta
         $this->assertNotNull($path);
@@ -134,7 +131,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(file_exists($path));
 
         // Cria ou recupera a pasta album
-        $path = Cache::getCachePath('album');
+        $path = RW_App_Model_Cache::getCachePath('album');
 
         // Verifica se foi criada corretamente a pasta
         $this->assertNotNull($path);
@@ -151,7 +148,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(file_exists($path));
 
         // Cria ou recupera a pasta
-        $path = Cache::getCachePath('album_Teste');
+        $path = RW_App_Model_Cache::getCachePath('album_Teste');
 
         // Verifica se foi criada corretamente a pasta
         $this->assertNotNull($path);
@@ -168,7 +165,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(file_exists($path), 'Verifica se a pasta album_Teste foi apagada');
 
         // Cria ou recupera a pasta
-        $path = Cache::getCachePath('album/Teste');
+        $path = RW_App_Model_Cache::getCachePath('album/Teste');
 
         // Verifica se foi criada corretamente a pasta
         $this->assertNotNull($path, 'Teste se o album/Teste foi criado');
@@ -184,7 +181,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testgetFrontendComClass()
     {
-        $cache = Cache::getFrontend('Album');
+        $cache = RW_App_Model_Cache::getFrontend('Album');
         $this->assertInstanceOf('Zend\Cache\Storage\Adapter\Filesystem', $cache);
     }
 
@@ -193,7 +190,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testgetFrontendSemClass()
     {
-        $cache = Cache::getFrontend(null);
+        $cache = RW_App_Model_Cache::getFrontend(null);
         $this->assertInstanceOf('Zend\Cache\Storage\Adapter\Filesystem', $cache);
     }
 }

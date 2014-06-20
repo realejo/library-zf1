@@ -54,6 +54,24 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
         )
     );
 
+    public function getAdapter()
+    {
+        if ($this->adapter === null) {
+
+            $config = array(
+                'host' => '192.168.100.25',
+                'username' => 'root',
+                'password' => 'naodigo',
+                'dbname' => 'test',
+                'charset' => 'UTF8');
+
+            $db = Zend_Db::factory('Mysqli', $config);
+            Zend_Db_Table_Abstract::setDefaultAdapter($db);
+            $this->adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
+        }
+        return $this->adapter;
+    }
+
     /**
      * @return \Realejo\Db\BaseTest
      */
@@ -62,7 +80,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
         $conn = $this->getAdapter();
         $conn->query("
             CREATE TABLE {$this->tableName} (
-            {$this->tableKeyName} INTEGER PRIMARY KEY ASC,
+            {$this->tableKeyName} INTEGER PRIMARY KEY,
             artist varchar(100) NOT NULL,
             title varchar(100) NOT NULL,
             deleted INTEGER UNSIGNED NOT NULL DEFAULT 0
@@ -154,7 +172,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructSemTableName()
     {
-        new Base(null, $this->tableKeyName);
+        new RW_App_Model_Base(null, $this->tableKeyName);
     }
 
     /**
@@ -163,7 +181,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructSemKeyName()
     {
-        new Base($this->tableName, null);
+        new RW_App_Model_Base($this->tableName, null);
     }
 
     /**
@@ -172,7 +190,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructComAdapterInvalido()
     {
-        $Base = new Base($this->tableName, $this->tableKeyName, new \PDO('sqlite::memory:'));
+        $Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, new \PDO('sqlite::memory:'));
     }
 
     /**
@@ -180,17 +198,17 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateBase()
     {
-        $Base = new Base($this->tableName, $this->tableKeyName, $this->getAdapter());
-        $this->assertInstanceOf('Realejo\App\Model\Base', $Base);
+        $Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, $this->getAdapter());
+        $this->assertInstanceOf('RW_App_Model_Base', $Base);
     }
 
     /**
      * teste o adapter PDO
      */
-    public function testPdoAdatper()
+    public function testPdoAdapter()
     {
-        $this->assertInstanceOf('\Zend\Db\Adapter\Adapter', $this->getAdapter());
-        $this->assertInstanceOf('\Zend\Db\Adapter\Adapter', $this->adapter);
+        $this->assertInstanceOf('Zend_Db_Adapter_Abstract', $this->getAdapter());
+        $this->assertInstanceOf('Zend_Db_Adapter_Abstract', $this->adapter);
     }
 
 
@@ -492,7 +510,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testGetTableGetKey()
     {
-        $Base = new Base('tablename', 'keyname');
+        $Base = new RW_App_Model_Base('tablename', 'keyname');
         $this->assertNotNull($Base->getTable());
         $this->assertNotNull($Base->getKey());
         $this->assertEquals('tablename', $Base->getTable());
@@ -500,7 +518,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
 
         /*
         // @todo permitir chaves compostas
-        $Base = new Base('tablename', array('key1', 'key2'));
+        $Base = new RW_App_Model_Base('tablename', array('key1', 'key2'));
         $this->assertNotNull($Base->getTable());
         $this->assertNotNull($Base->getKey());
         $this->assertEquals('tablename', $Base->getTable());
