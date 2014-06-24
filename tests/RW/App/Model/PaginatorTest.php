@@ -6,8 +6,6 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-use Realejo\App\Model\Paginator,
-    Zend\Db\Adapter\Adapter;
 
 /**
  * Base test case.
@@ -27,7 +25,7 @@ class PaginatorTest extends PHPUnit_Framework_TestCase
     public function getPaginator()
     {
         if ($this->Paginator === null) {
-            $this->Paginator = new Paginator();
+            $this->Paginator = new RW_App_Model_Paginator();
         }
         return $this->Paginator;
     }

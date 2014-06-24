@@ -46,7 +46,7 @@ class RW_App_Model_Cache
          }
 
          // retorna a pasta raiz do cache
-         return APPLICATION_DATA . '/cache';
+         return realpath(dirname(__FILE__)) . APPLICATION_DATA . '/cache';
      }
 
      /**
@@ -75,7 +75,7 @@ class RW_App_Model_Cache
 
      /**
       * Ignora o backend e apaga os arquivos do cache. inclui as subpastas.
-      * Serão removio apenas os arquivos de cache e não as pastas
+      * Serão removidos apenas os arquivos de cache e não as pastas.
       *
       * @param string $path
       */

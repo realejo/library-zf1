@@ -225,91 +225,14 @@ class RW_App_Model_Base
     }
 
     /**
-     * Return the where clause
+     * Processa as cluasulas especiais do where
      *
-     * @param string|array $where OPTIONAL Consulta SQL
-     *
-     * @return array null
+     * @param array $where
+     * @return array
      */
-    public function getWhere($where = null)
+    public function getWhere($where)
     {
-        // Sets where is array
-        $this->where = array();
-
-        // Checks $where is not null
-        if (empty($where)) {
-            if ($this->getUseDeleted() && !$this->getShowDeleted()) {
-                $this->where[] = "{$this->getTableGateway()->getTable()}.deleted=0";
-            }
-        } else {
-
-            // Checks $where is deleted
-            if ($this->getUseDeleted() && !$this->getShowDeleted() && !isset($where['deleted'])) {
-                $where['deleted'] = 0;
-            }
-
-            // Checks $where is not array
-            if (! is_array($where))
-                $where = array(
-                    $where
-                );
-            foreach ($where as $id => $w) {
-
-                // Checks $where is not string
-                if ($w instanceof \Zend\Db\Sql\Expression) {
-                    $this->where[] = $w;
-
-                // Checks is deleted
-                } elseif ($id === 'deleted' && $w === false) {
-                    $this->where[] = "{$this->getTableGateway()->getTable()}.deleted=0";
-
-                } elseif ($id === 'deleted' && $w === true) {
-                    $this->where[] = "{$this->getTableGateway()->getTable()}.deleted=1";
-
-                } elseif ((is_numeric($id) && $w === 'ativo') || ($id === 'ativo' && $w === true)) {
-                    $this->where[] = "{$this->getTableGateway()->getTable()}.ativo=1";
-
-                } elseif ($id === 'ativo' && $w === false) {
-                    $this->where[] = "{$this->getTableGateway()->getTable()}.ativo=0";
-
-                    // Checks $id is not numeric and $w is numeric
-                } elseif (! is_numeric($id) && is_numeric($w)) {
-                    if (strpos($id, '.') === false)
-                        $id = $this->getTableGateway()->getTable() . ".$id";
-                    $this->where[] = "$id=$w";
-
-                /**
-                 * Funciona direto com array, mas tem que verificar o impacto no join
-                 * if (strpos($id, '.') === false) {
-                 * $this->where[$id] = $w;
-                 * } else {
-                 * $this->where[] = "$id=$w";
-                 * }
-                 */
-
-                    // Checks $id is not numeric and $w is string
-                } elseif (! is_numeric($id) && is_string($id)) {
-                    if (strpos($id, '.') === false)
-                        $id = $this->getTableGateway()->getTable() . ".$id";
-                    $this->where[] = "$id='$w'";
-
-                /**
-                 * Funciona direto com array, mas tem que verificar o impacto no join
-                 * if (strpos($id, '.') === false) {
-                 * $this->where[$id] = $w;
-                 * } else {
-                 * $this->where[] = "$id='$w'";
-                 * }
-                 */
-
-                    // Return $id is not numeric and $w is string
-                } else {
-                    throw new \Exception('Condição inválida em TableAdapter::getWhere()');
-                }
-            }
-        } // End $where
-
-        return $this->where;
+        return $where;
     }
 
     /**
@@ -744,31 +667,14 @@ class RW_App_Model_Base
     }
 
     /**
-     * @return TableGateway
+     * Retorna o Select básico do model
+     * Sobrescreva este método para inlcuir os joins
+     *
+     * @return \Zend\Db\Sql\Select
      */
-    public function getTableGateway()
+    public function getSQLSelect()
     {
-        // Verifica se já está carregado
-        if (isset($this->_tableGateway)) {
-            return $this->_tableGateway;
-        }
-
-        if (empty($this->table)) {
-            throw new \Exception('Tabela não definida em ' . get_class($this) . '::getTable()');
-        }
-
-        // Define o adapter padrão
-        if (empty($this->_dbAdapter)) {
-            $this->_dbAdapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-        }
-
-        // Verifica se tem adapter válido
-        if (! ($this->_dbAdapter instanceof Zend_Db_Table_Abstract)) {
-            throw new \Exception("Adapter dever ser uma instancia de abacate AdapterInterface");
-        }
-        $this->_tableGateway = new TableGateway($this->table, $this->_dbAdapter);
-
-        // retorna o tabela
-        return $this->_tableGateway;
+        return $this->getTable()
+        ->select();
     }
 }
