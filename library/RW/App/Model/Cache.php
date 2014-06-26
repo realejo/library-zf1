@@ -46,7 +46,7 @@ class RW_App_Model_Cache
          }
 
          // retorna a pasta raiz do cache
-         return realpath(dirname(__FILE__)) . APPLICATION_DATA . '/cache';
+         return APPLICATION_DATA . '/cache';
      }
 
      /**

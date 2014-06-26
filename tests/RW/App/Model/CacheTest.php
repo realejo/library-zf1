@@ -55,7 +55,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
     {
         // Verifica se a pasta de cache existe
         if (defined('APPLICATION_DATA') === false) {
-            define('APPLICATION_DATA', $this->dataPath);
+            define('APPLICATION_DATA', realpath(dirname(__FILE__)) .$this->dataPath);
         }
     }
 
