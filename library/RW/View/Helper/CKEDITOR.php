@@ -33,17 +33,35 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
      */
     public function CKEDITOR($campos, $userOptions = null)
     {
-        // Verifica se a constante da marca esta definida
-        //@todo remover referencia a BBFC
-        $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
+        // Opções de localização do application.ini
+        $configs = array(
+                    APPLICATION_PATH . "/../configs/application.ini",
+                    APPLICATION_PATH . "/configs/application.ini"
+                  );
 
-        // Localiza o arquivo de configuração
-        $config = realpath(APPLICATION_PATH . "/configs/application$marca.ini");
-        if (empty($config)) { $config = realpath(APPLICATION_PATH . "/../configs/application$marca.ini"); }
-        if (empty($config)) { throw new Exception ('Arquivo de configuração não encontrado em RW_View_Helper_CKEDITOR'); }
+        // Verifica se a constante da marca (BFFC) esta definida
+        if (defined('MARCA')) {
+            $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+            $configs[] = APPLICATION_PATH . "configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+        }
+
+        // Carrega as configurações do config
+        $configpath = false;
+        foreach($configs as $c) {
+            if ( file_exists($c) ) {
+                $configpath = $c;
+            }
+        }
+
+        // Verifica se uma das opções foi localizada
+        if ( $configpath === false ) {
+            require_once 'Zend/Config/Exception.php';
+            $marca = (defined('MARCA')) ? '(marca='.BFFC_Marca::getCssClass(MARCA) .')': '' ;
+            throw new Exception("Nenhum arquivo de configuração application.ini encontrado do diretório '/configs' $marca");
+        }
 
         // Carrega a configuração do Application
-        $config = new Zend_Config_Ini($config, APPLICATION_ENV);
+        $config = new Zend_Config_Ini($configpath, APPLICATION_ENV);
 
         // Verifica a versão do CKEditor
         $ckeditor = false;

@@ -92,7 +92,7 @@ class RW_App_Model_Base
             if (isset($this->key)) {
                 $key = $this->key;
             } else {
-                throw new \Exception('Nome da chave inválido');
+                throw new Exception('Nome da chave inválido');
             }
         }
 
@@ -105,7 +105,7 @@ class RW_App_Model_Base
             if ($dbAdapter instanceof Zend_Db_Adapter_Abstract) {
                 $this->_dbAdapter = $dbAdapter;
             } else {
-                throw new \Exception('Adapter deve ser Zend\Db\Adapter\AdapterInterface');
+                throw new Exception('Adapter deve ser Zend\Db\Adapter\AdapterInterface');
             }
         }
     }
