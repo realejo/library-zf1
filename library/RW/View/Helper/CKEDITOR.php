@@ -42,7 +42,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         // Verifica se a constante da marca (BFFC) esta definida
         if (defined('MARCA')) {
             $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-            $configs[] = APPLICATION_PATH . "configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+            $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
         }
 
         // Carrega as configurações do config
