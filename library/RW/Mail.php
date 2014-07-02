@@ -61,7 +61,7 @@ class RW_Mail
         // Verifica se a constante da marca (BFFC) esta definida
         if (defined('MARCA')) {
             $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-            $configs[] = APPLICATION_PATH . "configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+            $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
         }
 
         // Carrega as configurações do config
