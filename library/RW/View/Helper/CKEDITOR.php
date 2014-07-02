@@ -84,7 +84,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         if (isset($config->cms->htmleditor->ckfinder) && !empty($config->cms->htmleditor->ckfinder)) {
             foreach ($this->availablePaths as $path) {
                 if (is_dir(APPLICATION_HTTP . $path. $config->cms->htmleditor->ckfinder)) {
-                    $ckeditor = $path. $config->cms->htmleditor->ckfinder;
+                    $ckfinder = $path. $config->cms->htmleditor->ckfinder;
                     break;
                 }
             }
