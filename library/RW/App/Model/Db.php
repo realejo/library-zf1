@@ -122,7 +122,7 @@ class RW_App_Model_Db extends RW_App_Model_Base
         }
 
         // Salva os dados alterados
-        $return = $this->getTable()->update($diff, $key);
+        $return = $this->getTable()->update($diff, "{$this->key}=$key");
 
         // Limpa o cache, se necessário
         if ($this->getUseCache()) {
@@ -151,9 +151,9 @@ class RW_App_Model_Db extends RW_App_Model_Base
 
         // Verifica se deve marcar como removido ou remover o registro
         if ($this->useDeleted === true) {
-            $return = $this->getTable()->update(array('deleted' => 1), $key);
+            $return = $this->getTable()->update(array('deleted' => 1), "{$this->key}=$key");
         } else {
-            $return = $this->getTable()->delete($key);
+            $return = $this->getTable()->delete("{$this->key}=$key");
         }
 
         // Limpa o cache se necessario

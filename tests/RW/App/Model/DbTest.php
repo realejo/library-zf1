@@ -38,6 +38,13 @@ class DbTest extends PHPUnit_Framework_TestCase
     private $Db;
 
     /**
+     * apenas para contar. não serve pra nada por enquanto
+     * @var unknown
+     */
+    protected $showDeleted = false;
+    protected $useDeleted = false;
+
+    /**
      * Valores padrões de registros.
      * @todo usa-los ao inves de $rows em #insert.
      */
@@ -241,7 +248,7 @@ class DbTest extends PHPUnit_Framework_TestCase
         $row1 = array(
             'id' => 1,
             'artist'  => 'Não me altere',
-            'title'   => 'Moving Pictures',
+            'title'   => 'Presto',
             'deleted' => 0
         );
 
@@ -284,6 +291,8 @@ class DbTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->getDb()->update(array(), 2));
         $this->assertFalse($this->getDb()->update(null, 2));
 
+        var_dump($this->getDb()->fetchAll());
+
     }
 
     /**
@@ -291,33 +300,44 @@ class DbTest extends PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        $row = array(
+        $row1 = array(
             'id' => 1,
             'artist' => 'Rush',
-            'title' => 'Rush',
+            'title' => 'Presto',
             'deleted' => 0
         );
-        $this->getDb()->insert($row);
+        $row2 = array(
+            'id' => 2,
+            'artist'  => 'Rush',
+            'title'   => 'Moving Pictures',
+            'deleted' => 0
+        );
+
+        $this->getDb()->insert($row1);
+        $this->getDb()->insert($row2);
 
         // Verifica se o registro existe
-        $this->assertEquals($row, $this->getDb()->fetchRow(1));
+        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'row1 existe');
+        $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 existe');
 
         // Marca para usar o campo deleted
         $this->getDb()->setUseDeleted(true);
 
         // Remove o registro
         $this->getDb()->delete(1);
-        $row['deleted'] = 1;
+        $row1['deleted'] = 1;
 
         // Verifica se foi removido
         $row = $this->getDb()->fetchRow(1);
-        $this->assertEquals(1, $row['deleted']);
+        $this->assertEquals(1, $row['deleted'], 'row1 marcado como deleted');
+        $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 ainda existe v1');
 
         // Marca para mostrar os removidos
         $this->getDb()->setShowDeleted(true);
 
         // Verifica se o registro existe
-        $this->assertEquals($row, $this->getDb()->fetchRow(1));
+        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'row1 ainda existe');
+        $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 ainda existe v2');
 
         // Marca para remover o registro da tabela
         $this->getDb()->setUseDeleted(false);
@@ -326,7 +346,8 @@ class DbTest extends PHPUnit_Framework_TestCase
         $this->getDb()->delete(1);
 
         // Verifica se ele foi removido
-        $this->assertNull($this->getDb()->fetchRow(1));
+        $this->assertNull($this->getDb()->fetchRow(1), 'row1 não existe ');
+        $this->assertNotEmpty($this->getDb()->fetchRow(2), 'row2 ainda existe v3');
     }
 }
 
