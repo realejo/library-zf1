@@ -2,8 +2,9 @@
 /**
  * Gerenciador de tabelas e model carregados para evitar que sejam carregados na memória mais de uma vez
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_App_Loader
 {

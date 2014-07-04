@@ -4,8 +4,9 @@
  *
  * @see http://rubsphp.blogspot.com/2011/06/funcoes-estatisticas-em-php.html
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_Math
 {

@@ -1,11 +1,4 @@
 <?php
-/**
- *
- *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
- */
-
 /** ----------------------------------------------------------------------
    Table Extractor
    ===============
@@ -16,16 +9,19 @@
    Compatibility: PHP 4.4.1 +
    Copyright Jack Sleight - www.reallyshiny.com
    This script is licensed under the Creative Commons License.
-----------------------------------------------------------------------*/
+----------------------------------------------------------------------
 
-/** ----------------------------------------------------------------------
+ ----------------------------------------------------------------------
     Adicionei um constructor e carregar arquivos diretamente
     Version 1.3.1
    Compatibility: PHP 4.4.1 +
    Copyright Rodrigo Capilé - www.realejo.com.br
    This script is licensed under the Creative Commons License.
-----------------------------------------------------------------------*/
-
+----------------------------------------------------------------------
+ *
+ * @link      http://github.com/realejo/library-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ */
 class RW_TableExtractor {
 
     var $source            = NULL;

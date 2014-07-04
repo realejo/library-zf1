@@ -6,10 +6,6 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-
-/**
- * Base test case.
- */
 class PaginatorTest extends PHPUnit_Framework_TestCase
 {
     /**

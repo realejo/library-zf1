@@ -2,30 +2,30 @@
 /**
  * Classe para armazenar e recuperar a versão da biblioteca da Realejo
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_Version
 {
     /**
-     * RWLIB indentificador de versão
+     * Indentificador de versão
      * @see compareVersion()
      */
     CONST VERSION = '1.4.2';
 
     /**
-     * The latest stable version Zend Framework available
+     * A ultima versão disponível
      *
      * @var string
      */
     protected static $_latestVersion;
 
     /**
-     * Compare the specified Zend Framework version string $version
-     * with the current Zend_Version::VERSION of Zend Framework.
+     * Compara a versão $version com a versão marcada em RW_Version::VERSION
      *
      * @param  string  $version  A version string (e.g. "0.7.1").
-     * @return int           -1 if the $version is older,
+     * @return int              -1 if the $version is older,
      *                           0 if they are the same,
      *                           and +1 if $version is newer.
      *
@@ -38,7 +38,7 @@ class RW_Version
     }
 
     /**
-     * Fetches the version of the latest stable release
+     * Recupera a ultima versão disponível
      *
      * @return string
      */

@@ -2,8 +2,9 @@
 /**
  * Imprime a data no formato correto
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_View_Helper_PrintDate extends Zend_View_Helper_Abstract
 {

@@ -4,8 +4,9 @@
  *
  * Ele cria automaticamente a pasta de cache, dentro de data/cache, baseado no nome da classe
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 abstract class RW_App_Loader_Awareness
 {

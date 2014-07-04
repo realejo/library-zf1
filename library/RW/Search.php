@@ -1,11 +1,11 @@
 <?php
 /**
  *
- *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
- *
  * @uses       Zend_Search_Lucene
+ *
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_Search extends Zend_Search_Lucene
 {

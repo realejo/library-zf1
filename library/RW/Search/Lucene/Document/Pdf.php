@@ -1,14 +1,12 @@
 <?php
 /**
  * Implemantação do Zend_Search_Lucene_Document para PDF
- *
- * @category   RW
- * @package    RW_Search
- * @author     Realejo/Rodrigo
- * @version    $Id: Pdf.php 7 2012-01-11 17:15:57Z rodrigo $
- * @copyright  Copyright (c) 2011-2012 Realejo Design Ltda. (http://www.realejo.com.br)
- *
+
  * @todo não lembro de onde copiei e o que alterei
+ *
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
 {

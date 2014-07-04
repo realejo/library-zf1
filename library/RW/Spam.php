@@ -2,10 +2,11 @@
 /**
  * Verifica os spams mais comuns e se passar verifica se é um SPAM no AKISMET
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
- *
  * @uses       Zend_Service_Akismet
+ *
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_Spam
 {

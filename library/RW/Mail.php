@@ -2,9 +2,6 @@
 /**
  * Bilioteca para envio de email
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
- *
  * @todo impedir que o email vá para o cliente sem querer. Deixar tudo no "drop folder"
  * @todo header injection
  * foreach($_REQUEST as $fields => $value)
@@ -12,6 +9,10 @@
  *          exit("ERROR: Code injection attempt denied! Please don't use the following sequences in your message: 'TO:', 'CC:', 'CCO:' or 'Content-Type'.");
  *
  * @uses Zend_Mail
+ *
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_Mail
 {

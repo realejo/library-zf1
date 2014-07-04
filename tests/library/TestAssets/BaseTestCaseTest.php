@@ -9,7 +9,6 @@
 class BaseTestCaseTest extends PHPUnit_Framework_TestCase
 {
     /**
-     *
      * @var BaseTestCase
      */
     private $BaseTestCase;
