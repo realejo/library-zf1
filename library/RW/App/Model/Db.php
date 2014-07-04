@@ -1,12 +1,11 @@
 <?php
 /**
- * Model basico para o App_Model com as funções de create, update e delete
+ * Model basico para o RW_App_Model_Base com as funções de insert, update e delete
  *
- * @link      http://github.com/realejo/libraray-zf2
+ * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-
 class RW_App_Model_Db extends RW_App_Model_Base
 {
 
@@ -51,7 +50,7 @@ class RW_App_Model_Db extends RW_App_Model_Base
         $this->_lastInsertSet = $set;
 
         // Grava o set no BD
-        $key = $this->getTable()->insert($set);
+        $key = $this->getTableGateway()->insert($set);
 
         // Grava a chave criada para referencia
         $this->_lastInsertKey = $key;
@@ -122,7 +121,7 @@ class RW_App_Model_Db extends RW_App_Model_Base
         }
 
         // Salva os dados alterados
-        $return = $this->getTable()->update($diff, "{$this->key}=$key");
+        $return = $this->getTableGateway()->update($diff, "{$this->key}=$key");
 
         // Limpa o cache, se necessário
         if ($this->getUseCache()) {
@@ -151,9 +150,9 @@ class RW_App_Model_Db extends RW_App_Model_Base
 
         // Verifica se deve marcar como removido ou remover o registro
         if ($this->useDeleted === true) {
-            $return = $this->getTable()->update(array('deleted' => 1), "{$this->key}=$key");
+            $return = $this->getTableGateway()->update(array('deleted' => 1), "{$this->key}=$key");
         } else {
-            $return = $this->getTable()->delete("{$this->key}=$key");
+            $return = $this->getTableGateway()->delete("{$this->key}=$key");
         }
 
         // Limpa o cache se necessario

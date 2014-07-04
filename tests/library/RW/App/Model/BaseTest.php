@@ -21,7 +21,7 @@ class AppModelBaseTest extends BaseTestCase
     protected $tables = array('album');
 
     /**
-     * @var Base
+     * @var RW_App_Model_Base
      */
     private $Base;
 
@@ -68,17 +68,6 @@ class AppModelBaseTest extends BaseTestCase
         }
         return $this;
     }
-
-    /**
-     *
-     * @return self
-     */
-    public function truncateTable()
-    {
-        $this->dropTable()->createTable();
-        return $this;
-    }
-
 
     /**
      * Prepares the environment before running a test.

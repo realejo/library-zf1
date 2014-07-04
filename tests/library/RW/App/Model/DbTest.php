@@ -6,48 +6,25 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-
-/**
- * Db test case.
- */
-class DbTest extends PHPUnit_Framework_TestCase
+class DbTest extends BaseTestCase
 {
     /**
-     *
      * @var string
      */
     protected $tableName = "album";
-    protected $table = "album";
 
     /**
-     *
      * @var string
      */
     protected $tableKeyName = "id";
 
-    /**
-     *
-     * @var Zend\Db\Adapter\Adapter
-     */
-    protected $adapter = null;
+    protected $tables = array('album');
 
     /**
-     *
-     * @var Db
+     * @var RW_App_Model_Db
      */
     private $Db;
 
-    /**
-     * apenas para contar. não serve pra nada por enquanto
-     * @var unknown
-     */
-    protected $showDeleted = false;
-    protected $useDeleted = false;
-
-    /**
-     * Valores padrões de registros.
-     * @todo usa-los ao inves de $rows em #insert.
-     */
     protected $defaultValues = array(
         array(
             'id' => 1,
@@ -75,61 +52,47 @@ class DbTest extends PHPUnit_Framework_TestCase
         )
     );
 
-    public function getAdapter()
+    /**
+     * @return self
+     */
+    public function insertDefaultRows()
     {
-        if ($this->adapter === null) {
-
-            $config = array(
-                    'host' => '192.168.100.25',
-                    'username' => 'root',
-                    'password' => 'naodigo',
-                    'dbname' => 'test',
-                    'charset' => 'UTF8');
-
-            $db = Zend_Db::factory('Mysqli', $config);
-            Zend_Db_Table_Abstract::setDefaultAdapter($db);
-            $this->adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
+        foreach ($this->defaultValues as $row) {
+            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+                                        VALUES (
+                                            {$row[$this->tableKeyName]},
+                                            '{$row['artist']}',
+                                            '{$row['title']}',
+                                            {$row['deleted']}
+                                        );");
         }
-        return $this->adapter;
-    }
-
-    public function createTable()
-    {
-        $this->getAdapter()
-        ->query("
-            CREATE TABLE IF NOT EXISTS `{$this->tableName}`  (
-            `{$this->tableKeyName}` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `artist` varchar(100) NOT NULL,
-            `title` varchar(100) NOT NULL,
-            `deleted` tinyint(1) unsigned NOT NULL default '0',
-            PRIMARY KEY  (`{$this->tableKeyName}`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-
-            return $this;
-    }
-
-    public function dropTable()
-    {
-        $this->getAdapter()->query("DROP TABLE IF EXISTS {$this->tableName}");
         return $this;
     }
 
-    public function truncateTable()
-    {
-        $this->dropTable()->createTable();
-        return $this;
-    }
-
+    /**
+     * Prepares the environment before running a test.
+     */
     protected function setUp()
     {
         parent::setUp();
-        $this->dropTable()->createTable();
+
+        $this->dropTables()->createTables();
+
+        // Remove as pastas criadas
+        $this->setApplicationConstants()->clearApplicationData();
     }
 
+    /**
+     * Cleans up the environment after running a test.
+     */
     protected function tearDown()
     {
         parent::tearDown();
-        $this->dropTable();
+
+        $this->dropTables();
+
+        // Remove as pastas criadas
+        $this->clearApplicationData();
     }
 
     /**
@@ -290,9 +253,6 @@ class DbTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($this->getDb()->update(array(), 2));
         $this->assertFalse($this->getDb()->update(null, 2));
-
-        var_dump($this->getDb()->fetchAll());
-
     }
 
     /**
@@ -321,7 +281,7 @@ class DbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 existe');
 
         // Marca para usar o campo deleted
-        $this->getDb()->setUseDeleted(true);
+        $this->getDb()->setUseDeleted(true)->setShowDeleted(true);
 
         // Remove o registro
         $this->getDb()->delete(1);
