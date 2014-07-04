@@ -2,13 +2,9 @@
 /**
  * BaseTest test case.
  *
- * @link      http://github.com/realejo/libraray-zf2
+ * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
- */
-
-/**
- * Base test case.
  */
 class AppModelBaseTest extends PHPUnit_Framework_TestCase
 {

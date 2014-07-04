@@ -4,8 +4,9 @@
  *
  * Ele cria automaticamente a pasta de cache, dentro de data/cache, baseado no nome da classe
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class RW_App_Model_Cache
 {
@@ -45,8 +46,16 @@ class RW_App_Model_Cache
              throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Cache::getCacheRoot()');
          }
 
+         // Verifica se a pasta do cache existe
+         $cachePath = APPLICATION_DATA . '/cache';
+         if (!file_exists($cachePath)) {
+             $oldumask = umask(0);
+             mkdir($cachePath, 0777, true); // or even 01777 so you get the sticky bit set
+             umask($oldumask);
+         }
+
          // retorna a pasta raiz do cache
-         return APPLICATION_DATA . '/cache';
+         return $cachePath;
      }
 
      /**

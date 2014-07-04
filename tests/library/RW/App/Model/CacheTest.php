@@ -2,23 +2,12 @@
 /**
  * CacheTest test case.
  *
- * @link      http://github.com/realejo/libraray-zf2
+ * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-
-/**
- * Base test case.
- */
-class CacheTest extends PHPUnit_Framework_TestCase
+class CacheTest extends BaseTestCase
 {
-
-    /**
-     *
-     * @var string
-     */
-    protected $dataPath = '/../../../assets/data';
-
     /**
      * Prepares the environment before running a test.
      */
@@ -26,13 +15,10 @@ class CacheTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        // Verifica se a pasta do cache existe
-        if (file_exists($this->dataPath)) {
-            $this->rrmdir($this->dataPath);
-        }
-        $oldumask = umask(0);
-        mkdir($this->dataPath, 0777, true);
-        umask($oldumask);
+        // Não inicializa o APPLICATION_DATA pois alguns testes exigem que ele não exista
+        //@todo é possível ser condicional? teste case separado?
+        // Remove as pastas criadas
+        //$this->clearApplicationData();
     }
 
     /**
@@ -42,37 +28,10 @@ class CacheTest extends PHPUnit_Framework_TestCase
     {
         parent::tearDown();
 
+        // Não inicializa o APPLICATION_DATA pois alguns testes exigem que ele não exista
+        //@todo é possível ser condicional? teste case separado?
         // Remove as pastas criadas
-        $this->rrmdir($this->dataPath);
-    }
-
-    /**
-     * setAPPLICATION_DATA define o APPLICATION_DATA se não existir
-     *
-     * @return string
-     */
-    public function setAPPLICATION_DATA()
-    {
-        // Verifica se a pasta de cache existe
-        if (defined('APPLICATION_DATA') === false) {
-            define('APPLICATION_DATA', realpath(dirname(__FILE__)) .$this->dataPath);
-        }
-    }
-
-    /**
-     * Remove os arquivos da pasta e a pasta
-     *
-     * @return string
-     */
-    public function rrmdir($dir) {
-        foreach(glob($dir . '/*') as $file) {
-            if(is_dir($file)) {
-                $this->rrmdir($file);
-            } else {
-                unlink($file);
-            }
-        }
-        rmdir($dir);
+        //$this->clearApplicationData();
     }
 
     /**
@@ -90,15 +49,17 @@ class CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCacheRoot()
     {
-        $this->setAPPLICATION_DATA();
+        $this->setApplicationConstants()->clearApplicationData();
 
         // Recupera a pasta aonde será salva as informações
         $path = RW_App_Model_Cache::getCacheRoot();
 
         // Verifica se tere o retorno correto
-        $this->assertNotNull($path);
-        $this->assertTrue(is_dir($path));
-        $this->assertTrue(is_writable($path));
+        $this->assertNotNull($path, 'a path foi retornado');
+        $this->assertTrue(is_dir($path), "$path é um diretório");
+        $this->assertTrue(is_writable($path), 'tem permissão de escrita');
+
+        $this->clearApplicationData();
     }
 
     /**
@@ -106,6 +67,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCachePath()
     {
+        $this->setApplicationConstants()->clearApplicationData();
 
         // Verifica se todas as opções são iguais
         $this->assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(null));
@@ -173,6 +135,8 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($path), 'Verifica se a pasta album/Teste existe');
         $this->assertTrue(is_dir($path), 'Verifica se a pasta album/Teste é uma pasta');
         $this->assertTrue(is_writable($path), 'Verifica se a pasta album/Teste tem permissão de escrita');
+
+        $this->clearApplicationData();
     }
 }
 

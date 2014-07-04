@@ -35,7 +35,7 @@ class BaseTestCase extends PHPUnit_Framework_TestCase
         // Inicializa o ZF
         $bootstrap = new Zend_Application(
             'testing',
-            APPLICATION_PATH . '/configs/application.ini'
+            TEST_ROOT . '/assets/application/configs/application.ini'
         );
         $bootstrap->bootstrap();
     }
