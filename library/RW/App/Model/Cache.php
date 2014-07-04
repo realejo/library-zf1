@@ -13,7 +13,7 @@ class RW_App_Model_Cache
      /**
       * Configura o cache
       *
-      * @return Zend_Cache_Frontend
+      * @return Zend_Cache_Core
       */
      static public function getFrontend($class = '')
      {

@@ -56,6 +56,27 @@ class RW_App_Model_Base
     protected $key;
 
     /**
+     * Define a ordem padrão a ser usada na consultas
+     *
+     * @var string
+     */
+    protected $order;
+
+    /**
+     * Define se deve remover os registros ou apenas marcar como removido
+     *
+     * @var boolean
+     */
+    protected $useDeleted = false;
+
+    /**
+     * Define se deve mostrar os registros marcados como removido
+     *
+     * @var boolean
+     */
+    protected $showDeleted = false;
+
+    /**
      * Campo a ser usado no <option>
      *
      * @var string
@@ -68,13 +89,6 @@ class RW_App_Model_Base
      * @var string|array
      */
     protected $htmlSelectOptionData;
-
-    /**
-     * Define a ordem padrão a ser usada na consultas
-     *
-     * @var string
-     */
-    protected $order;
 
     public function __construct($table = null, $key = null, $dbAdapter = null)
     {
@@ -132,7 +146,7 @@ class RW_App_Model_Base
      *
      * @return Zend_Db_Table
      */
-    public function getTable($table = null)
+    public function getTableGateway($table = null)
     {
         if (empty($table) && isset($this->table)) {
             $table = $this->table;
@@ -177,37 +191,46 @@ class RW_App_Model_Base
             $select->limit($count, $offset);
         }
 
-        // Verifica se há condições
-        if (!empty($where)) {
-
-            // Veriifca se é um array para fazer o processamento abaixo
-            if (!is_array($where)) {
-                $where = array($where);
+        // Checks $where is not null
+        if (empty($where)) {
+            if ($this->getUseDeleted() && !$this->getShowDeleted()) {
+                $where = array('deleted' => 0);
             }
+        }
 
-            // Verifica as clausulas especiais se houver
-            $where = $this->getWhere($where);
+        // Veriifca se é um array para fazer o processamento abaixo
+        if (!is_array($where)) {
+            $where = (empty($where)) ? array() : array($where);
+        }
 
-            // processa as clausulas
-            foreach($where as $id=>$w) {
-                // Zend_Db_Expr
-                if ($w instanceof Zend_Db_Expr) {
-                    $select->where($w);
+        // Checks $where is deleted
+        if ($this->getUseDeleted() && !$this->getShowDeleted() && !isset($where['deleted'])) {
+            $where['deleted'] = 0;
+        }
 
-                // Valor numerico
-                } elseif (!is_numeric($id) && is_numeric($w)) {
-                    if (strpos($id,'.') === false) $id = "{$this->table}.$id";
-                    $select->where("$id = ?", $w, 'INTEGER');
+        // Verifica as clausulas especiais se houver
+        $where = $this->getWhere($where);
 
-                // Texto e Data
-                } elseif (!is_numeric($id)) {
-                    if (strpos($id,'.') === false) $id = "{$this->table}.$id";
-                    $select->where("$id = ?", $w, 'STRING');
+        // processa as clausulas
+        foreach($where as $id=>$w) {
+            // Zend_Db_Expr
+            if ($w instanceof Zend_Db_Expr) {
+                $select->where($w);
 
-                } else {
+            // Valor numerico
+            } elseif (!is_numeric($id) && is_numeric($w)) {
+                if (strpos($id,'.') === false) $id = "{$this->table}.$id";
+                $select->where("$id = ?", $w, 'INTEGER');
 
-                    throw new Exception("Condição inválida '$w' em " . get_class($this) . '::getSelect()');
-                }
+            // Texto e Data
+            } elseif (!is_numeric($id)) {
+                if (strpos($id,'.') === false) $id = "{$this->table}.$id";
+                $select->where("$id = ?", $w, 'STRING');
+
+            } else {
+                var_dump($where, '$where');
+                var_dump($w, '$$w');
+                throw new Exception("Condição inválida '$w' em " . get_class($this) . '::getSelect()');
             }
         }
 
@@ -221,7 +244,7 @@ class RW_App_Model_Base
      */
     public function getTableSelect()
     {
-        return $this->getTable()->select();
+        return $this->getTableGateway()->select();
     }
 
     /**
@@ -279,7 +302,7 @@ class RW_App_Model_Base
         if ($where instanceof Zend_Db_Select) {
             $md5 = md5($where->assemble());
         } else {
-            $md5 = md5(var_export($where, true) . var_export($order, true) . var_export($count, true) . var_export($offset, true));
+            $md5 = md5(var_export($this->showDeleted, true) . var_export($this->usePaginator, true) . var_export($where, true) . var_export($order, true) . var_export($count, true) . var_export($offset, true));
         }
 
         // Verifica se tem no cache
@@ -312,7 +335,7 @@ class RW_App_Model_Base
 
             } else {
                 // Recupera os registros do banco de dados
-                $fetchAll = $this->getTable()->fetchAll($select);
+                $fetchAll = $this->getTableGateway()->fetchAll($select);
 
                 // Verifica se foi localizado algum registro
                 if ( !is_null($fetchAll) && count($fetchAll) > 0 ) {
@@ -326,7 +349,9 @@ class RW_App_Model_Base
                 }
 
                 // Grava a consulta no cache
-                if ($this->getUseCache()) $this->getCache()->save($fetchAll, $md5);
+                if ($this->getUseCache()) {
+                    $this->getCache()->save($fetchAll, $md5);
+                }
             }
 
             // Some garbage collection
@@ -525,7 +550,7 @@ class RW_App_Model_Base
     /**
      * Retorna o frontend para gravar o cache
      *
-     * @return Zend_Cache_Frontend
+     * @return Zend_Cache_Core
      */
     public function getCache()
     {
@@ -593,21 +618,6 @@ class RW_App_Model_Base
     }
 
     /**
-     * Define se irá usar o campo deleted ou remover o registro quando usar delete()
-     *
-     * @param boolean $useDeleted
-     *
-     * @return  Realejo\App\Model\Base
-     */
-    public function setUseDeleted($useDeleted)
-    {
-        $this->useDeleted = $useDeleted;
-
-        // Mantem a cadeia
-        return $this;
-    }
-
-    /**
      * Retorna se deve usar o paginator
      *
      * @return boolean
@@ -618,18 +628,25 @@ class RW_App_Model_Base
     }
 
     /**
-     * Define se deve retornar os registros marcados como removidos
-     *
-     * @param boolean $showDeleted
-     *
-     * @return  Realejo\App\Model\Base
+     * Getters and setters
      */
-    public function setShowDeleted($showDeleted)
-    {
-        $this->showDeleted = $showDeleted;
 
-        // Mantem a cadeia
-        return $this;
+    /**
+     *
+     * @return string
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**
@@ -643,14 +660,56 @@ class RW_App_Model_Base
 
     /**
      *
+     * @return string
+     */
+    public function getHtmlSelectOption()
+    {
+        return $this->htmlSelectOption;
+    }
+
+    /**
+     *
+     * @return array|string
+     */
+    public function getHtmlSelectOptionData()
+    {
+        return $this->htmlSelectOptionData;
+    }
+
+    /**
+     *
      * @param string $order
      *
-     * @return \Realejo\App\Model\Base
+     * @return \self
      */
     public function setOrder($order)
     {
         $this->order = $order;
+        return $this;
+    }
 
+
+    /**
+     *
+     * @param string $htmlSelectOption
+     *
+     * @return \self
+     */
+    public function setHtmlSelectOption($htmlSelectOption)
+    {
+        $this->htmlSelectOption = $htmlSelectOption;
+        return $this;
+    }
+
+    /**
+     *
+     * @param array|string $htmlSelectOptionData
+     *
+     * @return \self
+     */
+    public function setHtmlSelectOptionData($htmlSelectOptionData)
+    {
+        $this->htmlSelectOptionData = $htmlSelectOptionData;
         return $this;
     }
 
@@ -665,6 +724,21 @@ class RW_App_Model_Base
     }
 
     /**
+     * Define se irá usar o campo deleted ou remover o registro quando usar delete()
+     *
+     * @param boolean $useDeleted
+     *
+     * @return  self
+     */
+    public function setUseDeleted($useDeleted)
+    {
+        $this->useDeleted = $useDeleted;
+
+        // Mantem a cadeia
+        return $this;
+    }
+
+    /**
      * Retorna se deve retornar os registros marcados como removidos
      *
      * @return boolean
@@ -672,5 +746,20 @@ class RW_App_Model_Base
     public function getShowDeleted()
     {
         return $this->showDeleted;
+    }
+
+    /**
+     * Define se deve retornar os registros marcados como removidos
+     *
+     * @param boolean $showDeleted
+     *
+     * @return  self
+     */
+    public function setShowDeleted($showDeleted)
+    {
+        $this->showDeleted = $showDeleted;
+
+        // Mantem a cadeia
+        return $this;
     }
 }

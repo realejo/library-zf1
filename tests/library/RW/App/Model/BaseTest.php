@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class AppModelBaseTest extends PHPUnit_Framework_TestCase
+class AppModelBaseTest extends BaseTestCase
 {
     /**
      * @var string
@@ -17,6 +17,8 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      * @var string
      */
     protected $tableKeyName = "id";
+
+    protected $tables = array('album');
 
     /**
      * @var Base
@@ -50,68 +52,26 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
         )
     );
 
-    public function getAdapter()
-    {
-        if ($this->adapter === null) {
-
-            $config = array(
-                'host' => '192.168.100.25',
-                'username' => 'root',
-                'password' => 'naodigo',
-                'dbname' => 'test',
-                'charset' => 'UTF8');
-
-            $db = Zend_Db::factory('Mysqli', $config);
-            Zend_Db_Table_Abstract::setDefaultAdapter($db);
-            $this->adapter = Zend_Db_Table_Abstract::getDefaultAdapter();
-        }
-        return $this->adapter;
-    }
-
     /**
-     * @return \Realejo\Db\BaseTest
-     */
-    public function createTable()
-    {
-        $conn = $this->getAdapter();
-        $conn->query("
-            CREATE TABLE {$this->tableName} (
-            {$this->tableKeyName} INTEGER PRIMARY KEY,
-            artist varchar(100) NOT NULL,
-            title varchar(100) NOT NULL,
-            deleted INTEGER UNSIGNED NOT NULL DEFAULT 0
-            );");
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Realejo\Db\BaseTest
+     * @return self
      */
     public function insertDefaultRows()
     {
-        $conn = $this->getAdapter();
         foreach ($this->defaultValues as $row) {
-            $conn->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
-        VALUES ({$row[$this->tableKeyName]}, '{$row['artist']}', '{$row['title']}', {$row['deleted']});");
+            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+                                        VALUES (
+                                            {$row[$this->tableKeyName]},
+                                            '{$row['artist']}',
+                                            '{$row['title']}',
+                                            {$row['deleted']}
+                                        );");
         }
         return $this;
     }
 
     /**
      *
-     * @return \Realejo\Db\BaseTest
-     */
-    public function dropTable()
-    {
-        $this->getAdapter()->query("DROP TABLE IF EXISTS {$this->tableName}");
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Realejo\Db\BaseTest
+     * @return self
      */
     public function truncateTable()
     {
@@ -126,7 +86,11 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->dropTable()->createTable()->insertDefaultRows();
+
+        $this->dropTables()->createTables()->insertDefaultRows();
+
+        // Remove as pastas criadas
+        $this->setApplicationConstants()->clearApplicationData();
     }
 
     /**
@@ -135,7 +99,11 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        $this->dropTable();
+
+        $this->dropTables();
+
+        // Remove as pastas criadas
+        $this->clearApplicationData();
     }
 
     /**
@@ -147,19 +115,6 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
             $this->Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, $this->getAdapter());
         }
         return $this->Base;
-    }
-
-    /**
-     * setAPPLICATION_DATA define o APPLICATION_DATA se não existir
-     *
-     * @return string
-     */
-    public function setAPPLICATION_DATA()
-    {
-        // Verifica se a pasta de cache existe
-        if (defined('APPLICATION_DATA') === false) {
-            define('APPLICATION_DATA', $this->dataPath);
-        }
     }
 
     /**
@@ -196,17 +151,12 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
     {
         $Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, $this->getAdapter());
         $this->assertInstanceOf('RW_App_Model_Base', $Base);
-    }
 
-    /**
-     * teste o adapter PDO
-     */
-    public function testPdoAdapter()
-    {
-        $this->assertInstanceOf('Zend_Db_Adapter_Abstract', $this->getAdapter());
-        $this->assertInstanceOf('Zend_Db_Adapter_Abstract', $this->adapter);
+        $Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName);
+        $this->assertInstanceOf('RW_App_Model_Base', $Base);
+        $this->assertInstanceOf(get_class($this->getAdapter()), $Base->getTableGateway()->getAdapter(), 'tem o Adapter padrão');
+        $this->assertEquals($this->getAdapter()->getConfig(), $Base->getTableGateway()->getAdapter()->getConfig(), 'tem a mesma configuração do adapter padrão');
     }
-
 
     /**
      * Tests Base->getOrder()
@@ -224,7 +174,6 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
         $this->getBase()->setOrder('title');
         $this->assertEquals('title', $this->getBase()->getOrder());
 
-
         // Define uma nova ordem com array
         $this->getBase()->setOrder(array('id', 'title'));
         $this->assertEquals(array('id', 'title'), $this->getBase()->getOrder());
@@ -236,7 +185,6 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testWhere()
     {
-
         // Marca pra usar o campo deleted
         $this->getBase()->setUseDeleted(true);
 
@@ -269,12 +217,12 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testGetSQlString()
     {
-        // Verfiica o padrão não usar o campo deleted e não mostrar os removidos
+        // Verifica o padrão de não usar o campo deleted e não mostrar os removidos
         $this->assertEquals('SELECT `album`.* FROM `album`', $this->getBase()->getSQlString(), 'showDeleted=false, useDeleted=false');
 
         // Marca para usar o campo deleted
         $this->getBase()->setUseDeleted(true);
-        $this->assertEquals('SELECT `album`.* FROM `album`', $this->getBase()->getSQlString(), 'showDeleted=false, useDeleted=true');
+        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.deleted = 0)', $this->getBase()->getSQlString(), 'showDeleted=false, useDeleted=true');
 
         // Marca para não usar o campo deleted
         $this->getBase()->setUseDeleted(false);
@@ -299,8 +247,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
      */
     public function testFetchAll()
     {
-
-        // O padrão é não usar o campo deleted
+         // O padrão é não usar o campo deleted
         $albuns = $this->getBase()->fetchAll();
         $this->assertCount(4, $albuns, 'showDeleted=false, useDeleted=false');
 
@@ -310,7 +257,7 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
 
         // Marca pra não mostar os removidos e usar o campo deleted
         $this->getBase()->setShowDeleted(false)->setUseDeleted(true);
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'showDeleted=false, useDeleted=true');
+        $this->assertCount(3, $this->getBase()->fetchAll(), 'showDeleted=false, useDeleted=true');
 
         // Marca pra mostrar os removidos e usar o campo deleted
         $this->getBase()->setShowDeleted(true)->setUseDeleted(true);
@@ -318,9 +265,10 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
         $this->assertCount(4, $albuns, 'showDeleted=true, useDeleted=true');
 
         // Marca não mostrar os removios
-        $this->getBase()->setShowDeleted(false);
+        $this->getBase()->setUseDeleted(true)->setShowDeleted(false);
 
         $albuns = $this->defaultValues;
+        unset($albuns[3]); // remove o deleted=1
         $this->assertEquals($albuns, $this->getBase()->fetchAll());
 
         // Marca mostrar os removios
@@ -329,16 +277,28 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->defaultValues, $this->getBase()->fetchAll());
         $this->assertCount(4, $this->getBase()->fetchAll());
         $this->getBase()->setShowDeleted(false);
-        $this->assertCount(4, $this->getBase()->fetchAll());
+        $this->assertCount(3, $this->getBase()->fetchAll());
 
         // Verifica o where
         $this->assertCount(2, $this->getBase()->fetchAll(array('artist'=>$albuns[0]['artist'])));
+        $this->assertNull($this->getBase()->fetchAll(array('artist'=>$this->defaultValues[3]['artist'])));
 
         // Verifica o paginator com o padrão
         $paginator = $this->getBase()->setUsePaginator(true)->fetchAll();
         $paginator = $paginator->toJson();
+
+        // Tem um bug no Zend_Paginator
+        //http://framework.zend.com/issues/browse/ZF-9731
+        $paginator = (array)json_decode($paginator);
+        $temp = array();
+        foreach($paginator as $p) {
+            $temp[] = $p;
+        }
+        $paginator = json_encode($temp);
+
         $fetchAll = $this->getBase()->setUsePaginator(false)->fetchAll();
         $this->assertNotEquals(json_encode($this->defaultValues), $paginator);
+        $this->assertEquals(json_encode($fetchAll), $paginator, 'retorno do paginator é igual');
 
         // Verifica o paginator alterando o paginator
         $this->getBase()->getPaginator()->setPageRange(2)
@@ -346,30 +306,47 @@ class AppModelBaseTest extends PHPUnit_Framework_TestCase
                                         ->setItemCountPerPage(2);
         $paginator = $this->getBase()->setUsePaginator(true)->fetchAll();
         $paginator = $paginator->toJson();
+
+        // Tem um bug no Zend_Paginator
+        //http://framework.zend.com/issues/browse/ZF-9731
+        $paginator = (array)json_decode($paginator);
+        $temp = array();
+        foreach($paginator as $p) {
+            $temp[] = $p;
+        }
+        $paginator = json_encode($temp);
+
         $this->assertNotEquals(json_encode($this->defaultValues), $paginator);
         $fetchAll = $this->getBase()->setUsePaginator(false)->fetchAll(null, null, 2);
+        $this->assertEquals(json_encode($fetchAll), $paginator);
 
-        $this->setAPPLICATION_DATA();
+        // Apaga qualquer cache
+        $this->assertTrue($this->getBase()->getCache()->clean(), 'apaga o cache');
 
-        // Define exibir os delatados
+        // Define exibir os deletados
         $this->getBase()->setShowDeleted(true);
 
         // Liga o cache
         $this->getBase()->setUseCache(true);
-        $this->assertEquals($this->defaultValues, $this->getBase()->fetchAll(), 'Igual');
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros 1');
+        $this->assertEquals($this->defaultValues, $this->getBase()->fetchAll(), 'fetchAll está igual ao defaultValues');
+        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros');
 
         // Grava um registro "sem o cache saber"
+        $this->getBase()->getTableGateway()->insert(array('id'=>10, 'artist'=>'nao existo por enquanto', 'title'=>'bla bla', 'deleted' => 0));
 
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros 2');
+        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros depois do insert "sem o cache saber"');
+        $this->assertTrue($this->getBase()->getCache()->clean(), 'limpa o cache');
+        $this->assertCount(5, $this->getBase()->fetchAll(), 'Deve conter 5 registros');
 
         // Define não exibir os deletados
         $this->getBase()->setShowDeleted(false);
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros 3');
+        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros com showDeleted=false');
 
         // Apaga um registro "sem o cache saber"
-        $this->getBase()->getTable()->delete(array("id"=>10));
+        $this->getBase()->getTableGateway()->delete("id=10");
         $this->getBase()->setShowDeleted(true);
+        $this->assertCount(5, $this->getBase()->fetchAll(), 'Deve conter 5 registros');
+        $this->assertTrue($this->getBase()->getCache()->clean(), 'apaga o cache');
         $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros 4');
 
     }
