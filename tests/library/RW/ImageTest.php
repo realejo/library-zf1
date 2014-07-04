@@ -27,7 +27,7 @@ class ImageTest extends PHPUnit_Framework_TestCase
         $this->Image = new RW_Image(/* parameters */);
 
         // path para as imagens
-        $this->imgPath = realpath(__DIR__ . '/_files/');
+        $this->imgPath = realpath(ASSETS_PATH . '/_files/');
     }
 
     /**
@@ -186,7 +186,6 @@ class ImageTest extends PHPUnit_Framework_TestCase
 		//$file = dirname(__FILE__).'/img/songbird.png';
 		//$this->Image->open($file);
         //$this->assertTrue($this->Image->sendScreen());
-
     }
 
     /**

@@ -6,8 +6,12 @@
  * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 // Define path to application directory
+defined('ASSETS_PATH')
+    || define('ASSETS_PATH', realpath(__DIR__. '/assets'));
+
+// Define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(__DIR__. '/assets/application'));
+    || define('APPLICATION_PATH', realpath(ASSETS_PATH. '/application'));
 
 // Define application environment
 define('APPLICATION_ENV', 'testing');
