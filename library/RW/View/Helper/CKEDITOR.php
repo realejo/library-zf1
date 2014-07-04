@@ -33,35 +33,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
      */
     public function CKEDITOR($campos, $userOptions = null)
     {
-        // Opções de localização do application.ini
-        $configs = array(
-                    APPLICATION_PATH . "/../configs/application.ini",
-                    APPLICATION_PATH . "/configs/application.ini"
-                  );
-
-        // Verifica se a constante da marca (BFFC) esta definida
-        if (defined('MARCA')) {
-            $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-            $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-        }
-
-        // Carrega as configurações do config
-        $configpath = false;
-        foreach($configs as $c) {
-            if ( file_exists($c) ) {
-                $configpath = $c;
-            }
-        }
-
-        // Verifica se uma das opções foi localizada
-        if ( $configpath === false ) {
-            require_once 'Zend/Config/Exception.php';
-            $marca = (defined('MARCA')) ? '(marca='.BFFC_Marca::getCssClass(MARCA) .')': '' ;
-            throw new Exception("Nenhum arquivo de configuração application.ini encontrado do diretório '/configs' $marca");
-        }
-
-        // Carrega a configuração do Application
-        $config = new Zend_Config_Ini($configpath, APPLICATION_ENV);
+        $config = RW_Config::getApplicationIni();
 
         // Verifica a versão do CKEditor
         $ckeditor = false;
@@ -76,7 +48,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 
         // Verifica se localizou o CKEditor
         if ($ckeditor === false) {
-            throw new Exception('Configuração do CKEditor não encontrada no application'.$marca.'.ini em RW_View_Helper_CKEDITOR');
+            throw new Exception('Configuração do CKEditor não encontrada no application.ini em RW_View_Helper_CKEDITOR');
         }
 
         // Verifica se deve usar o CKFinder

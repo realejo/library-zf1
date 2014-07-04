@@ -65,7 +65,7 @@ class RW_App_Model_Upload
     static public function getUploadRoot()
     {
         // Verifica se a pasta de upload existe
-        if (defined('APPLICATION_DATA') === false) {
+        if ( !defined('APPLICATION_DATA')  || realpath(APPLICATION_DATA) == false) {
             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUploadRoot()');
         }
 
@@ -81,8 +81,8 @@ class RW_App_Model_Upload
     static public function getUrlRoot()
     {
         // Verifica se a pasta de upload existe
-        if (defined('APPLICATION_DATA') === false) {
-            throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUrlRoot()');
+        if ( !defined('APPLICATION_DATA')  || realpath(APPLICATION_DATA) == false) {
+            throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUploadRoot()');
         }
 
         // retorna a pasta raiz do cache

@@ -16,35 +16,7 @@ class RW_Backup
      */
     static public function create($tables = null)
     {
-        // Opções de localização do application.ini
-        $configs = array(
-                    APPLICATION_PATH . "/../configs/application.ini",
-                    APPLICATION_PATH . "/configs/application.ini"
-                  );
-
-        // Verifica se a constante da marca (BFFC) esta definida
-        if (defined('MARCA')) {
-            $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-            $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-        }
-
-        // Carrega as configurações do config
-        $configpath = false;
-        foreach($configs as $c) {
-            if ( file_exists($c) ) {
-                $configpath = $c;
-            }
-        }
-
-        // Verifica se uma das opções foi localizada
-        if ( $configpath === false ) {
-            require_once 'Zend/Config/Exception.php';
-            $marca = (defined('MARCA')) ? '(marca='.BFFC_Marca::getCssClass(MARCA) .')': '' ;
-            throw new Exception("Nenhum arquivo de configuração application.ini encontrado do diretório '/configs' $marca");
-        }
-
-        // Instância o arquivo aplication.ini
-        $config = new Zend_Config_Ini($configpath, APPLICATION_ENV);
+        $config = RW_Config::getApplicationIni();
 
         // Grava os dados de acesso a banco de dados
         $dbhost	= $config->resources->db->params->host;
@@ -109,23 +81,7 @@ class RW_Backup
      */
     static public function restore($file)
     {
-        // Verifica se a constante da marca esta definida
-        $marca = (defined('MARCA')) ? '.'.BFFC_Marca::getCssClass(MARCA) : '' ;
-
-        // Carrega as configurações do config
-        $configpath = APPLICATION_PATH . "/../configs/application$marca.ini";
-        if ( !file_exists($configpath) ) {
-            // procura dentro do application
-            $configpath = APPLICATION_PATH . "/configs/application$marca.ini";
-        }
-
-        if ( !file_exists($configpath) ) {
-            require_once 'Zend/Config/Exception.php';
-            throw new Exception("Arquivo de configuração application$marca.ini não encontrado do diretório /configs");
-        }
-
-        // Instância o arquivo aplication.ini
-        $config = new Zend_Config_Ini($configpath, APPLICATION_ENV);
+        $config = RW_Config::getApplicationIni();
 
         // Grava os dados de acesso a banco de dados
         $dbhost	= $config->resources->db->params->host;
@@ -248,9 +204,11 @@ class RW_Backup
      */
     static public function getPath()
     {
-        // Verifica se a constante da marca esta definida
-        $marca = (defined('MARCA')) ? '/'.BFFC_Marca::getCssClass(MARCA) : '' ;
+        // Verifica se a pasta de upload existe
+        if ( !defined('APPLICATION_DATA')  || realpath(APPLICATION_DATA) == false) {
+            throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_Backup::getPath()');
+        }
 
-        return realpath(APPLICATION_PATH . '/../data'.$marca.'/dumps');
+        return realpath(APPLICATION_DATA . '/dumps');
     }
 }

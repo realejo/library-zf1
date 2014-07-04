@@ -228,6 +228,7 @@ class RW_App_Model_Base
      * Processa as cluasulas especiais do where
      *
      * @param array $where
+     *
      * @return array
      */
     public function getWhere($where)
@@ -510,6 +511,7 @@ class RW_App_Model_Base
 
     /**
      * Retorna o frontend para gravar o cache
+     *
      * @return RW_App_Model_Upload
      */
     public function getUpload()
@@ -522,6 +524,7 @@ class RW_App_Model_Base
 
     /**
      * Retorna o frontend para gravar o cache
+     *
      * @return Zend_Cache_Frontend
      */
     public function getCache()
@@ -532,6 +535,7 @@ class RW_App_Model_Base
 
     /**
      * Define se deve usar o cache
+     *
      * @param boolean $useCache
      */
     public function setUseCache($useCache)
@@ -545,6 +549,7 @@ class RW_App_Model_Base
 
     /**
      * Retorna se deve usar o cache
+     *
      * @return boolean
      */
     public function getUseCache()
@@ -575,6 +580,7 @@ class RW_App_Model_Base
 
     /**
      * Define se deve usar o paginator
+     *
      * @param boolean $usepaginator
      */
     public function setUsePaginator($usePaginator)
@@ -603,6 +609,7 @@ class RW_App_Model_Base
 
     /**
      * Retorna se deve usar o paginator
+     *
      * @return boolean
      */
     public function getUsePaginator()
@@ -643,6 +650,7 @@ class RW_App_Model_Base
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -664,17 +672,5 @@ class RW_App_Model_Base
     public function getShowDeleted()
     {
         return $this->showDeleted;
-    }
-
-    /**
-     * Retorna o Select básico do model
-     * Sobrescreva este método para inlcuir os joins
-     *
-     * @return \Zend\Db\Sql\Select
-     */
-    public function getSQLSelect()
-    {
-        return $this->getTable()
-        ->select();
     }
 }
