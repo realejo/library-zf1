@@ -11,14 +11,16 @@ class RW_Search extends Zend_Search_Lucene
 {
     /**
      * Retorna o indice utilizado verificando se ele já está criado e usando o Stemmer em portugues
+     *
      * @param string $index
+     *
      * @return Zend_Search_Lucene_Interface
      */
     static public function getIndex($index, $forceCreate = false)
     {
 
         // define o caminho
-        $path = APPLICATION_PATH . '/../data/indexes/'. $index;
+        $path = self::getIndexRoot() . '/'. $index;
 
         // Verifica se o index já esta criado
         if ( $forceCreate ) {
@@ -92,5 +94,29 @@ class RW_Search extends Zend_Search_Lucene
         $text = preg_replace($pattern, $replacement, $text);
 
         return trim($text);
+    }
+
+    /**
+     * Retorna a pasta raiz de todos os caches
+     *
+     * @return string
+     */
+    static public function getIndexRoot()
+    {
+        // Verifica se a pasta de cache existe
+        if (defined('APPLICATION_DATA') === false) {
+            throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_Search::getIndexRoot()');
+        }
+
+        // Verifica se a pasta do cache existe
+        $indexPath = APPLICATION_DATA . '/indexes';
+        if (!file_exists($indexPath)) {
+            $oldumask = umask(0);
+            mkdir($indexPath, 0777, true); // or even 01777 so you get the sticky bit set
+            umask($oldumask);
+        }
+
+        // retorna a pasta raiz do cache
+        return $indexPath;
     }
 }

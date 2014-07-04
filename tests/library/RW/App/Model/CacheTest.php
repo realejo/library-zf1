@@ -41,6 +41,10 @@ class CacheTest extends BaseTestCase
      */
     public function testGetCacheRootSemAPPLICATION_DATA()
     {
+        if (defined("APPLICATION_DATA")) {
+            throw new Exception('APPLICATION_DATA já foi definido em outro lugar');
+        }
+
         RW_App_Model_Cache::getCacheRoot();
     }
 

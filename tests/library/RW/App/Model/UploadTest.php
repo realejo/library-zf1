@@ -6,16 +6,9 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class UploadTest extends PHPUnit_Framework_TestCase
+class UploadTest extends BaseTestCase
 {
     /**
-     *
-     * @var string
-     */
-    protected $dataPath = '/../../../assets/data';
-
-    /**
-     *
      * @var RW_App_Model_Upload
      */
     private $RW_App_Model_Upload;
@@ -27,13 +20,8 @@ class UploadTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        // Verifica se a pasta do cache existe
-        if (file_exists($this->dataPath)) {
-            $this->rrmdir($this->dataPath);
-        }
-        $oldumask = umask(0);
-        mkdir($this->dataPath, 0777, true);
-        umask($oldumask);
+        // Verifica se a pasta do APPLICATION DATA
+        $this->setApplicationConstants()->clearApplicationData();
 
         // TODO Auto-generated RW_App_Model_UploadTest::setUp()
         $this->RW_App_Model_Upload = new RW_App_Model_Upload(/* parameters */);
@@ -46,20 +34,10 @@ class UploadTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated RW_App_Model_UploadTest::tearDown()
         $this->RW_App_Model_Upload = null;
-        parent::tearDown();
-    }
 
-    /**
-     * setAPPLICATION_DATA define o APPLICATION_DATA se não existir
-     *
-     * @return string
-     */
-    public function setAPPLICATION_DATA()
-    {
-        // Verifica se a pasta de cache existe
-        if (defined('APPLICATION_DATA') === false) {
-            define('APPLICATION_DATA', $this->dataPath);
-        }
+        $this->clearApplicationData();
+
+        parent::tearDown();
     }
 
     /**

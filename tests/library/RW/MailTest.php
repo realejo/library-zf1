@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class MailTest extends PHPUnit_Framework_TestCase
+class MailTest extends BaseTestCase
 {
     /**
      * @var RW_Mail
@@ -19,6 +19,9 @@ class MailTest extends PHPUnit_Framework_TestCase
     protected function setUp ()
     {
         parent::setUp();
+
+        $this->setApplicationConstants();
+
         // TODO Auto-generated MailTest::setUp()
         $this->RW_Mail = new RW_Mail(/* parameters */);
     }

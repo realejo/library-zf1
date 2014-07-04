@@ -21,7 +21,7 @@ class FileTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated FileTest::setUp()
         $this->RW_File = new RW_File(/* parameters */);
 
-        $this->filePath = realpath(__DIR__ . '/_files/');
+        $this->filePath = realpath(TEST_ROOT . '/assets/_files/');
 
     }
     /**
