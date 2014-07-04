@@ -42,8 +42,10 @@ class RW_App_Model_Cache
      static public function getCacheRoot()
      {
          // Verifica se a pasta de cache existe
-         if (defined('APPLICATION_DATA') === false) {
-             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Cache::getCacheRoot()');
+         if ( !defined('APPLICATION_DATA') )  {
+             throw new Exception('A pasta raiz do data  não está definido em APPLICATION_DATA em RW_App_Model_Cache::getCacheRoot()');
+         } elseif (!is_dir(APPLICATION_DATA) || !is_writable(APPLICATION_DATA) )  {
+             throw new Exception("A pasta raiz do data(APPLICATION_DATA) '". APPLICATION_DATA ."' não existe ou não tem permissão de escrita em RW_App_Model_Cache::getCacheRoot()'");
          }
 
          // Verifica se a pasta do cache existe

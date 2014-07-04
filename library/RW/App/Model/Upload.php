@@ -65,10 +65,12 @@ class RW_App_Model_Upload
      */
     static public function getUploadRoot()
     {
-        // Verifica se a pasta de upload existe
-        if ( !defined('APPLICATION_DATA')  || realpath(APPLICATION_DATA) == false) {
-            throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUploadRoot()');
-        }
+         // Verifica se a pasta de cache existe
+         if ( !defined('APPLICATION_DATA') )  {
+             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUploadRoot()');
+         } elseif (!is_dir(APPLICATION_DATA) || !is_writable(APPLICATION_DATA) )  {
+             throw new Exception("A pasta raiz do data(APPLICATION_DATA) '". APPLICATION_DATA ."' não existe ou não tem permissão de escrita em RW_App_Model_Upload::getUploadRoot()'");
+         }
 
         // retorna a pasta raiz do cache
         return APPLICATION_DATA . '/upload';
