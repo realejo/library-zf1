@@ -28,7 +28,7 @@ class RW_Image
      * @var array
      */
     protected $_imageQuality = array(
-        'png'   =>  10,
+        'png'   =>  9,
         'jpeg'  =>  100,
         'gif'   =>  100
     );

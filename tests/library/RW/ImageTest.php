@@ -27,7 +27,7 @@ class ImageTest extends PHPUnit_Framework_TestCase
         $this->Image = new RW_Image(/* parameters */);
 
         // path para as imagens
-        $this->imgPath = realpath(ASSETS_PATH . '/_files/');
+        $this->imgPath = realpath(TEST_ROOT . '/assets/_files/');
     }
 
     /**
@@ -68,8 +68,8 @@ class ImageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->Image->isLoaded());
 
         // Verifica se o mimetype é JPEG
-        $mineType = $this->Image->mimeType;
-        $this->assertEquals('jpeg', $mineType);
+        $mimeType = $this->Image->mimeType;
+        $this->assertEquals('jpeg', $mimeType);
 
         // Fecha a imagem
         $this->Image->close();
@@ -86,9 +86,9 @@ class ImageTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($this->Image->isLoaded());
 
 		// Verifica se o mimetype é PNG
-		$mineType = $this->Image->mimeType;
+		$mimeType = $this->Image->mimeType;
         //$this->assertEqual('png',$mineType);
-        $this->assertTrue('png' === $mineType);
+        $this->assertTrue('png' === $mimeType);
 
         // Fecha a imagem
         $this->Image->close();
@@ -101,9 +101,9 @@ class ImageTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($this->Image->isLoaded());
 
 		// Verifica se o mimetype é gif
-		$mineType = $this->Image->mimeType;
+		$mimeType = $this->Image->mimeType;
         //$this->assertEqual('gif',$mineType);
-        $this->assertTrue('gif' === $mineType);
+        $this->assertTrue('gif' === $mimeType);
 
         // Fecha a imagem
         $this->Image->close();
@@ -119,10 +119,11 @@ class ImageTest extends PHPUnit_Framework_TestCase
     public function testClose ()
     {
         $file = $this->imgPath.'/exemplo.jpg';
+
     	$this->Image->open($file);
+
     	//Fecha o arquivo
     	$this->assertTrue($this->Image->close());
-
     }
 
     /**
@@ -131,10 +132,10 @@ class ImageTest extends PHPUnit_Framework_TestCase
     public function testIsLoaded ()
     {
         // Cria o arquivo temporário
-        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/saves/temp.jpg');
+        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/temp/temp.jpg');
 
         // Deifne o arquivo a ser usado para os testes
-        $file = $this->imgPath.'/saves/temp.jpg';
+        $file = $this->imgPath.'/temp/temp.jpg';
     	$this->Image->open($file);
 
     	//Verifica o resource
@@ -147,7 +148,7 @@ class ImageTest extends PHPUnit_Framework_TestCase
         //$this->assertNull($this->Image->isLoaded());
 
         // Abre a imagem novamente
-        $file = $this->imgPath.'/saves/temp.jpg';
+        $file = $this->imgPath.'/temp/temp.jpg';
         $this->Image->open($file);
 
         // Salva a imagem sem a opção de fechar
@@ -157,23 +158,28 @@ class ImageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->Image->isLoaded());
 
         // Salva a imagem com opção de fechar
-        $this->Image->save($file,true);
+        $this->Image->save($file, true);
 
         // veriicca o isLoaded
-        //$this->assertFalse($this->Image->isLoaded());
+        $this->assertFalse($this->Image->isLoaded());
 
         // apago o arquivo temporário
         unlink($file);
     }
+
     /**
      * Tests RW_Image->save()
      */
     public function testSave ()
     {
-        $file = $this->imgPath.'/exemplo.jpg';
-    	$this->Image->open($file);
-        $this->assertTrue($this->Image->save(true));
+        // Cria o arquivo temporário
+        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/temp/temp.jpg');
 
+        $file = $this->imgPath.'/temp/temp.jpg';
+
+    	$this->Image->open($file);
+
+        $this->assertTrue($this->Image->save(true));
     }
 
     /**
@@ -188,19 +194,27 @@ class ImageTest extends PHPUnit_Framework_TestCase
         //$this->assertTrue($this->Image->sendScreen());
     }
 
+
+    /**
+     * Image->resize() sem imagem carregada
+     *
+     * @expectedException Exception
+     */
+    public function testResizeSemImagemCarregada()
+    {
+        $this->Image->resize('500','150',true,true);
+    }
+
     /**
      * Tests RW_Image->resize()
      */
     public function testResize ()
     {
-    	//Retornar False
-    	$this->assertFalse($this->Image->resize('500','150',true,true));
-
     	// Cria o arquivo temporário
-        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/saves/temp.jpg');
+        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/temp/temp.jpg');
 
         //Abrir JPG
-        $file = $this->imgPath.'/saves/temp.jpg';
+        $file = $this->imgPath.'/temp/temp.jpg';
         $this->Image->open($file);
 
         //Reduz o tamanho do JPG com crop
@@ -251,7 +265,7 @@ class ImageTest extends PHPUnit_Framework_TestCase
 		unlink($file);
 
 		//Sem Crop e reduzindo forçado
-		copy($this->imgPath.'/exemplo_600x800.jpg', $this->imgPath.'/saves/temp.jpg');
+		copy($this->imgPath.'/exemplo_600x800.jpg', $this->imgPath.'/temp/temp.jpg');
 
 		//Abrir JPG
         $this->Image->open($file);
@@ -288,10 +302,10 @@ class ImageTest extends PHPUnit_Framework_TestCase
 		/*COM ARQUIVO PNG*/
 
     	// Cria o arquivo temporário
-        copy($this->imgPath.'/exemplo.png', $this->imgPath.'/saves/temp.png');
+        copy($this->imgPath.'/exemplo.png', $this->imgPath.'/temp/temp.png');
 
         //Abrindo arquivo
-        $file = $this->imgPath.'/saves/temp.png';
+        $file = $this->imgPath.'/temp/temp.png';
         $this->Image->open($file);
 
         //aumentando o PNG COM CROP
@@ -322,8 +336,8 @@ class ImageTest extends PHPUnit_Framework_TestCase
 		unlink($file);
 
 		// Cria o arquivo temporário
-        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/saves/temp.jpg');
-        $file = $this->imgPath.'/saves/temp.jpg';
+        copy($this->imgPath.'/exemplo.jpg', $this->imgPath.'/temp/temp.jpg');
+        $file = $this->imgPath.'/temp/temp.jpg';
 
         //abrindo o arquivo
         $this->Image->open($file);
@@ -345,8 +359,8 @@ class ImageTest extends PHPUnit_Framework_TestCase
     public function testRemoveMetadata ()
     {
 		 // Cria o arquivo temporário
-         copy($this->imgPath.'/exemplo_600x800.jpg', $this->imgPath.'/saves/temp.jpg');
-         $file = $this->imgPath.'/saves/temp.jpg';
+         copy($this->imgPath.'/exemplo_600x800.jpg', $this->imgPath.'/temp/temp.jpg');
+         $file = $this->imgPath.'/temp/temp.jpg';
 
          //Salva os metadados antes de alterar
          $metadados = exif_read_data($file);
