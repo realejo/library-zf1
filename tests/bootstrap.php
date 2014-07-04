@@ -2,23 +2,21 @@
 /**
  * Bootstrap para os testes do PHPUnit
  *
- * @link      http://github.com/realejo/library-zf1
- * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
-// Define path to application directory
-defined('ASSETS_PATH')
-    || define('ASSETS_PATH', realpath(__DIR__. '/assets'));
 
 // Define path to application directory
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(ASSETS_PATH. '/application'));
+defined('TEST_ROOT')
+    || define('TEST_ROOT', realpath(__DIR__));
 
 // Define application environment
 define('APPLICATION_ENV', 'testing');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once 'BaseTestCase.php';
+require_once 'library/TestAssets/BaseTestCase.php';
 
 Zend_Loader_Autoloader::getInstance();
 

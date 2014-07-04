@@ -18,8 +18,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
     protected function setUp ()
     {
         parent::setUp();
-        // TODO Auto-generated RW_BaseTest::setUp()
-        $this->RW_Base = new RW_Base(/* parameters */);
+
+        $this->RW_Base = new RW_Base();
     }
 
     /**
@@ -27,8 +27,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown ()
     {
-        // TODO Auto-generated RW_BaseTest::tearDown()
         $this->RW_Base = null;
+
         parent::tearDown();
     }
 

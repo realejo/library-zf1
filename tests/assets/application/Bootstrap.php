@@ -1,11 +1,10 @@
 <?php
 /**
- * Boostrap da Extranet BFFC
+ * Boostrap exdemplo para um applicativo que use relaejo/library-zf1
  *
- * @category   Bootstrap
- * @author     Realejo
- * @version    $Id: Bootstrap.php 1020 2014-01-13 14:02:07Z igor $
- * @copyright  Copyright (c) 2012 Realejo Design Ltda. (http://www.realejo.com.br)
+ * @link      http://github.com/realejo/libraray-zf1
+ * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
+ * @license   http://unlicense.org
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -21,14 +20,5 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $config = new Zend_Config($this->getOptions());
         $db = Zend_Db::factory($config->resources->db);
         Zend_Db_Table_Abstract::setDefaultAdapter($db);
-
-        // Configura o cache do metadata das tabelas
-//         $frontendOptions = array( 'automatic_serialization' => true, 'lifetime'=>null );
-//         $backendOptions  = array( 'cache_dir' => APPLICATION_PATH . '/../data/cache/db' );
-//         $cache = Zend_Cache::factory('Core',
-//                                     'File',
-//                                     $frontendOptions,
-//                                     $backendOptions);
-//         Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
     }
 }

@@ -1,5 +1,5 @@
 [testing]
-bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
+bootstrap.path = TEST_ROOT "/assets/application/Bootstrap.php"
 bootstrap.class = "Bootstrap"
 
 ; Database
