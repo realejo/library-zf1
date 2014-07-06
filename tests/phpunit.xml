@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./bootstrap.php" colors="false">
-    <testsuite name="ApplicationTestSuite">
+    <testsuite name="Realejo Library ZF1 Test Suite">
         <directory>./library/RW</directory>
     </testsuite>
     <filter>
@@ -10,6 +10,6 @@
     </filter>
     <logging>
         <log type="coverage-html" target="./log/coverage" charset="UTF-8" yui="true" highlight="false" lowUpperBound="35" highLowerBound="70"/>
-		<log type="testdox-html" target="./log/testdox.html"/>		
+		<log type="testdox-html" target="./log/testdox.html"/>
     </logging>
 </phpunit>
