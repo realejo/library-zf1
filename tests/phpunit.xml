@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./bootstrap.php" colors="false">
     <testsuite name="ApplicationTestSuite">
-        <directory>./RW/</directory>
+        <directory>./library/RW</directory>
     </testsuite>
     <filter>
         <whitelist>
-            <directory suffix=".php">../library</directory>
-            <directory suffix=".php">../application</directory>
+            <directory suffix=".php">../library/RW</directory>
         </whitelist>
     </filter>
     <logging>

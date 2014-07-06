@@ -16,7 +16,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp ()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -26,7 +26,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown ()
+    protected function tearDown()
     {
         $this->RW_Base = null;
 
@@ -36,7 +36,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Constructs the test case.
      */
-    public function __construct ()
+    public function __construct()
     {
         // TODO Auto-generated constructor
     }
@@ -44,7 +44,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::RemoveAcentos()
      */
-    public function testRemoveAcentos ()
+    public function testRemoveAcentos()
     {
 
         $string  = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝŸàáâãäåæçèéêëìíîïñòóôõöùúûüýÿ';
@@ -55,7 +55,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::strip_tags_attributes()
      */
-    public function testStrip_tags_attributes ()
+    public function testStrip_tags_attributes()
     {
     	//$allow = '<span><p><ul><li><b><strong><a>';
     	$allow1 = '<span><a><p>';
@@ -74,7 +74,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::CleanFileName()
      */
-    public function testCleanFileName ()
+    public function testCleanFileName()
     {
     	$filename = '#$%@#%$ãoçáàbácôíxêchôçú';
         $this->assertEquals('aocaabacoixechocu', RW_Base::CleanFileName($filename));
@@ -105,6 +105,9 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Thamyris Mendonça',$this->RW_Base->sanitize('•●๋• Thamyris Mendonça •●๋•'));
         $this->assertEquals('FERNANDA FIGHT',$this->RW_Base->sanitize('☠ FERNANDA FIGHT ☠ '));
 
+        // URL
+        $this->assertEquals('',$this->RW_Base->sanitize('áéúí', array('url')));
+
         // Especiais
         $this->assertEquals('',$this->RW_Base->sanitize(null));
         $this->assertEquals('',$this->RW_Base->sanitize("\n"));
@@ -119,7 +122,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::seourl()
      */
-    public function testSeourl ()
+    public function testSeourl()
     {
     	$url 		= 'fazendo uma tremenda bagunça e uma GRANDE confusão';
     	$urlRetorno = 'fazendo-uma-tremenda-bagunca-e-uma-grande-confusao';
@@ -133,18 +136,29 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::getSafeSEO()
      */
-    public function testGetSafeSEO ()
+    public function testGetSafeSEO()
     {
         $this->assertEquals('123-bla,blsdsa-bla', $this->RW_Base->getSafeSEO(' 123-bla,blsds   a-bla '));
     }
 
     /**
+     * Tests RW_Base::getSafeID()
+     */
+    public function testGetSafeID()
+    {
+        $this->assertEquals('123blablsdsabla', $this->RW_Base->getSafeID('123-bla,blsds   a-bla '));
+    }
+
+    /**
      * Tests RW_Base::getSEOID()
      */
-    public function testGetSEOID ()
+    public function testGetSEOID()
     {
         $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla,bla-bla'));
         $this->assertEquals('123', $this->RW_Base->getSEOID('123,bla-bla-bla'));
+
+        $this->assertEquals('123', $this->RW_Base->getSEOID('123,bla'));
+        $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla'));
 
         $this->assertEquals('123', $this->RW_Base->getSEOID('123-bla-bla-bla', '-'));
         $this->assertEquals('123-bla-bla-bla', $this->RW_Base->getSEOID('123-bla-bla-bla', ','));
@@ -156,7 +170,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::CleanHTML()
      */
-    public function testCleanHTML ()
+    public function testCleanHTML()
     {
         $allow 	 = '<span><a><br>';
         $str 	 = '<p style="text-align:center">Paragraph</p><strong style="color:red">Bold</strong><br><span style="color:red">Red</span><a href="#">Header</a>';
@@ -167,7 +181,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     /**
      * Tests RW_Base::getCSV()
      */
-    public function testGetCSV ()
+    public function testGetCSV()
     {
         $array[0] = array('nome'=>'Artur dos Santos','idade'=>32,'data_nascimento'=>'28/08/1979','escolaridade'=>'2 Grau');
         $retorno1  = "NOME;IDADE;DATA_NASCIMENTO;ESCOLARIDADE\n\"Artur dos Santos\";\"32\";\"28/08/1979\";\"2 Grau\"";

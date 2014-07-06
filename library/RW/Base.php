@@ -324,6 +324,8 @@ class RW_Base
      * @param string   $chave      Chave do cache
      * @param opcional $configfile Nome do arquivo de configuração
      *
+     * @deprecated Descobrir quem ainda usa isso. Isso aumenta muito o overhead e não faz sentido a longo prazo
+     *
      * @return boolean|null  Retorna TRUE|FALSE se a chave existir ou retorna nulo
      */
     public static function getCacheConfig($chave, $configfile = 'application')
