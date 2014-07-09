@@ -78,6 +78,8 @@ class DbTest extends BaseTestCase
 
         $this->dropTables()->createTables();
 
+        $this->Db = new RW_App_Model_Db($this->tableName, $this->tableKeyName);
+
         // Remove as pastas criadas
         $this->setApplicationConstants()->clearApplicationData();
     }
@@ -91,21 +93,10 @@ class DbTest extends BaseTestCase
 
         $this->dropTables();
 
+        unset($this->Db);
+
         // Remove as pastas criadas
         $this->clearApplicationData();
-    }
-
-    /**
-     *
-     * @param string $reset
-     * @return RW_App_Model_Db
-     */
-    public function getDb($reset = false)
-    {
-        if ($this->Db === null || $reset === true) {
-            $this->Db = new RW_App_Model_Db($this->tableName, $this->tableKeyName);
-        }
-        return $this->Db;
     }
 
     public function testTableName()
@@ -130,24 +121,15 @@ class DbTest extends BaseTestCase
     }
 
     /**
-     * Verifica se tudo foi criado corretamente no MySQL
-     */
-    public function testSetupMysql()
-    {
-        $this->setup();
-        $this->assertTrue(true);
-    }
-
-    /**
      * Tests Db->insert()
      */
     public function testInsert()
     {
         // Certifica que a tabela está vazia
-        $this->assertNull($this->getDb()->fetchAll(), 'Verifica se há algum registro pregravado');
+        $this->assertNull($this->Db->fetchAll(), 'Verifica se há algum registro pregravado');
 
-        $this->assertFalse($this->getDb()->insert(array()), 'Verifica inclusão inválida 1');
-        $this->assertFalse($this->getDb()->insert(null), 'Verifica inclusão inválida 2');
+        $this->assertFalse($this->Db->insert(array()), 'Verifica inclusão inválida 1');
+        $this->assertFalse($this->Db->insert(null), 'Verifica inclusão inválida 2');
 
         $row = array(
             'artist' => 'Rush',
@@ -155,17 +137,17 @@ class DbTest extends BaseTestCase
             'deleted' => '0'
         );
 
-        $id = $this->getDb()->insert($row);
+        $id = $this->Db->insert($row);
         $this->assertEquals(1, $id, 'Verifica a chave criada=1');
 
-        $this->assertNotNull($this->getDb()->fetchAll(), 'Verifica o fetchAll não vazio');
-        $this->assertEquals($row, $this->getDb()->getLastInsertSet(), 'Verifica o set do ultimo insert');
-        $this->assertCount(1, $this->getDb()->fetchAll(), 'Verifica se apenas um registro foi adicionado');
+        $this->assertNotNull($this->Db->fetchAll(), 'Verifica o fetchAll não vazio');
+        $this->assertEquals($row, $this->Db->getLastInsertSet(), 'Verifica o set do ultimo insert');
+        $this->assertCount(1, $this->Db->fetchAll(), 'Verifica se apenas um registro foi adicionado');
 
         $row = array_merge(array('id'=>$id), $row);
 
-        $this->assertEquals(array($row), $this->getDb()->fetchAll(), 'Verifica se o registro adicionado corresponde ao original pelo fetchAll()');
-        $this->assertEquals($row, $this->getDb()->fetchRow(1), 'Verifica se o registro adicionado corresponde ao original pelo fetchRow()');
+        $this->assertEquals(array($row), $this->Db->fetchAll(), 'Verifica se o registro adicionado corresponde ao original pelo fetchAll()');
+        $this->assertEquals($row, $this->Db->fetchRow(1), 'Verifica se o registro adicionado corresponde ao original pelo fetchRow()');
 
         $row = array(
             'id' => 2,
@@ -174,29 +156,29 @@ class DbTest extends BaseTestCase
             'deleted' => '0'
         );
 
-        $id = $this->getDb()->insert($row);
+        $id = $this->Db->insert($row);
         $this->assertEquals(2, $id, 'Verifica a chave criada=2');
 
-        $this->assertCount(2, $this->getDb()->fetchAll(), 'Verifica que há DOIS registro');
-        $this->assertEquals($row, $this->getDb()->fetchRow(2), 'Verifica se o SEGUNDO registro adicionado corresponde ao original pelo fetchRow()');
-        $this->assertEquals($row, $this->getDb()->getLastInsertSet());
+        $this->assertCount(2, $this->Db->fetchAll(), 'Verifica que há DOIS registro');
+        $this->assertEquals($row, $this->Db->fetchRow(2), 'Verifica se o SEGUNDO registro adicionado corresponde ao original pelo fetchRow()');
+        $this->assertEquals($row, $this->Db->getLastInsertSet());
 
         $row = array(
             'artist' => 'Rush',
             'title' => 'Moving Pictures',
             'deleted' => '0'
         );
-        $id = $this->getDb()->insert($row);
+        $id = $this->Db->insert($row);
         $this->assertEquals(3, $id);
-        $this->assertEquals($row, $this->getDb()->getLastInsertSet(), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo getLastInsertSet()');
+        $this->assertEquals($row, $this->Db->getLastInsertSet(), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo getLastInsertSet()');
 
         $row = array_merge(array('id'=>$id), $row);
 
-        $this->assertCount(3, $this->getDb()->fetchAll());
-        $this->assertEquals($row, $this->getDb()->fetchRow(3), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo fetchRow()');
+        $this->assertCount(3, $this->Db->fetchAll());
+        $this->assertEquals($row, $this->Db->fetchRow(3), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo fetchRow()');
 
         // Teste com Zend_Db_Expr
-        $id = $this->getDb()->insert(array('title'=>new Zend_Db_Expr('now()')));
+        $id = $this->Db->insert(array('title'=>new Zend_Db_Expr('now()')));
         $this->assertEquals(4, $id);
     }
 
@@ -206,7 +188,7 @@ class DbTest extends BaseTestCase
     public function testUpdate()
     {
         // Certifica que a tabela está vazia
-        $this->assertNull($this->getDb()->fetchAll());
+        $this->assertNull($this->Db->fetchAll());
 
         $row1 = array(
             'id' => 1,
@@ -222,37 +204,37 @@ class DbTest extends BaseTestCase
             'deleted' => 0
         );
 
-        $this->getDb()->insert($row1);
-        $this->getDb()->insert($row2);
+        $this->Db->insert($row1);
+        $this->Db->insert($row2);
 
-        $this->assertNotNull($this->getDb()->fetchAll());
-        $this->assertCount(2, $this->getDb()->fetchAll());
-        $this->assertEquals($row1, $this->getDb()->fetchRow(1));
-        $this->assertEquals($row2, $this->getDb()->fetchRow(2));
+        $this->assertNotNull($this->Db->fetchAll());
+        $this->assertCount(2, $this->Db->fetchAll());
+        $this->assertEquals($row1, $this->Db->fetchRow(1));
+        $this->assertEquals($row2, $this->Db->fetchRow(2));
 
         $row = array(
             'artist'  => 'Rush',
             'title'   => 'Moving Pictures',
         );
 
-        $this->getDb()->update($row, 2);
+        $this->Db->update($row, 2);
         $row['id'] = '2';
         $row['deleted'] = '0';
 
-        $this->assertNotNull($this->getDb()->fetchAll());
-        $this->assertCount(2, $this->getDb()->fetchAll());
-        $this->assertEquals($row, $this->getDb()->fetchRow(2), 'Alterou o 2?' );
+        $this->assertNotNull($this->Db->fetchAll());
+        $this->assertCount(2, $this->Db->fetchAll());
+        $this->assertEquals($row, $this->Db->fetchRow(2), 'Alterou o 2?' );
 
-        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'Alterou o 1?');
-        $this->assertNotEquals($row2, $this->getDb()->fetchRow(2), 'O 2 não é mais o mesmo?');
+        $this->assertEquals($row1, $this->Db->fetchRow(1), 'Alterou o 1?');
+        $this->assertNotEquals($row2, $this->Db->fetchRow(2), 'O 2 não é mais o mesmo?');
 
         unset($row['id']);
         unset($row['deleted']);
-        $this->assertEquals($row, $this->getDb()->getLastUpdateSet(), 'Os dados diferentes foram os alterados?');
-        $this->assertEquals(array('title'=>array($row2['title'], $row['title'])), $this->getDb()->getLastUpdateDiff(), 'As alterações foram detectadas corretamente?');
+        $this->assertEquals($row, $this->Db->getLastUpdateSet(), 'Os dados diferentes foram os alterados?');
+        $this->assertEquals(array('title'=>array($row2['title'], $row['title'])), $this->Db->getLastUpdateDiff(), 'As alterações foram detectadas corretamente?');
 
-        $this->assertFalse($this->getDb()->update(array(), 2));
-        $this->assertFalse($this->getDb()->update(null, 2));
+        $this->assertFalse($this->Db->update(array(), 2));
+        $this->assertFalse($this->Db->update(null, 2));
     }
 
     /**
@@ -273,41 +255,41 @@ class DbTest extends BaseTestCase
             'deleted' => 0
         );
 
-        $this->getDb()->insert($row1);
-        $this->getDb()->insert($row2);
+        $this->Db->insert($row1);
+        $this->Db->insert($row2);
 
         // Verifica se o registro existe
-        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'row1 existe');
-        $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 existe');
+        $this->assertEquals($row1, $this->Db->fetchRow(1), 'row1 existe');
+        $this->assertEquals($row2, $this->Db->fetchRow(2), 'row2 existe');
 
         // Marca para usar o campo deleted
-        $this->getDb()->setUseDeleted(true)->setShowDeleted(true);
+        $this->Db->setUseDeleted(true)->setShowDeleted(true);
 
         // Remove o registro
-        $this->getDb()->delete(1);
+        $this->Db->delete(1);
         $row1['deleted'] = 1;
 
         // Verifica se foi removido
-        $row = $this->getDb()->fetchRow(1);
+        $row = $this->Db->fetchRow(1);
         $this->assertEquals(1, $row['deleted'], 'row1 marcado como deleted');
-        $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 ainda existe v1');
+        $this->assertEquals($row2, $this->Db->fetchRow(2), 'row2 ainda existe v1');
 
         // Marca para mostrar os removidos
-        $this->getDb()->setShowDeleted(true);
+        $this->Db->setShowDeleted(true);
 
         // Verifica se o registro existe
-        $this->assertEquals($row1, $this->getDb()->fetchRow(1), 'row1 ainda existe');
-        $this->assertEquals($row2, $this->getDb()->fetchRow(2), 'row2 ainda existe v2');
+        $this->assertEquals($row1, $this->Db->fetchRow(1), 'row1 ainda existe');
+        $this->assertEquals($row2, $this->Db->fetchRow(2), 'row2 ainda existe v2');
 
         // Marca para remover o registro da tabela
-        $this->getDb()->setUseDeleted(false);
+        $this->Db->setUseDeleted(false);
 
         // Remove o registro
-        $this->getDb()->delete(1);
+        $this->Db->delete(1);
 
         // Verifica se ele foi removido
-        $this->assertNull($this->getDb()->fetchRow(1), 'row1 não existe ');
-        $this->assertNotEmpty($this->getDb()->fetchRow(2), 'row2 ainda existe v3');
+        $this->assertNull($this->Db->fetchRow(1), 'row1 não existe ');
+        $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v3');
     }
 }
 
