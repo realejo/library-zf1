@@ -451,14 +451,19 @@ class RW_App_Model_Base
     /**
      * Retorna o HTML de um <select> apra usar em formulários
      *
-     * @param string $nome        Nome/ID a ser usado no <select>
+     * @param string $nome        Name/ID a ser usado no <select>
      * @param string $selecionado Valor pré seleiconado
      * @param string $opts        Opções adicionais
+     *
+     * Os valores de option serão os valores dos campos definidos em $htmlSelectOption
+     * Aos options serão adicionados data-* de acordo com os campos definidos em $htmlSelectOptionData
      *
      * As opções adicionais podem ser
      *  - where       => filtro para ser usando no fetchAll()
      *  - placeholder => legenda quando nenhum estiver selecionado e/ou junto com show-empty
+     *                   se usdo com FALSE, nunca irá mostrar o vazio, mesmo que não tenha um selecionado
      *  - show-empty  => mostra um <option> vazio no inicio mesmo com um selecionado
+     *  - grouped     => mostra o <optgroup> usando com label e agregador o campo informado
      *
      * @return string
      */
@@ -485,8 +490,11 @@ class RW_App_Model_Base
             $selectPlaceholder = "placeholder=\"$selectPlaceholder\"";
         }
 
+        $grouped = (isset($opts['grouped'])) ? $opts['grouped'] : false;
+
         // Monta as opções
         $options = '';
+        $group = false;
         if (! empty($fetchAll)) {
             foreach ($fetchAll as $row) {
                 preg_match_all('/\{([a-z_]*)\}/', $this->htmlSelectOption, $matches);
@@ -510,15 +518,33 @@ class RW_App_Model_Base
                         $data .= " data-$name=\"{$row[$field]}\"";
                     }
                 }
+
+                // Verifica se deve usar optgroup e cria o label
+                if ($grouped !== false) {
+                    if ($group !== $row[$grouped]) {
+                        if ($group !== false) {
+                            $options .= '</optgroup>';
+                        }
+                        $options .= '<optgroup label="' . $row[$grouped] . '">';
+                        $group = $row[$grouped];
+                    }
+                }
+
                 $options .= "<option value=\"{$row[$this->key]}\" $data>$option</option>";
+            }
+
+            // Fecha o último grupo se ele existir
+            if ($grouped !== false && $group !== false) {
+                $options .= '</optgroup>';
             }
         }
 
         // Verifica se tem valor padrão
-        if (! is_null($selecionado)) {
+        if ( !is_null($selecionado) ) {
             $temp = str_replace("<option value=\"$selecionado\"", "<option value=\"$selecionado\" selected=\"selected\"", $options);
-            if ($temp === $options)
+            if ($temp === $options) {
                 $selecionado = null;
+            }
             $options = $temp;
         }
 
