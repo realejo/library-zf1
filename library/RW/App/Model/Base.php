@@ -475,11 +475,15 @@ class RW_App_Model_Base
             );
         }
 
-        // Verifica se deve manter um em branco
+        // Verifica se deve mostrar a primeira opção em branco
         $showEmpty = (isset($opts['show-empty']) && $opts['show-empty'] === true);
+        $neverShowEmpty = (isset($opts['show-empty']) && $opts['show-empty'] === false);
 
         // Define ao plcaeholder aser usado
-        $placeholder = (isset($opts['placeholder'])) ? $opts['placeholder'] : '';
+        $placeholder = $selectPlaceholder = (isset($opts['placeholder'])) ? $opts['placeholder'] : '';
+        if (!empty($placeholder)) {
+            $selectPlaceholder = "placeholder=\"$selectPlaceholder\"";
+        }
 
         // Monta as opções
         $options = '';
@@ -489,7 +493,7 @@ class RW_App_Model_Base
 
                 // Troca pelos valores
                 foreach ($matches[1] as $i => $m) {
-                    $matches[1][$i] = $row[$m];
+                    $matches[1][$i] = (isset($row[$m])) ? $row[$m] : '';
                 }
 
                 // Define o option
@@ -519,10 +523,10 @@ class RW_App_Model_Base
         }
 
         // Abre o select
-        $select = "<select class=\"form-control\" name=\"$nome\" id=\"$nome\">";
+        $select = "<select class=\"form-control\" name=\"$nome\" id=\"$nome\" $selectPlaceholder>";
 
         // Verifica se tem valor padrão selecionado
-        if (empty($selecionado) || $showEmpty)
+        if ((empty($selecionado) || $showEmpty) && !$neverShowEmpty)
             $select .= "<option value=\"\">$placeholder</option>";
 
         // Coloca as opções
@@ -681,7 +685,7 @@ class RW_App_Model_Base
      *
      * @param string $order
      *
-     * @return \self
+     * @return self
      */
     public function setOrder($order)
     {
@@ -694,7 +698,7 @@ class RW_App_Model_Base
      *
      * @param string $htmlSelectOption
      *
-     * @return \self
+     * @return self
      */
     public function setHtmlSelectOption($htmlSelectOption)
     {
@@ -706,7 +710,7 @@ class RW_App_Model_Base
      *
      * @param array|string $htmlSelectOptionData
      *
-     * @return \self
+     * @return self
      */
     public function setHtmlSelectOptionData($htmlSelectOptionData)
     {

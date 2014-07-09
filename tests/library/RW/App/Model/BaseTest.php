@@ -99,6 +99,7 @@ class AppModelBaseTest extends BaseTestCase
         $this->clearApplicationData();
     }
 
+
     /**
      * Construct sem nome da tabela
      * @expectedException Exception
@@ -377,6 +378,197 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertEquals($this->defaultValues[1], $albuns[2]);
         $this->assertEquals($this->defaultValues[2], $albuns[3]);
         $this->assertEquals($this->defaultValues[3], $albuns[4]);
+    }
+
+    public function testHtmlSelectGettersSetters()
+    {
+        $this->assertEquals('{nome}', $this->Base->getHtmlSelectOption(), 'padrão {nome}');
+        $this->assertInstanceOf('RW_App_Model_Base', $this->Base->setHtmlSelectOption('{title}'), 'setHtmlSelectOption() retorna RW_App_Model_Base');
+        $this->assertEquals('{title}', $this->Base->getHtmlSelectOption(), 'troquei por {title}');
+    }
+
+    public function testHtmlSelectWhere()
+    {
+        $id = 'teste';
+        $this->Base->setHtmlSelectOption('{title}');
+
+        $select = $this->Base->getHtmlSelect($id, null, array('where'=>array('artist'=>'Rush')));
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+
+        $options = $dom->query("option");
+        $this->assertCount(3, $options, " 3 opções encontradas");
+
+        $this->assertEmpty($options->current()->nodeValue, "primeiro é vazio 1");
+        $this->assertEmpty($options->current()->getAttribute('value'), "o valor do primeiro é vazio 1");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 1");
+        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do tereceiro ok 1");
+        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do tereceiro ok 1");
+
+
+        $select = $this->Base->getHtmlSelect($id, 1, array('where'=>array('artist'=>'Rush')));
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+
+        $options = $dom->query("option");
+        $this->assertCount(2, $options, " 2 opções encontradas");
+
+        $this->assertNotEmpty($options->current()->nodeValue, "primeiro não é vazio 2");
+        $this->assertNotEmpty($options->current()->getAttribute('value'), "o valor do primeiro não é vazio 2");
+
+        $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 2");
+        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 2");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do tereceiro ok 2");
+        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do tereceiro ok 2");
+
+    }
+    public function testHtmlSelectSemOptionValido()
+    {
+        $id = 'teste';
+
+        $select = $this->Base->getHtmlSelect($id);
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+
+        $options = $dom->query("option");
+        $this->assertCount(5, $options, " 5 opções encontradas");
+
+        $this->assertEmpty($options->current()->nodeValue, "primeiro é vazio 1");
+        $this->assertEmpty($options->current()->getAttribute('value'), "o valor do primeiro é vazio 1");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do segundo ok 1");
+        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do tereceiro ok 1");
+        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do tereceiro ok 1");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do quarto ok 1");
+        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do quarto ok 1");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do quinto ok 1");
+        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quinto ok 1");
+
+        $select = $this->Base->setHtmlSelectOption('{nao_existo}')->getHtmlSelect($id);
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+
+        $options = $dom->query("option");
+        $this->assertCount(5, $options, " 5 opções encontradas");
+
+        $this->assertEmpty($options->current()->nodeValue, "primeiro é vazio 2");
+        $this->assertEmpty($options->current()->getAttribute('value'), "o valor do primeiro é vazio 2");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do segundo ok 2");
+        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 2");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do tereceiro ok 2");
+        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do tereceiro ok 2");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do quarto ok 2");
+        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do quarto ok 2");
+
+        $options->next();
+        $this->assertEmpty($options->current()->nodeValue, "nome do quinto ok 2");
+        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quinto ok 2");
+    }
+
+    public function testHtmlSelectOption()
+    {
+        $id = 'teste';
+
+        $select = $this->Base->setHtmlSelectOption('{artist}')->getHtmlSelect($id);
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query("#$id"), "id #$id existe");
+        $this->assertCount(1, $dom->query("select[name=\"$id\"]"), "placeholder select[name=\"$id\"] encontrado");
+        $options = $dom->query("option");
+        $this->assertCount(5, $options, " 5 opções encontradas");
+
+        $this->assertEmpty($options->current()->nodeValue, "primeiro é vazio");
+        $this->assertEmpty($options->current()->getAttribute('value'), "o valor do primeiro é vazio");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[0]['artist'], $options->current()->nodeValue, "nome do segundo ok");
+        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[1]['artist'], $options->current()->nodeValue, "nome do tereceiro ok");
+        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do tereceiro ok");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[2]['artist'], $options->current()->nodeValue, "nome do quarto ok");
+        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do quarto ok");
+
+        $options->next();
+        $this->assertEquals($this->defaultValues[3]['artist'], $options->current()->nodeValue, "nome do quinto ok");
+        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quinto ok");
+    }
+
+    public function testHtmlSelectPlaceholder()
+    {
+        $ph = 'myplaceholder';
+        $select = $this->Base->getHtmlSelect('nome_usado', null, array('placeholder'=>$ph));
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe');
+        $this->assertCount(1, $dom->query("select[placeholder=\"$ph\"]"), "placeholder select[placeholder=\"$ph\"] encontrado");
+        $options = $dom->query("option");
+        $this->assertCount(5, $options, " 5 opções encontradas");
+        $this->assertEquals($ph, $options->current()->nodeValue, "placeholder é a primeira");
+        $this->assertEmpty($options->current()->getAttribute('value'), "o valor do placeholder é vazio");
+    }
+
+    public function testHtmlSelectShowEmpty()
+    {
+        $select = $this->Base->getHtmlSelect('nome_usado');
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe');
+        $this->assertCount(5, $dom->query('option'), '5 opções existem');
+        $this->assertEmpty($dom->query('option')->current()->nodeValue, "a primeira é vazia");
+        $this->assertEmpty($dom->query('option')->current()->getAttribute('value'), "o valor da primeira é vazio");
+
+        $select = $this->Base->getHtmlSelect('nome_usado', 1);
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe COM valor padrão');
+        $this->assertCount(4, $dom->query('option'), '4 opções existem COM valor padrão');
+
+        $select = $this->Base->getHtmlSelect('nome_usado', null, array('show-empty'=>false));
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe SEM valor padrão e show-empty=false');
+        $this->assertCount(4, $dom->query('option'), '4 opções existem SEM valor padrão e show-empty=false');
+
+        // sem mostrar o empty
+        $select = $this->Base->getHtmlSelect('nome_usado', 1, array('show-empty'=>false));
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe com valor padrão e show-empty=false');
+        $this->assertCount(4, $dom->query('option'), '4 opções existem com valor padrão e show-empty=false');
+
+        // sem mostrar o empty
+        $select = $this->Base->getHtmlSelect('nome_usado', 1, array('show-empty'=>true));
+        $this->assertNotEmpty($select);
+        $dom = new Zend_Dom_Query($select);
+        $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe com valor padrão e show-empty=true');
+        $this->assertCount(5, $dom->query('option'), '5 opções existem com valor padrão e show-empty=true');
+        $this->assertEmpty($dom->query('option')->current()->nodeValue, "a primeira é vazia com valor padrão e show-empty=true");
+        $this->assertEmpty($dom->query('option')->current()->getAttribute('value'), "o valor da primeira é vazio com valor padrão e show-empty=true");
     }
 }
 
