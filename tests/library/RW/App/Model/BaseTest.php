@@ -78,6 +78,8 @@ class AppModelBaseTest extends BaseTestCase
 
         $this->dropTables()->createTables()->insertDefaultRows();
 
+        $this->Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, $this->getAdapter());
+
         // Remove as pastas criadas
         $this->setApplicationConstants()->clearApplicationData();
     }
@@ -91,19 +93,10 @@ class AppModelBaseTest extends BaseTestCase
 
         $this->dropTables();
 
+        unset($this->Base);
+
         // Remove as pastas criadas
         $this->clearApplicationData();
-    }
-
-    /**
-     * @return RW_App_Model_Base
-     */
-    public function getBase($reset = false)
-    {
-        if ($this->Base === null || $reset === true) {
-            $this->Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName, $this->getAdapter());
-        }
-        return $this->Base;
     }
 
     /**
@@ -153,19 +146,19 @@ class AppModelBaseTest extends BaseTestCase
     public function testOrder()
     {
         // Verifica a ordem padrão
-        $this->assertNull($this->getBase()->getOrder());
+        $this->assertNull($this->Base->getOrder());
 
         // Define uma nova ordem com string
-        $this->getBase()->setOrder('id');
-        $this->assertEquals('id', $this->getBase()->getOrder());
+        $this->Base->setOrder('id');
+        $this->assertEquals('id', $this->Base->getOrder());
 
         // Define uma nova ordem com string
-        $this->getBase()->setOrder('title');
-        $this->assertEquals('title', $this->getBase()->getOrder());
+        $this->Base->setOrder('title');
+        $this->assertEquals('title', $this->Base->getOrder());
 
         // Define uma nova ordem com array
-        $this->getBase()->setOrder(array('id', 'title'));
-        $this->assertEquals(array('id', 'title'), $this->getBase()->getOrder());
+        $this->Base->setOrder(array('id', 'title'));
+        $this->assertEquals(array('id', 'title'), $this->Base->getOrder());
     }
 
 
@@ -175,10 +168,10 @@ class AppModelBaseTest extends BaseTestCase
     public function testWhere()
     {
         // Marca pra usar o campo deleted
-        $this->getBase()->setUseDeleted(true);
+        $this->Base->setUseDeleted(true);
 
-        $this->assertEquals(array("{$this->tableName}.deleted=0"), $this->getBase()->getWhere(array("{$this->tableName}.deleted=0")));
-        $this->assertEquals(array("{$this->tableName}.deleted=1"), $this->getBase()->getWhere(array("{$this->tableName}.deleted=1")));
+        $this->assertEquals(array("{$this->tableName}.deleted=0"), $this->Base->getWhere(array("{$this->tableName}.deleted=0")));
+        $this->assertEquals(array("{$this->tableName}.deleted=1"), $this->Base->getWhere(array("{$this->tableName}.deleted=1")));
     }
 
     /**
@@ -187,18 +180,18 @@ class AppModelBaseTest extends BaseTestCase
     public function testDeletedField()
     {
         // Verifica se deve remover o registro
-        $this->getBase()->setUseDeleted(false);
-        $this->assertFalse($this->getBase()->getUseDeleted());
-        $this->assertTrue($this->getBase()->setUseDeleted(true)->getUseDeleted());
-        $this->assertFalse($this->getBase()->setUseDeleted(false)->getUseDeleted());
-        $this->assertFalse($this->getBase()->getUseDeleted());
+        $this->Base->setUseDeleted(false);
+        $this->assertFalse($this->Base->getUseDeleted());
+        $this->assertTrue($this->Base->setUseDeleted(true)->getUseDeleted());
+        $this->assertFalse($this->Base->setUseDeleted(false)->getUseDeleted());
+        $this->assertFalse($this->Base->getUseDeleted());
 
         // Verifica se deve mostrar o registro
-        $this->getBase()->setShowDeleted(false);
-        $this->assertFalse($this->getBase()->getShowDeleted());
-        $this->assertFalse($this->getBase()->setShowDeleted(false)->getShowDeleted());
-        $this->assertTrue($this->getBase()->setShowDeleted(true)->getShowDeleted());
-        $this->assertTrue($this->getBase()->getShowDeleted());
+        $this->Base->setShowDeleted(false);
+        $this->assertFalse($this->Base->getShowDeleted());
+        $this->assertFalse($this->Base->setShowDeleted(false)->getShowDeleted());
+        $this->assertTrue($this->Base->setShowDeleted(true)->getShowDeleted());
+        $this->assertTrue($this->Base->getShowDeleted());
     }
 
     /**
@@ -207,17 +200,17 @@ class AppModelBaseTest extends BaseTestCase
     public function testGetSQlString()
     {
         // Verifica o padrão de não usar o campo deleted e não mostrar os removidos
-        $this->assertEquals('SELECT `album`.* FROM `album`', $this->getBase()->getSQlString(), 'showDeleted=false, useDeleted=false');
+        $this->assertEquals('SELECT `album`.* FROM `album`', $this->Base->getSQlString(), 'showDeleted=false, useDeleted=false');
 
         // Marca para usar o campo deleted
-        $this->getBase()->setUseDeleted(true);
-        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.deleted = 0)', $this->getBase()->getSQlString(), 'showDeleted=false, useDeleted=true');
+        $this->Base->setUseDeleted(true);
+        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.deleted = 0)', $this->Base->getSQlString(), 'showDeleted=false, useDeleted=true');
 
         // Marca para não usar o campo deleted
-        $this->getBase()->setUseDeleted(false);
+        $this->Base->setUseDeleted(false);
 
-        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.id = 1234)', $this->getBase()->getSQlString(array('id'=>1234)));
-        $this->assertEquals("SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')", $this->getBase()->getSQlString(array('texto'=>'textotextotexto')));
+        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.id = 1234)', $this->Base->getSQlString(array('id'=>1234)));
+        $this->assertEquals("SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')", $this->Base->getSQlString(array('texto'=>'textotextotexto')));
 
     }
 
@@ -226,9 +219,9 @@ class AppModelBaseTest extends BaseTestCase
      */
     public function testGetSQlSelect()
     {
-        $select = $this->getBase()->getTableSelect();
+        $select = $this->Base->getTableSelect();
         $this->assertInstanceOf('Zend_Db_Table_Select', $select);
-        $this->assertEquals($select->assemble(), $this->getBase()->getSQLString());
+        $this->assertEquals($select->assemble(), $this->Base->getSQLString());
     }
 
     /**
@@ -237,43 +230,43 @@ class AppModelBaseTest extends BaseTestCase
     public function testFetchAll()
     {
          // O padrão é não usar o campo deleted
-        $albuns = $this->getBase()->fetchAll();
+        $albuns = $this->Base->fetchAll();
         $this->assertCount(4, $albuns, 'showDeleted=false, useDeleted=false');
 
         // Marca para mostrar os removidos e não usar o campo deleted
-        $this->getBase()->setShowDeleted(true)->setUseDeleted(false);
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'showDeleted=true, useDeleted=false');
+        $this->Base->setShowDeleted(true)->setUseDeleted(false);
+        $this->assertCount(4, $this->Base->fetchAll(), 'showDeleted=true, useDeleted=false');
 
         // Marca pra não mostar os removidos e usar o campo deleted
-        $this->getBase()->setShowDeleted(false)->setUseDeleted(true);
-        $this->assertCount(3, $this->getBase()->fetchAll(), 'showDeleted=false, useDeleted=true');
+        $this->Base->setShowDeleted(false)->setUseDeleted(true);
+        $this->assertCount(3, $this->Base->fetchAll(), 'showDeleted=false, useDeleted=true');
 
         // Marca pra mostrar os removidos e usar o campo deleted
-        $this->getBase()->setShowDeleted(true)->setUseDeleted(true);
-        $albuns = $this->getBase()->fetchAll();
+        $this->Base->setShowDeleted(true)->setUseDeleted(true);
+        $albuns = $this->Base->fetchAll();
         $this->assertCount(4, $albuns, 'showDeleted=true, useDeleted=true');
 
         // Marca não mostrar os removios
-        $this->getBase()->setUseDeleted(true)->setShowDeleted(false);
+        $this->Base->setUseDeleted(true)->setShowDeleted(false);
 
         $albuns = $this->defaultValues;
         unset($albuns[3]); // remove o deleted=1
-        $this->assertEquals($albuns, $this->getBase()->fetchAll());
+        $this->assertEquals($albuns, $this->Base->fetchAll());
 
         // Marca mostrar os removios
-        $this->getBase()->setShowDeleted(true);
+        $this->Base->setShowDeleted(true);
 
-        $this->assertEquals($this->defaultValues, $this->getBase()->fetchAll());
-        $this->assertCount(4, $this->getBase()->fetchAll());
-        $this->getBase()->setShowDeleted(false);
-        $this->assertCount(3, $this->getBase()->fetchAll());
+        $this->assertEquals($this->defaultValues, $this->Base->fetchAll());
+        $this->assertCount(4, $this->Base->fetchAll());
+        $this->Base->setShowDeleted(false);
+        $this->assertCount(3, $this->Base->fetchAll());
 
         // Verifica o where
-        $this->assertCount(2, $this->getBase()->fetchAll(array('artist'=>$albuns[0]['artist'])));
-        $this->assertNull($this->getBase()->fetchAll(array('artist'=>$this->defaultValues[3]['artist'])));
+        $this->assertCount(2, $this->Base->fetchAll(array('artist'=>$albuns[0]['artist'])));
+        $this->assertNull($this->Base->fetchAll(array('artist'=>$this->defaultValues[3]['artist'])));
 
         // Verifica o paginator com o padrão
-        $paginator = $this->getBase()->setUsePaginator(true)->fetchAll();
+        $paginator = $this->Base->setUsePaginator(true)->fetchAll();
         $paginator = $paginator->toJson();
 
         // Tem um bug no Zend_Paginator
@@ -285,15 +278,15 @@ class AppModelBaseTest extends BaseTestCase
         }
         $paginator = json_encode($temp);
 
-        $fetchAll = $this->getBase()->setUsePaginator(false)->fetchAll();
+        $fetchAll = $this->Base->setUsePaginator(false)->fetchAll();
         $this->assertNotEquals(json_encode($this->defaultValues), $paginator);
         $this->assertEquals(json_encode($fetchAll), $paginator, 'retorno do paginator é igual');
 
         // Verifica o paginator alterando o paginator
-        $this->getBase()->getPaginator()->setPageRange(2)
+        $this->Base->getPaginator()->setPageRange(2)
                                         ->setCurrentPageNumber(1)
                                         ->setItemCountPerPage(2);
-        $paginator = $this->getBase()->setUsePaginator(true)->fetchAll();
+        $paginator = $this->Base->setUsePaginator(true)->fetchAll();
         $paginator = $paginator->toJson();
 
         // Tem um bug no Zend_Paginator
@@ -306,37 +299,37 @@ class AppModelBaseTest extends BaseTestCase
         $paginator = json_encode($temp);
 
         $this->assertNotEquals(json_encode($this->defaultValues), $paginator);
-        $fetchAll = $this->getBase()->setUsePaginator(false)->fetchAll(null, null, 2);
+        $fetchAll = $this->Base->setUsePaginator(false)->fetchAll(null, null, 2);
         $this->assertEquals(json_encode($fetchAll), $paginator);
 
         // Apaga qualquer cache
-        $this->assertTrue($this->getBase()->getCache()->clean(), 'apaga o cache');
+        $this->assertTrue($this->Base->getCache()->clean(), 'apaga o cache');
 
         // Define exibir os deletados
-        $this->getBase()->setShowDeleted(true);
+        $this->Base->setShowDeleted(true);
 
         // Liga o cache
-        $this->getBase()->setUseCache(true);
-        $this->assertEquals($this->defaultValues, $this->getBase()->fetchAll(), 'fetchAll está igual ao defaultValues');
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros');
+        $this->Base->setUseCache(true);
+        $this->assertEquals($this->defaultValues, $this->Base->fetchAll(), 'fetchAll está igual ao defaultValues');
+        $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros');
 
         // Grava um registro "sem o cache saber"
-        $this->getBase()->getTableGateway()->insert(array('id'=>10, 'artist'=>'nao existo por enquanto', 'title'=>'bla bla', 'deleted' => 0));
+        $this->Base->getTableGateway()->insert(array('id'=>10, 'artist'=>'nao existo por enquanto', 'title'=>'bla bla', 'deleted' => 0));
 
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros depois do insert "sem o cache saber"');
-        $this->assertTrue($this->getBase()->getCache()->clean(), 'limpa o cache');
-        $this->assertCount(5, $this->getBase()->fetchAll(), 'Deve conter 5 registros');
+        $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros depois do insert "sem o cache saber"');
+        $this->assertTrue($this->Base->getCache()->clean(), 'limpa o cache');
+        $this->assertCount(5, $this->Base->fetchAll(), 'Deve conter 5 registros');
 
         // Define não exibir os deletados
-        $this->getBase()->setShowDeleted(false);
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros com showDeleted=false');
+        $this->Base->setShowDeleted(false);
+        $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros com showDeleted=false');
 
         // Apaga um registro "sem o cache saber"
-        $this->getBase()->getTableGateway()->delete("id=10");
-        $this->getBase()->setShowDeleted(true);
-        $this->assertCount(5, $this->getBase()->fetchAll(), 'Deve conter 5 registros');
-        $this->assertTrue($this->getBase()->getCache()->clean(), 'apaga o cache');
-        $this->assertCount(4, $this->getBase()->fetchAll(), 'Deve conter 4 registros 4');
+        $this->Base->getTableGateway()->delete("id=10");
+        $this->Base->setShowDeleted(true);
+        $this->assertCount(5, $this->Base->fetchAll(), 'Deve conter 5 registros');
+        $this->assertTrue($this->Base->getCache()->clean(), 'apaga o cache');
+        $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros 4');
 
     }
 
@@ -346,17 +339,17 @@ class AppModelBaseTest extends BaseTestCase
     public function testFetchRow()
     {
         // Marca pra usar o campo deleted
-        $this->getBase()->setUseDeleted(true);
+        $this->Base->setUseDeleted(true);
 
         // Verifica os itens que existem
-        $this->assertEquals($this->defaultValues[0], $this->getBase()->fetchRow(1));
-        $this->assertEquals($this->defaultValues[1], $this->getBase()->fetchRow(2));
-        $this->assertEquals($this->defaultValues[2], $this->getBase()->fetchRow(3));
+        $this->assertEquals($this->defaultValues[0], $this->Base->fetchRow(1));
+        $this->assertEquals($this->defaultValues[1], $this->Base->fetchRow(2));
+        $this->assertEquals($this->defaultValues[2], $this->Base->fetchRow(3));
 
         // Verifica o item removido
-        $this->getBase()->setShowDeleted(true);
-        $this->assertEquals($this->defaultValues[3], $this->getBase()->fetchRow(4));
-        $this->getBase()->setShowDeleted(false);
+        $this->Base->setShowDeleted(true);
+        $this->assertEquals($this->defaultValues[3], $this->Base->fetchRow(4));
+        $this->Base->setShowDeleted(false);
     }
 
     /**
@@ -365,7 +358,7 @@ class AppModelBaseTest extends BaseTestCase
     public function testFetchAssoc()
     {
         // O padrão é não usar o campo deleted
-        $albuns = $this->getBase()->fetchAssoc();
+        $albuns = $this->Base->fetchAssoc();
         $this->assertCount(4, $albuns, 'showDeleted=false, useDeleted=false');
         $this->assertEquals($this->defaultValues[0], $albuns[1]);
         $this->assertEquals($this->defaultValues[1], $albuns[2]);
@@ -373,12 +366,12 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertEquals($this->defaultValues[3], $albuns[4]);
 
         // Marca para mostrar os removidos e não usar o campo deleted
-        $this->getBase()->setShowDeleted(true)->setUseDeleted(false);
-        $this->assertCount(4, $this->getBase()->fetchAssoc(), 'showDeleted=true, useDeleted=false');
+        $this->Base->setShowDeleted(true)->setUseDeleted(false);
+        $this->assertCount(4, $this->Base->fetchAssoc(), 'showDeleted=true, useDeleted=false');
 
         // Marca pra mostrar os removidos e usar o campo deleted
-        $this->getBase()->setShowDeleted(true)->setUseDeleted(true);
-        $albuns = $this->getBase()->fetchAssoc();
+        $this->Base->setShowDeleted(true)->setUseDeleted(true);
+        $albuns = $this->Base->fetchAssoc();
         $this->assertCount(4, $albuns, 'showDeleted=true, useDeleted=true');
         $this->assertEquals($this->defaultValues[0], $albuns[1]);
         $this->assertEquals($this->defaultValues[1], $albuns[2]);
