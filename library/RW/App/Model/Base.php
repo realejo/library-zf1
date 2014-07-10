@@ -245,7 +245,9 @@ class RW_App_Model_Base
      */
     public function getTableSelect()
     {
-        return $this->getTableGateway()->select();
+        return $this->getTableGateway()
+                    ->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+                    ->setIntegrityCheck(false);
     }
 
     /**
