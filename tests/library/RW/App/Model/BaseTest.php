@@ -99,69 +99,6 @@ class AppModelBaseTest extends BaseTestCase
         $this->clearApplicationData();
     }
 
-    public function testHtmlSelectGrouped()
-    {
-        $id = 'teste';
-
-        $select = $this->Base->setHtmlSelectOption('{title}')->getHtmlSelect($id, 1, array('grouped'=>'artist'));
-        $this->assertNotEmpty($select);
-        $dom = new Zend_Dom_Query($select);
-        $this->assertCount(1, $dom->query("#$id"), "id #$id existe");
-
-        $options = $dom->query("option");
-        $this->assertCount(4, $options, " 4 opções encontradas");
-
-        $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do primeiro ok 1");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do primeiro ok 1");
-
-        $options->next();
-        $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do segundo ok 1");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
-
-        $options->next();
-        $this->assertEquals($this->defaultValues[2]['title'], $options->current()->nodeValue, "nome do terceiro ok 1");
-        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 1");
-
-        $options->next();
-        $this->assertEquals($this->defaultValues[3]['title'], $options->current()->nodeValue, "nome do quarto ok 1");
-        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quarto ok 1");
-
-        $optgroups = $dom->query("optgroup");
-        $this->assertCount(3, $optgroups, " 3 grupo de opções encontrados");
-
-        $this->assertEquals($this->defaultValues[0]['artist'], $optgroups->current()->getAttribute('label'), "nome do primeiro grupo ok");
-        $this->assertEquals(2, $optgroups->current()->childNodes->length, " 2 opções encontrados no priemiro optgroup");
-        $this->assertEquals($this->defaultValues[0]['title'], $optgroups->current()->firstChild->nodeValue, "nome do primeiro ok 2");
-        $this->assertEquals($this->defaultValues[0]['id'], $optgroups->current()->firstChild->getAttribute('value'), "valor do primeiro ok 2");
-        $this->assertEquals($this->defaultValues[1]['title'], $optgroups->current()->firstChild->nextSibling->nodeValue, "nome do segundo ok 2");
-        $this->assertEquals($this->defaultValues[1]['id'], $optgroups->current()->firstChild->nextSibling->getAttribute('value'), "valor do segundo ok 2");
-
-        $optgroups->next();
-        $this->assertEquals($this->defaultValues[2]['artist'], $optgroups->current()->getAttribute('label'), "nome do segundo grupo ok");
-        $this->assertEquals(1, $optgroups->current()->childNodes->length, " 2 opções encontrados");
-        $this->assertEquals($this->defaultValues[2]['title'], $optgroups->current()->firstChild->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[2]['id'], $optgroups->current()->firstChild->getAttribute('value'), "valor do terceiro ok 2");
-
-        $optgroups->next();
-        $this->assertEquals($this->defaultValues[3]['artist'], $optgroups->current()->getAttribute('label'), "nome do terceiro grupo ok");
-        $this->assertEquals(1, $optgroups->current()->childNodes->length, " 2 opções encontrados");
-        $this->assertEquals($this->defaultValues[3]['title'], $optgroups->current()->firstChild->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[3]['id'], $optgroups->current()->firstChild->getAttribute('value'), "valor do terceiro ok 2");
-
-        // SELECT VAZIO!
-
-        $select = $this->Base->setHtmlSelectOption('{title}')->getHtmlSelect($id, 1, array('grouped'=>'artist', 'where'=>array('id'=>100)));
-        $this->assertNotEmpty($select);
-        $dom = new Zend_Dom_Query($select);
-        $this->assertCount(1, $dom->query("#$id"), "id #$id existe");
-
-        $this->assertCount(1, $dom->query("option"), " nenhuma option com where id = 100");
-        $this->assertCount(0, $dom->query("optgroup"), " nenhuma optgroup com where id = 100");
-
-        $this->assertEmpty($dom->query("option")->current()->nodeValue, "primeiro é vazio");
-        $this->assertEmpty($dom->query("option")->current()->getAttribute('value'), "o valor do primeiro é vazio");
-    }
-
     /**
      * Construct sem nome da tabela
      * @expectedException Exception
