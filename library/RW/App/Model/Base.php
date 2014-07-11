@@ -174,7 +174,7 @@ class RW_App_Model_Base
     public function getSelect($where = null, $order = null, $count = null, $offset = null)
     {
         // Retorna o select para a tabela
-        $select = $this->getTableSelect($where);
+        $select = $this->getTableSelect();
 
         // Verifica se existe ordem padrão
         if (empty($order) && isset($this->order)) {
@@ -241,11 +241,9 @@ class RW_App_Model_Base
     /**
      * Retorna o select a ser usado no fetchAll e fetchRow
      *
-     * @param $where OPCIONAL $where que será usado, caso tenha alguma clausula que interfira nos joins
-     *
      * @return Zend_Db_Table_Select
      */
-    public function getTableSelect($where = null)
+    public function getTableSelect()
     {
         return $this->getTableGateway()
                     ->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
