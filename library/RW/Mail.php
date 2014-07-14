@@ -51,70 +51,82 @@ class RW_Mail
      */
     private $_password;
 
-    public function __construct($isException = false)
+public function __construct($isException = false)
     {
-        $config = RW_Config::getApplicationIni();
+        $default = Zend_Mail::getDefaultTransport();
 
-        $this->_name       = $config->cms->email->name;
-        $this->_email      = $config->cms->email->email;
-        $this->_returnPath = $config->cms->email->returnPath;
-        $this->_type       = ($isException) ? 'exception' : $config->cms->email->type;
-        $this->_username   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->username : '';
-        $this->_password   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->password : '';
+        // Verifica se há transport a ser usado
+        if (empty($default)) {
+            if ($isException instanceof Zend_Mail_Transport_Abstract) {
+                $transport = $isException;
 
-        // Configura o método de envio
-        if ($this->_type == 'exception') {
-            $transport = new Zend_Mail_Transport_Sendmail('-f'. $this->_returnPath);
+            } else {
 
-        // Envio do servidor local. Deve impedir que o cliente receba sem querer
-        } elseif (APPLICATION_ENV != 'production') {
-            $this->_name .= ' (teste local)';
-            $this->_email = 'sistemas@realejo.com.br';
-            $transport = new Zend_Mail_Transport_Sendmail("-fsistemas@realejo.com.br");
+                $config = RW_Config::getApplicationIni();
 
-        // Configurações da Locaweb
-        } elseif ( $this->_type == 'locaweb' ) {
-            /*
-             * Return-Path padrão da Locaweb
-             * sendmail_path = /usr/sbin/sendmail -t -i -r'email@seudominio.com.br'
-             */
-            $transport = new Zend_Mail_Transport_Sendmail("-f{$this->_returnPath}");
+                $this->_name       = $config->cms->email->name;
+                $this->_email      = $config->cms->email->email;
+                $this->_returnPath = $config->cms->email->returnPath;
+                $this->_type       = ($isException) ? 'exception' : $config->cms->email->type;
+                $this->_username   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->username : '';
+                $this->_password   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->password : '';
 
-        // Configurações do GMail
-        } elseif ( $this->_type == 'gmail' ) {
-            $serverconfig = array(
-                'auth' => 'login',
-                'username' => $this->_username,
-                'password' => $this->_password,
-                'ssl' => 'ssl', //'tls',
-                'port' => 465
-            );
-            $transport = new Zend_Mail_Transport_Smtp('smtp.gmail.com', $serverconfig);
+                // Configura o método de envio
+                if ($this->_type == 'exception') {
+                    $transport = new Zend_Mail_Transport_Sendmail('-f'. $this->_returnPath);
 
-        // Configuração genérica de SMTP
-        } elseif ( $this->_type == 'smtp' ) {
-            $serverconfig = array(
-                'auth' => 'login',
-                'username' => $this->_username,
-                'password' => $this->_password
-            );
+                // Envio do servidor local. Deve impedir que o cliente receba sem querer
+                } elseif (APPLICATION_ENV != 'production') {
+                    $this->_name .= ' (teste local)';
+                    $this->_email = 'sistemas@realejo.com.br';
+                    $transport = new Zend_Mail_Transport_Sendmail("-fsistemas@realejo.com.br");
 
-            // Verifica se há SSL
-            if ( isset($config->cms->email->smtp->ssl) && $config->cms->email->smtp->ssl != '')
-                $config['ssl'] = $config->cms->email->smtp->ssl;
+                // Configurações da Locaweb
+                } elseif ( $this->_type == 'locaweb' ) {
+                    /*
+                     * Return-Path padrão da Locaweb
+                     * sendmail_path = /usr/sbin/sendmail -t -i -r'email@seudominio.com.br'
+                     */
+                    $transport = new Zend_Mail_Transport_Sendmail("-f{$this->_returnPath}");
 
-            // veriufica se há uma porta definida
-            if ( isset($config->cms->email->smtp->port) &&  $config->cms->email->smtp->port != '')
-                $config['port'] = $config->cms->email->smtp->port;
+                // Configurações do GMail
+                } elseif ( $this->_type == 'gmail' ) {
+                    $serverconfig = array(
+                        'auth' => 'login',
+                        'username' => $this->_username,
+                        'password' => $this->_password,
+                        'ssl' => 'ssl', //'tls',
+                        'port' => 465
+                    );
+                    $transport = new Zend_Mail_Transport_Smtp('smtp.gmail.com', $serverconfig);
 
-            // Configura o transport
-            $transport = new Zend_Mail_Transport_Smtp($config->cms->email->smtp->host, $serverconfig);
+                // Configuração genérica de SMTP
+                } elseif ( $this->_type == 'smtp' ) {
+                    $serverconfig = array(
+                        'auth' => 'login',
+                        'username' => $this->_username,
+                        'password' => $this->_password
+                    );
 
-        } else {
-            throw new Exception ( 'Tipo de envio <b>' . $this->_type . '</b> não definido em RW_Mail');
+                    // Verifica se há SSL
+                    if ( isset($config->cms->email->smtp->ssl) && $config->cms->email->smtp->ssl != '')
+                        $config['ssl'] = $config->cms->email->smtp->ssl;
+
+                    // veriufica se há uma porta definida
+                    if ( isset($config->cms->email->smtp->port) &&  $config->cms->email->smtp->port != '')
+                        $config['port'] = $config->cms->email->smtp->port;
+
+                    // Configura o transport
+                    $transport = new Zend_Mail_Transport_Smtp($config->cms->email->smtp->host, $serverconfig);
+
+                } else {
+                    throw new Exception ( 'Tipo de envio <b>' . $this->_type . '</b> não definido em RW_Mail');
+                }
+            }
+
+            // Grava o transport a ser usado para envio de emails
+            Zend_Mail::setDefaultTransport($transport);
         }
-
-        Zend_Mail::setDefaultTransport($transport);
     }
 
     public function SendEmail($replyName, $replyEmail, $toName, $toEmail, $subject, $message, $opt = array() )
