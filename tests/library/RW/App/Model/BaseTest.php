@@ -99,6 +99,12 @@ class AppModelBaseTest extends BaseTestCase
         $this->clearApplicationData();
     }
 
+    public function testGetKeyWhere()
+    {
+        $this->markTestIncomplete('Ainda não terminei');
+        $this->invokeMethod($this->Base, '_getKeyWhere');
+    }
+
     /**
      * Construct sem nome da tabela
      * @expectedException Exception

@@ -52,14 +52,14 @@ class RW_App_Model_Base
 
     /**
      * Define o nome da chave
-     * @var string
+     * @var string|array
      */
     protected $key;
 
     /**
      * Define a ordem padrão a ser usada na consultas
      *
-     * @var string
+     * @var string|array
      */
     protected $order;
 
@@ -794,5 +794,10 @@ class RW_App_Model_Base
 
         // Mantem a cadeia
         return $this;
+    }
+
+    private function _getKeyWhere()
+    {
+
     }
 }
