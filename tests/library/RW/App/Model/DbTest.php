@@ -292,4 +292,3 @@ class DbTest extends BaseTestCase
         $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v3');
     }
 }
-

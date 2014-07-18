@@ -3,6 +3,9 @@
  * Model com acesso ao BD, Cache e Paginator padronizado.
  * Também permite que tenha acesso ao Loader
  *
+ * Quando usar chaves multiplas deve sempre ser informado como array
+ * Ex: array(key1=>val1, $key2=>$val2);
+ *
  * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
@@ -91,38 +94,35 @@ class RW_App_Model_Base
      */
     protected $htmlSelectOptionData;
 
-    public function __construct($table = null, $key = null, $dbAdapter = null)
+    /**
+     *
+     * @param string       $table Nome da tabela a ser usada
+     * @param string|array $key   Nome ou array de chaves a serem usadas
+     *
+     */
+    public function __construct($table = null, $key = null)
     {
         // Verifica o nome da tabela
         if (empty($table) && !is_string($table)) {
             if (isset($this->table)) {
                 $table = $this->table;
             } else {
-                throw new \Exception('Nome da tabela inválido');
+                throw new InvalidArgumentException('Nome da tabela inválido em RW_App_Model_Base');
             }
         }
 
         // Verifica o nome da chave
-        if (empty($key) && !is_string($key)) {
+        if (empty($key) && !is_string($key) && !is_array($key)) {
             if (isset($this->key)) {
                 $key = $this->key;
             } else {
-                throw new Exception('Nome da chave inválido');
+                throw new InvalidArgumentException('Chave inválida em RW_App_Model_Base');
             }
         }
 
         // Define a chave e o nome da tabela
-        $this->key = $key;
+        $this->key   = $key;
         $this->table = $table;
-
-        // Define o adapter padrão
-        if ( !empty($dbAdapter) ) {
-            if ($dbAdapter instanceof Zend_Db_Adapter_Abstract) {
-                $this->_dbAdapter = $dbAdapter;
-            } else {
-                throw new Exception('Adapter deve ser Zend\Db\Adapter\AdapterInterface');
-            }
-        }
     }
 
     /**
@@ -154,10 +154,10 @@ class RW_App_Model_Base
         }
 
         if (empty($table)) {
-            throw new Exception('Tabela não definida em ' . get_class($this) . '::getTable()');
+            throw new InvalidArgumentException('Tabela não definida em ' . get_class($this) . '::getTable()');
         }
 
-        // retorna o tabela
+        // retorna a tabela
         return $this->getLoader()->getTable($table);
     }
 
@@ -229,9 +229,7 @@ class RW_App_Model_Base
                 $select->where("$id = ?", $w, 'STRING');
 
             } else {
-                var_dump($where, '$where');
-                var_dump($w, '$$w');
-                throw new Exception("Condição inválida '$w' em " . get_class($this) . '::getSelect()');
+                throw new LogicException("Condição inválida '$w' em " . get_class($this) . '::getSelect()');
             }
         }
 
@@ -377,8 +375,8 @@ class RW_App_Model_Base
         // Define se é a chave da tabela
         if (is_numeric($where)) {
             if (empty($this->key)) {
-                throw new Exception('Chave não definida em ' . get_class($this) . '::fetchRow()');
-            } else{
+                throw new InvalidArgumentException('Chave não definida em ' . get_class($this) . '::fetchRow()');
+            } else {
                 $where = array($this->key=>$where);
             }
         }
@@ -393,6 +391,8 @@ class RW_App_Model_Base
 
     /**
      * Retorna um array associado com a chave da tabela como chave do array
+     *
+     * Quando usar chaves multiplas será usada sempre a primeira
      *
      * @param string|array $where  OPTIONAL An SQL WHERE clause
      * @param string|array $order  OPTIONAL An SQL ORDER clause.
@@ -413,8 +413,9 @@ class RW_App_Model_Base
 
         // Associa pela chave da tabela
         $fetchAssoc = array();
+        $key = $this->getKey(true);
         foreach ($fetchAll as $row) {
-            $fetchAssoc[$row[$this->key]] = $row;
+            $fetchAssoc[$row[$key]] = $row;
         }
 
         // Some garbage collection
@@ -460,12 +461,15 @@ class RW_App_Model_Base
      * Os valores de option serão os valores dos campos definidos em $htmlSelectOption
      * Aos options serão adicionados data-* de acordo com os campos definidos em $htmlSelectOptionData
      *
+     * Quando usar chaves multiplas será usada sempre a primeira, a menos que use o parametro 'key' abaixo
+     *
      * As opções adicionais podem ser
      *  - where       => filtro para ser usando no fetchAll()
      *  - placeholder => legenda quando nenhum estiver selecionado e/ou junto com show-empty
      *                   se usdo com FALSE, nunca irá mostrar o vazio, mesmo que não tenha um selecionado
      *  - show-empty  => mostra um <option> vazio no inicio mesmo com um selecionado
      *  - grouped     => mostra o <optgroup> usando com label e agregador o campo informado
+     *  - key         => campo a ser usado como chave, se não informado será usado a chave definida
      *
      * @return string
      */
@@ -486,13 +490,20 @@ class RW_App_Model_Base
         $showEmpty = (isset($opts['show-empty']) && $opts['show-empty'] === true);
         $neverShowEmpty = (isset($opts['show-empty']) && $opts['show-empty'] === false);
 
-        // Define ao plcaeholder aser usado
+        // Define ao placeholder a ser usado
         $placeholder = $selectPlaceholder = (isset($opts['placeholder'])) ? $opts['placeholder'] : '';
         if (!empty($placeholder)) {
             $selectPlaceholder = "placeholder=\"$selectPlaceholder\"";
         }
 
         $grouped = (isset($opts['grouped'])) ? $opts['grouped'] : false;
+
+        // Define a chave a ser usada
+        if (isset($opts['key']) && !empty($opts['key']) && is_string($opts['key'])) {
+            $key = $opts['key'];
+        } else {
+            $key = $this->getKey(true);
+        }
 
         // Monta as opções
         $options = '';
@@ -532,7 +543,7 @@ class RW_App_Model_Base
                     }
                 }
 
-                $options .= "<option value=\"{$row[$this->key]}\" $data>$option</option>";
+                $options .= "<option value=\"{$row[$key]}\" $data>$option</option>";
             }
 
             // Fecha o último grupo se ele existir
@@ -622,6 +633,7 @@ class RW_App_Model_Base
 
     /**
      * Retorna o frontend para gravar o cache
+     * não pode usar o loader pois irá afetar a paginação quando houve mais de uma sendo usada
      *
      * @return RW_App_Model_Paginator
      */
@@ -674,12 +686,43 @@ class RW_App_Model_Base
     }
 
     /**
+     * Retorna a chave definida para a tabela
      *
-     * @return string
+     * @param $returnSingle OPCIONAL Quando for uma chave multipla, use TRUE para retorna a primeira chave
+     *
+     * @return string|array
      */
-    public function getKey()
+    public function getKey($returnSingle = false)
     {
-        return $this->key;
+        $key = $this->key;
+
+        // Verifica se é para retorna apenas a primeira da chave multipla
+        if (is_array($key) && $returnSingle === true) {
+            if (is_array($key)) {
+                foreach($key as $k=>$v) {
+                    $key = (is_numeric($k)) ? $v : $k;
+                    break;
+                }
+            }
+        }
+
+        return $key;
+    }
+
+    /**
+     * @param string|array
+     *
+     * @return self
+     */
+    public function setKey($key)
+    {
+        if (empty($key) && !is_string($key) && !is_array($key)) {
+            throw new InvalidArgumentException('Chave inválida em ' . get_class($this) . '::setKey()');
+        }
+
+        $this->key = $key;
+
+        return $this;
     }
 
     /**
@@ -711,16 +754,20 @@ class RW_App_Model_Base
 
     /**
      *
-     * @param string $order
+     * @param string|array|Zend_Db_Expr $order
      *
      * @return self
      */
     public function setOrder($order)
     {
+        if (empty($order) && !is_string($order) && !is_array($order) && ( ! $order instanceof Zend_Db_Expr)) {
+            throw new InvalidArgumentException('Chave inválida em ' . get_class($this) . '::setOrder()');
+        }
+
         $this->order = $order;
+
         return $this;
     }
-
 
     /**
      *
@@ -794,10 +841,5 @@ class RW_App_Model_Base
 
         // Mantem a cadeia
         return $this;
-    }
-
-    private function _getKeyWhere()
-    {
-
     }
 }

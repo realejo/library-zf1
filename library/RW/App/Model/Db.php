@@ -2,6 +2,12 @@
 /**
  * Model basico para o RW_App_Model_Base com as funções de insert, update e delete
  *
+ * Quando usar chaves multiplas deve sempre ser informado como array
+ * Ex: array(key1=>val1, $key2=>$val2);
+ *
+ * Sempre é preciso informar todas as chaves. Caso queira usar apenas algumas
+ * use useAllKeys = false
+ *
  * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
@@ -180,6 +186,28 @@ class RW_App_Model_Db extends RW_App_Model_Base
             } else {
                 throw new \Exception("{$this->id} key does not exist");
             }
+        }
+    }
+
+    /**
+     * Retorna a chave no formato que ela deve ser usada
+     *
+     * @param Zend_Db_Expr|string|array $key
+     *
+     * @return Zend_Db_Expr|string
+     */
+    private function _getKeyWhere($key)
+    {
+        if ($key instanceof Zend_Db_Expr) {
+            return $key;
+
+        } elseif (is_string($this->key) && is_numeric($key)) {
+            return "{$this->key} = $key";
+
+        } elseif (is_array($this->key)) {
+
+        } else {
+            throw new LogicException("Chave mal definida em ' . get_class($this) . '::_getWhere");
         }
     }
 
