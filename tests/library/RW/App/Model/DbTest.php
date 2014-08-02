@@ -291,4 +291,232 @@ class DbTest extends BaseTestCase
         $this->assertNull($this->Db->fetchRow(1), 'row1 não existe ');
         $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v3');
     }
+
+    /**
+     * Tests TableAdapter->delete()
+     */
+    public function testDeleteIntegerKey()
+    {
+
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id'));
+
+        // Abaixo é igual ao testDelete
+        $row1 = array(
+                'id' => 1,
+                'artist' => 'Rush',
+                'title' => 'Presto',
+                'deleted' => 0
+        );
+        $row2 = array(
+                'id' => 2,
+                'artist'  => 'Rush',
+                'title'   => 'Moving Pictures',
+                'deleted' => 0
+        );
+
+        $this->Db->insert($row1);
+        $this->Db->insert($row2);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row1, $this->Db->fetchRow(1), 'row1 existe');
+        $this->assertEquals($row2, $this->Db->fetchRow(2), 'row2 existe');
+
+        // Marca para usar o campo deleted
+        $this->Db->setUseDeleted(true)->setShowDeleted(true);
+
+        // Remove o registro
+        $this->Db->delete(1);
+        $row1['deleted'] = 1;
+
+        // Verifica se foi removido
+        $row = $this->Db->fetchRow(1);
+        $this->assertEquals(1, $row['deleted'], 'row1 marcado como deleted');
+        $this->assertEquals($row2, $this->Db->fetchRow(2), 'row2 ainda existe v1');
+
+        // Marca para mostrar os removidos
+        $this->Db->setShowDeleted(true);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row1, $this->Db->fetchRow(1), 'row1 ainda existe v2');
+        $this->assertEquals($row2, $this->Db->fetchRow(2), 'row2 ainda existe v2');
+
+        // Marca para remover o registro da tabela
+        $this->Db->setUseDeleted(false);
+
+        // Remove o registro que não existe
+        $this->Db->delete(3);
+
+        // Verifica se ele foi removido
+        $this->assertNotEmpty($this->Db->fetchRow(1), 'row1 ainda existe v3');
+        $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v3');
+
+        // Remove o registro
+        $this->Db->delete(1);
+
+        // Verifica se ele foi removido
+        $this->assertNull($this->Db->fetchRow(1), 'row1 não existe');
+        $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v4');
+    }
+
+    /**
+     * Tests TableAdapter->delete()
+     */
+    public function testDeleteStringKey()
+    {
+
+        // Cria a tabela com chave string
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_STRING=>'id'));
+        $this->dropTables()->createTables(array('album_string'));
+
+        // Abaixo é igual ao testDelete trocando 1, 2 por A, B
+        $row1 = array(
+                'id' => 'A',
+                'artist' => 'Rush',
+                'title' => 'Presto',
+                'deleted' => 0
+        );
+        $row2 = array(
+                'id' => 'B',
+                'artist'  => 'Rush',
+                'title'   => 'Moving Pictures',
+                'deleted' => 0
+        );
+
+        $this->Db->insert($row1);
+        $this->Db->insert($row2);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row1, $this->Db->fetchRow('A'), 'row1 existe');
+        $this->assertEquals($row2, $this->Db->fetchRow('B'), 'row2 existe');
+
+        // Marca para usar o campo deleted
+        $this->Db->setUseDeleted(true)->setShowDeleted(true);
+
+        // Remove o registro
+        $this->Db->delete('A');
+        $row1['deleted'] = 1;
+
+        // Verifica se foi removido
+        $row = $this->Db->fetchRow('A');
+        $this->assertEquals(1, $row['deleted'], 'row1 marcado como deleted');
+        $this->assertEquals($row2, $this->Db->fetchRow('B'), 'row2 ainda existe v1');
+
+        // Marca para mostrar os removidos
+        $this->Db->setShowDeleted(true);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row1, $this->Db->fetchRow('A'), 'row1 ainda existe v1');
+        $this->assertEquals($row2, $this->Db->fetchRow('B'), 'row2 ainda existe v2');
+
+        // Marca para remover o registro da tabela
+        $this->Db->setUseDeleted(false);
+
+        // Remove o registro qwue não existe
+        $this->Db->delete('C');
+
+        // Verifica se ele foi removido
+        $this->assertNotEmpty($this->Db->fetchRow('A'), 'row1 ainda existe v3');
+        $this->assertNotEmpty($this->Db->fetchRow('B'), 'row2 ainda existe v3');
+
+        // Remove o registro
+        $this->Db->delete('A');
+
+        // Verifica se ele foi removido
+        $this->assertNull($this->Db->fetchRow('A'), 'row1 não existe v4');
+        $this->assertNotEmpty($this->Db->fetchRow('B'), 'row2 ainda existe v4');
+    }
+
+    /**
+     * Acesso de chave multiplica com acesso simples
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testDeleteInvalidArrayKey()
+    {
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id_int', RW_App_Model_Db::KEY_STRING=>'id_char'));
+        $this->Db->delete('A');
+    }
+
+    /**
+     * Acesso de chave multiplica com acesso simples
+     *
+     * @expectedException LogicException
+     */
+    public function testDeleteInvalidArraySingleKey()
+    {
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id_int', RW_App_Model_Db::KEY_STRING=>'id_char'));
+        $this->Db->delete(array('id_int'=>'A'));
+    }
+
+
+    /**
+     * Tests TableAdapter->delete()
+     */
+    public function testDeleteArrayKey()
+    {
+
+        // Cria a tabela com chave string
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id_int', RW_App_Model_Db::KEY_STRING=>'id_char'));
+        $this->dropTables()->createTables(array('album_array'));
+        $this->Db->setUseAllKeys(false);
+
+        // Abaixo é igual ao testDelete trocando 1, 2 por A, B
+        $row1 = array(
+                'id_int' => 1,
+                'id_char' => 'A',
+                'artist' => 'Rush',
+                'title' => 'Presto',
+                'deleted' => 0
+        );
+        $row2 = array(
+                'id_int' => 2,
+                'id_char' => 'B',
+                'artist'  => 'Rush',
+                'title'   => 'Moving Pictures',
+                'deleted' => 0
+        );
+
+        $this->Db->insert($row1);
+        $this->Db->insert($row2);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row1, $this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 existe');
+        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 existe');
+
+        // Marca para usar o campo deleted
+        $this->Db->setUseDeleted(true)->setShowDeleted(true);
+
+        // Remove o registro
+        $this->Db->delete(array('id_char'=>'A'));
+        $row1['deleted'] = 1;
+
+        // Verifica se foi removido
+        $row = $this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1));
+        $this->assertEquals(1, $row['deleted'], 'row1 marcado como deleted');
+        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v1');
+
+        // Marca para mostrar os removidos
+        $this->Db->setShowDeleted(true);
+
+        // Verifica se o registro existe
+        $this->assertEquals($row1, $this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 ainda existe v1');
+        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v2');
+
+        // Marca para remover o registro da tabela
+        $this->Db->setUseDeleted(false);
+
+        // Remove o registro qwue não existe
+        $this->Db->delete(array('id_char'=>'C'));
+
+        // Verifica se ele foi removido
+        $this->assertNotEmpty($this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 ainda existe v3');
+        $this->assertNotEmpty($this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v3');
+
+        // Remove o registro
+        $this->Db->delete(array('id_char'=>'A'));
+
+        // Verifica se ele foi removido
+        $this->assertNull($this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 não existe v4');
+        $this->assertNotEmpty($this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v4');
+    }
 }

@@ -135,6 +135,17 @@ class AppModelBaseTest extends BaseTestCase
     }
 
     /**
+     * Definição de ordem invalido
+     * @expectedException InvalidArgumentException
+     */
+    public function testfetchRowMultiKeyException()
+    {
+        // Cria a tabela com chave string
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_INTEGER=>'id_int', RW_App_Model_Base::KEY_STRING=>'id_char'));
+        $this->Base->fetchRow(1);
+    }
+
+    /**
      * Definição de chave invalido
      */
     public function testGettersStters()
@@ -384,6 +395,152 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertEquals($this->defaultValues[3], $this->Base->fetchRow(4));
         $this->Base->setShowDeleted(false);
     }
+
+    /**
+     * Tests Base->fetchRow()
+     */
+    public function testFetchRowWithIntegerKey()
+    {
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_INTEGER=>'id'));
+
+        // Marca pra usar o campo deleted
+        $this->Base->setUseDeleted(true);
+
+        // Verifica os itens que existem
+        $this->assertEquals($this->defaultValues[0], $this->Base->fetchRow(1));
+        $this->assertEquals($this->defaultValues[1], $this->Base->fetchRow(2));
+        $this->assertEquals($this->defaultValues[2], $this->Base->fetchRow(3));
+
+        // Verifica o item removido
+        $this->Base->setShowDeleted(true);
+        $this->assertEquals($this->defaultValues[3], $this->Base->fetchRow(4));
+        $this->Base->setShowDeleted(false);
+    }
+
+    /**
+     * Tests Base->fetchRow()
+     */
+    public function testFetchRowWithStringKey()
+    {
+        $this->dropTables()->createTables(array('album_string'));
+        $defaultValues = array(
+                array(
+                        'id' => 'A',
+                        'artist' => 'Rush',
+                        'title' => 'Rush',
+                        'deleted' => 0
+                ),
+                array(
+                        'id' => 'B',
+                        'artist' => 'Rush',
+                        'title' => 'Moving Pictures',
+                        'deleted' => 0
+                ),
+                array(
+                        'id' => 'C',
+                        'artist' => 'Dream Theater',
+                        'title' => 'Images And Words',
+                        'deleted' => 0
+                ),
+                array(
+                        'id' => 'D',
+                        'artist' => 'Claudia Leitte',
+                        'title' => 'Exttravasa',
+                        'deleted' => 1
+                )
+        );
+        foreach ($defaultValues as $row) {
+            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+                                        VALUES (
+                                        '{$row['id']}',
+                                        '{$row['artist']}',
+                                        '{$row['title']}',
+                                        {$row['deleted']}
+                                        );");
+        }
+
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_STRING=>'id'));
+
+        // Marca pra usar o campo deleted
+        $this->Base->setUseDeleted(true);
+
+        // Verifica os itens que existem
+        $this->assertEquals($defaultValues[0], $this->Base->fetchRow('A'));
+        $this->assertEquals($defaultValues[1], $this->Base->fetchRow('B'));
+        $this->assertEquals($defaultValues[2], $this->Base->fetchRow('C'));
+
+        // Verifica o item removido
+        $this->Base->setShowDeleted(true);
+        $this->assertEquals($defaultValues[3], $this->Base->fetchRow('D'));
+        $this->Base->setShowDeleted(false);
+    }
+
+    /**
+     * Tests Base->fetchRow()
+     */
+    public function testFetchRowWithMultipleKey()
+    {
+        $this->dropTables()->createTables(array('album_array'));
+        $defaultValues = array(
+                array(
+                        'id_int' => 1,
+                        'id_char' => 'A',
+                        'artist' => 'Rush',
+                        'title' => 'Rush',
+                        'deleted' => 0
+                ),
+                array(
+                        'id_int' => 2,
+                        'id_char' => 'B',
+                        'artist' => 'Rush',
+                        'title' => 'Moving Pictures',
+                        'deleted' => 0
+                ),
+                array(
+                        'id_int' => 3,
+                        'id_char' => 'C',
+                        'artist' => 'Dream Theater',
+                        'title' => 'Images And Words',
+                        'deleted' => 0
+                ),
+                array(
+                        'id_int' => 4,
+                        'id_char' => 'D',
+                        'artist' => 'Claudia Leitte',
+                        'title' => 'Exttravasa',
+                        'deleted' => 1
+                )
+        );
+        foreach ($defaultValues as $row) {
+            $this->getAdapter()->query("INSERT into album (id_int, id_char, artist, title, deleted)
+                                        VALUES (
+                                        '{$row['id_int']}',
+                                        '{$row['id_char']}',
+                                        '{$row['artist']}',
+                                        '{$row['title']}',
+                                        {$row['deleted']}
+                                        );");
+        }
+
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_STRING=>'id'));
+
+        // Marca pra usar o campo deleted
+        $this->Base->setUseDeleted(true);
+
+        // Verifica os itens que existem
+        $this->assertEquals($defaultValues[0], $this->Base->fetchRow(array('id_char'=>'A', 'id_int'=>1)));
+        $this->assertEquals($defaultValues[1], $this->Base->fetchRow(array('id_char'=>'B', 'id_int'=>2)));
+        $this->assertEquals($defaultValues[2], $this->Base->fetchRow(array('id_char'=>'C', 'id_int'=>3)));
+
+        $this->assertNull($this->Base->fetchRow(array('id_char'=>'C', 'id_int'=>2)));
+
+        // Verifica o item removido
+        $this->Base->setShowDeleted(true);
+        $this->assertEquals($defaultValues[3], $this->Base->fetchRow(array('id_char'=>'D', 'id_int'=>4)));
+        $this->Base->setShowDeleted(false);
+    }
+
+
 
     /**
      * Tests Base->fetchAssoc()
@@ -745,7 +902,7 @@ class AppModelBaseTest extends BaseTestCase
     {
         // Define a chave multipla
         // como ele deve considerar apenas o primeiro o teste abaixo é o mesmo de testHtmlSelectWhere
-        $this->Base->setKey(array('id'=>'CAST', 'nao-existo'));
+        $this->Base->setKey(array('CAST'=>'id', 'nao-existo'));
 
         $id = 'teste';
         $this->Base->setHtmlSelectOption('{title}');

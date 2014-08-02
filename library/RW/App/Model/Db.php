@@ -14,7 +14,6 @@
  */
 class RW_App_Model_Db extends RW_App_Model_Base
 {
-
     private $_lastInsertSet;
 
     private $_lastInsertKey;
@@ -28,6 +27,13 @@ class RW_App_Model_Db extends RW_App_Model_Base
     private $_lastDeleteKey;
 
     /**
+     * Define se deve usar todas as chaves para os operações de update e delete
+     *
+     * @var boolean
+     */
+    protected $useAllKeys = true;
+
+    /**
      * Grava um novo registro
      *
      * @param array $dados Dados a serem cadastrados
@@ -36,7 +42,6 @@ class RW_App_Model_Db extends RW_App_Model_Base
      */
     public function insert($set)
     {
-
         // Verifica se há algo a ser adicionado
         if (empty($set)) {
             return false;
@@ -81,8 +86,8 @@ class RW_App_Model_Db extends RW_App_Model_Base
     public function update($set, $key)
     {
         // Verifica se o código é válido
-        if ( !is_numeric($key) ) {
-            throw new \Exception("O código <b>'$key'</b> inválido em " . get_class($this) . "::update()");
+        if ( empty($key) ) {
+            throw new InvalidArgumentException("O código <b>'$key'</b> inválido em " . get_class($this) . "::update()");
         }
 
         // Verifica se há algo para alterar
@@ -127,7 +132,7 @@ class RW_App_Model_Db extends RW_App_Model_Base
         }
 
         // Salva os dados alterados
-        $return = $this->getTableGateway()->update($diff, "{$this->key}=$key");
+        $return = $this->getTableGateway()->update($diff, $this->_getKeyWhere($key));
 
         // Limpa o cache, se necessário
         if ($this->getUseCache()) {
@@ -147,8 +152,12 @@ class RW_App_Model_Db extends RW_App_Model_Base
      */
     public function delete($key)
     {
-        if (! is_numeric($key) || empty($key)) {
-            throw new \Exception("O código <b>'$key'</b> inválido em " . get_class($this) . "::delete()");
+        if ( empty($key) ) {
+            throw new InvalidArgumentException("O código <b>'$key'</b> inválido em " . get_class($this) . "::delete()");
+        }
+
+        if ( !is_array($key) && is_array($this->getKey()) && count($this->getKey()) > 1) {
+            throw new InvalidArgumentException("Não é possível acessar direto uma coluna usando chaves múltiplas em " . get_class($this) . "::delete()");
         }
 
         // Grava os dados alterados para referencia
@@ -156,9 +165,9 @@ class RW_App_Model_Db extends RW_App_Model_Base
 
         // Verifica se deve marcar como removido ou remover o registro
         if ($this->useDeleted === true) {
-            $return = $this->getTableGateway()->update(array('deleted' => 1), "{$this->key}=$key");
+            $return = $this->getTableGateway()->update(array('deleted' => 1), $this->_getKeyWhere($key));
         } else {
-            $return = $this->getTableGateway()->delete("{$this->key}=$key");
+            $return = $this->getTableGateway()->delete($this->_getKeyWhere($key));
         }
 
         // Limpa o cache se necessario
@@ -173,8 +182,8 @@ class RW_App_Model_Db extends RW_App_Model_Base
     public function save($dados)
     {
         if (! isset($dados[$this->id])) {
-
             return $this->insert($dados);
+
         } else {
             // Caso não seja, envia um Exception
             if (! is_numeric($dados[$this->id])) {
@@ -201,13 +210,66 @@ class RW_App_Model_Db extends RW_App_Model_Base
         if ($key instanceof Zend_Db_Expr) {
             return $key;
 
-        } elseif (is_string($this->key) && is_numeric($key)) {
-            return "{$this->key} = $key";
+        } elseif (is_string($this->getKey()) && is_numeric($key)) {
+            return "{$this->getKey()} = $key";
 
-        } elseif (is_array($this->key)) {
+        } elseif (is_string($this->getKey()) && is_string($key)) {
+            return "{$this->getKey()} = '$key'";
+
+        } elseif (is_array($this->getKey())) {
+            $where = array();
+            $usedKeys = array();
+
+            // Verifica as chaves definidas
+            foreach ($this->getKey() as $type=>$definedKey) {
+
+                // Verifica se é uma chave única com cast
+                if (count($this->getKey()) === 1 && !is_array($key)) {
+
+                    // Grava a chave como integer
+                    if (is_numeric($type) || $type === self::KEY_INTEGER) {
+                        $where[] = "$definedKey = $key";
+
+                        // Grava a chave como string
+                    } elseif ($type === self::KEY_STRING) {
+                        $where[] = "$definedKey = '$key'";
+                    }
+
+                    $usedKeys[] = $definedKey;
+                }
+
+
+                // Verifica se a chave definida foi informada
+                elseif (is_array($key) && isset($key[$definedKey])) {
+
+                    // Grava a chave como integer
+                    if (is_numeric($type) || $type === self::KEY_INTEGER) {
+                        $where[] = "$definedKey = {$key[$definedKey]}";
+
+                    // Grava a chave como string
+                    } elseif ($type === self::KEY_STRING) {
+                        $where[] = "$definedKey = '{$key[$definedKey]}'";
+                    }
+
+                    // Marca a chave com usada
+                    $usedKeys[] = $definedKey;
+                }
+            }
+
+            // Verifica se alguma chave foi definida
+            if (empty($where)) {
+                throw new LogicException('Nenhuma chave múltipla informada em ' . get_class($this) . '::_getWhere()');
+            }
+
+            // Verifica se todas as chaves foram usadas
+            if ($this->getUseAllKeys() === true && is_array($this->getKey()) && count($usedKeys) !== count($this->getKey())) {
+                throw new LogicException('Não é permitido usar chaves parciais ' . get_class($this) . '::_getWhere()');
+            }
+
+            return '(' . implode(') AND (', $where). ')';
 
         } else {
-            throw new LogicException("Chave mal definida em ' . get_class($this) . '::_getWhere");
+            throw new LogicException('Chave mal definida em ' . get_class($this) . '::_getWhere()');
         }
     }
 
@@ -263,5 +325,25 @@ class RW_App_Model_Db extends RW_App_Model_Base
     public function getLastDeleteKey()
     {
         return $this->_lastDeleteKey;
+    }
+
+	/**
+     * @return boolean
+     */
+    public function getUseAllKeys ()
+    {
+        return $this->useAllKeys;
+    }
+
+	/**
+     * @param boolean $useAllKeys
+     *
+     * @retrun self
+     */
+    public function setUseAllKeys ($useAllKeys)
+    {
+        $this->useAllKeys = $useAllKeys;
+
+        return $this;
     }
 }

@@ -12,6 +12,9 @@
  */
 class RW_App_Model_Base
 {
+    const KEY_STRING  = 'STRING';
+    const KEY_INTEGER = 'INTEGER';
+
     /**
      * @var RW_App_Loader
      */
@@ -373,9 +376,23 @@ class RW_App_Model_Base
     public function fetchRow($where, $order = null)
     {
         // Define se é a chave da tabela
-        if (is_numeric($where)) {
+        if (is_numeric($where) || is_string($where)) {
+            // Veririfica se há chave definida
             if (empty($this->key)) {
                 throw new InvalidArgumentException('Chave não definida em ' . get_class($this) . '::fetchRow()');
+
+            // Verifica se é uma chave muktipla ou com cast
+            } elseif (is_array($this->key)) {
+
+                // Verifica se é uma chave simples com cast
+                if (count($this->key) == 1) {
+                    $where = array($this->getKey(true)=>$where);
+
+                // Não é possível acessar um registro com chave multipla usando apenas uma delas
+                } else {
+                    throw new InvalidArgumentException('Não é possível acessar chaves múltiplas informando apenas uma em ' . get_class($this) . '::fetchRow()');
+                }
+
             } else {
                 $where = array($this->key=>$where);
             }
@@ -699,8 +716,8 @@ class RW_App_Model_Base
         // Verifica se é para retorna apenas a primeira da chave multipla
         if (is_array($key) && $returnSingle === true) {
             if (is_array($key)) {
-                foreach($key as $k=>$v) {
-                    $key = (is_numeric($k)) ? $v : $k;
+                foreach($key as $type=>$keyName) {
+                    $key = $keyName;
                     break;
                 }
             }
