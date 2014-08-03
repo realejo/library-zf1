@@ -29,8 +29,13 @@ class RW_Config
 
         // Verifica se a constante da marca (BFFC) esta definida
         if (defined('MARCA')) {
-            $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-            $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+            if (is_numeric(MARCA)) {
+                $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+                $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+            } else {
+                $configs[] = APPLICATION_PATH . "/../configs/application.".MARCA.".ini";
+                $configs[] = APPLICATION_PATH . "/configs/application.".MARCA.".ini";
+            }
         }
 
         // Carrega as configurações do config
