@@ -1,8 +1,5 @@
 language: php
 
-env:
-  - MARCA="travis"
-
 php:
   - 5.5
   - 5.4
