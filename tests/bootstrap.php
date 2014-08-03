@@ -14,10 +14,6 @@ defined('TEST_ROOT')
 // Define application environment
 define('APPLICATION_ENV', 'testing');
 
-if (getenv('TRAVIS')) {
-    define('MARCA', 'travis');
-}
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 require_once 'library/TestAssets/BaseTestCase.php';
