@@ -1,5 +1,8 @@
 language: php
 
+env:
+  - TRAVIS=true
+
 php:
   - 5.5
   - 5.4
