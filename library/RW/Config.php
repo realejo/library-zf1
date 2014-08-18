@@ -1,6 +1,8 @@
 <?php
 /**
- * Recupera as configurações do application
+ * Recupera as configurações contidas em um arquivo .ini
+ * Considera que o arquivo está em um pasta configs no mesmo nivel que a
+ * pasta do aplicativo ou dentro do pasta do aplicativo
  *
  * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
@@ -8,13 +10,16 @@
  */
 class RW_Config
 {
+
     /**
      * Cria um dump das tabelas do banco de dados.
      *
-     * @param string $section OPCIONAL ENV a ser usando, se não inforamdop será usado APPLICATION_ENV
-     * @throws Exception
+     * @param string $file_prefix Perfixo do arquivo a ser usado (SEM .INI) 
+     * @param string $section OPCIONAL section a ser usanda, se não informada será usado o que está definido em APPLICATION_ENV
+     * 
+     * @return Zend_Config_Ini
      */
-    static public function getApplicationIni($section = null)
+    static public function getIni($file_prefix, $section = null)
     {
         // Verifica se uma das opções foi localizada
         if ( !defined('APPLICATION_PATH') || realpath(APPLICATION_PATH) === false ) {
@@ -23,18 +28,18 @@ class RW_Config
 
         // Opções de localização do application.ini
         $configs = array(
-                    APPLICATION_PATH . "/../configs/application.ini",
-                    APPLICATION_PATH . "/configs/application.ini"
-                  );
+            APPLICATION_PATH . "/../configs/$file_prefix.ini",
+            APPLICATION_PATH . "/configs/$file_prefix.ini"
+        );
 
         // Verifica se a constante da marca (BFFC) esta definida
         if (defined('MARCA')) {
             if (is_numeric(MARCA)) {
-                $configs[] = APPLICATION_PATH . "/../configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
-                $configs[] = APPLICATION_PATH . "/configs/application.".BFFC_Marca::getCssClass(MARCA).".ini";
+                $configs[] = APPLICATION_PATH . "/../configs/$file_prefix.".BFFC_Marca::getCssClass(MARCA).".ini";
+                $configs[] = APPLICATION_PATH . "/configs/$file_prefix.".BFFC_Marca::getCssClass(MARCA).".ini";
             } else {
-                $configs[] = APPLICATION_PATH . "/../configs/application.".MARCA.".ini";
-                $configs[] = APPLICATION_PATH . "/configs/application.".MARCA.".ini";
+                $configs[] = APPLICATION_PATH . "/../configs/$file_prefix.".MARCA.".ini";
+                $configs[] = APPLICATION_PATH . "/configs/$file_prefix.".MARCA.".ini";
             }
         }
 
@@ -49,7 +54,7 @@ class RW_Config
         // Verifica se uma das opções foi localizada
         if ( $configpath === false ) {
             $marca = (defined('MARCA')) ? '(marca='.BFFC_Marca::getCssClass(MARCA) .')': '' ;
-            throw new Exception("Nenhum arquivo de configuração application.ini encontrado do diretório '/configs' $marca em RW_Config::getApplicationIni()");
+            throw new Exception("Nenhum arquivo de configuração $file_prefix.ini encontrado do diretório '/configs' $marca em RW_Config::getApplicationIni()");
         }
 
         // Verifica o ambiente
@@ -57,5 +62,17 @@ class RW_Config
 
         // Instância o arquivo aplication.ini
         return new Zend_Config_Ini($configpath, $section);
+    }
+
+    /**
+     * Retorna as congirações defindas no application.ini
+     *
+     * @param string $section OPCIONAL section a ser usanda, se não informada será usado o que está definido em APPLICATION_ENV
+     * 
+     * @return Zend_Config_Ini
+     */
+    static public function getApplicationIni($section = null)
+    {
+        return self::getIni('application', $section);
     }
 }
