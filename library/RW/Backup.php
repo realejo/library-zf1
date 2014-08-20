@@ -210,6 +210,14 @@ class RW_Backup
             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_Backup::getPath()');
         }
 
-        return realpath(APPLICATION_DATA . '/dumps');
+        // Verifica se a pasta do cache existe
+        $cachePath = APPLICATION_DATA . '/dumps';
+        if (! file_exists($cachePath)) {
+            $oldumask = umask(0);
+            mkdir($cachePath, 0777, true);
+            umask($oldumask);
+        }
+
+        return $cachePath;
     }
 }
