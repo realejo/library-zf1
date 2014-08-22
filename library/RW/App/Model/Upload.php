@@ -14,29 +14,22 @@ class RW_App_Model_Upload
      * Retorna a pasta de upload para o model baseado no nome da classe
      * Se a pasta não existir ela será criada
      *
+     * @deprecated Usar RW_Upload
+     *
      * @param string $class Nome da classe a ser usada
      *
      * @return string
      */
     static public function getUploadPath($class = '')
     {
-        // Define a pasta de upload
-        $uploadPath = self::getUploadRoot() . '/' . str_replace('_', '/', strtolower($class));
-
-        // Verifica se a pasta do cache existe
-        if (!file_exists($uploadPath)) {
-            $oldumask = umask(0);
-            mkdir($uploadPath, 0777, true);
-            umask($oldumask);
-        }
-
-        // Retorna a pasta de upload
-        return $uploadPath;
+        return RW_Upload::getUploadPath($class);
     }
 
     /**
      * Retorna a pasta de visualizacao para o model baseado no nome da classe
      * Se a pasta não existir ela será criada
+     *
+     * @deprecated Usar RW_Upload
      *
      * @param string $class Nome da classe a ser usada
      *
@@ -44,52 +37,31 @@ class RW_App_Model_Upload
      */
     static public function getUrlPath($class = '')
     {
-        // Define a pasta de upload
-        $urlPath = self::getUrlRoot() . '/' . str_replace('_', '/', strtolower($class));
-
-        // Verifica se a pasta do cache existe
-        if (!file_exists($urlPath)) {
-            $oldumask = umask(0);
-            mkdir($urlPath, 0777, true);
-            umask($oldumask);
-        }
-
-        // Retorna a pasta de upload
-        return $urlPath;
+        return RW_Upload::getAssetsReservedPath($class);
     }
 
     /**
      * Retorna a pasta raiz de todos os uploads
      *
+     * @deprecated Usar RW_Upload
+     *
      * @return string
      */
     static public function getUploadRoot()
     {
-         // Verifica se a pasta de cache existe
-         if ( !defined('APPLICATION_DATA') )  {
-             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUploadRoot()');
-         } elseif (!is_dir(APPLICATION_DATA) || !is_writable(APPLICATION_DATA) )  {
-             throw new Exception("A pasta raiz do data(APPLICATION_DATA) '". APPLICATION_DATA ."' não existe ou não tem permissão de escrita em RW_App_Model_Upload::getUploadRoot()'");
-         }
-
-        // retorna a pasta raiz do cache
-        return APPLICATION_DATA . '/upload';
+         return RW_Upload::getUploadRoot();
     }
 
     /**
      * Retorna a pasta raiz do public de todos os uploads
      *
+     * @deprecated Usar RW_Upload
+     *
      * @return string
      */
     static public function getUrlRoot()
     {
-        // Verifica se a pasta de upload existe
-        if ( !defined('APPLICATION_DATA')  || realpath(APPLICATION_DATA) == false) {
-            throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_App_Model_Upload::getUploadRoot()');
-        }
-
-        // retorna a pasta raiz do cache
-        return APPLICATION_DATA . '/assets';
+        return RW_Upload::getAssetsReservedRoot();
     }
 
 }
