@@ -96,7 +96,7 @@ class RW_Upload
 
          // Verifica se existe e se tem permissão de escrita
          if (!is_dir($path) || !is_writable($path) )  {
-             throw new Exception("A pasta raiz de upload data/upload não existe ou não tem permissão de escrita em RW_Upload::getUploadRoot()'");
+             throw new Exception("A pasta raiz de upload data/uploads não existe ou não tem permissão de escrita em RW_Upload::getUploadRoot()'");
          }
 
         // retorna a pasta raiz do cache
