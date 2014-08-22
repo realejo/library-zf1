@@ -92,7 +92,7 @@ class RW_Upload
              throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_Upload::getUploadRoot()');
          }
 
-         $path = APPLICATION_DATA . '/upload';
+         $path = APPLICATION_DATA . '/uploads';
 
          // Verifica se existe e se tem permissão de escrita
          if (!is_dir($path) || !is_writable($path) )  {
