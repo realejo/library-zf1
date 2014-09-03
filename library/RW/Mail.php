@@ -110,11 +110,11 @@ public function __construct($isException = false)
 
                     // Verifica se há SSL
                     if ( isset($config->cms->email->smtp->ssl) && $config->cms->email->smtp->ssl != '')
-                        $config['ssl'] = $config->cms->email->smtp->ssl;
+                        $serverconfig['ssl'] = $config->cms->email->smtp->ssl;
 
                     // veriufica se há uma porta definida
                     if ( isset($config->cms->email->smtp->port) &&  $config->cms->email->smtp->port != '')
-                        $config['port'] = $config->cms->email->smtp->port;
+                        $serverconfig['port'] = $config->cms->email->smtp->port;
 
                     // Configura o transport
                     $transport = new Zend_Mail_Transport_Smtp($config->cms->email->smtp->host, $serverconfig);
