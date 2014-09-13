@@ -1,5 +1,5 @@
 {
-  "name" : "Realejo Library ZF1",
+  "name" : "realejo/library-zf1",
   "description" : "Realejo Library ZF1",
   "require" : {
     "php" : ">=5.3.3",
