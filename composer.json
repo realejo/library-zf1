@@ -1,19 +1,26 @@
 {
-  "name" : "realejo/library-zf1",
-  "description" : "Realejo Library ZF1",
-  "require" : {
-    "php" : ">=5.3.3",
-    "zendframework/zendframework1" : "1.*"
-  },
-  "keywords" : [ "framework", "zf1", "realejo", "cnpj", "cpf", "uf" ],
-  "autoload" : {
-    "psr-0" : {
-      "RW_" : "library/"
+    "name": "realejo/library-zf1",
+    "description": "Realejo Library ZF1",
+    "type" : "library",
+    "license" : "Unlicense",
+    "homepage" : "http://realejo.com.br",
+    "keywords": [
+        "framework",
+        "zf1",
+        "realejo",
+        "cnpj", "cpf", "uf"
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework1": "1.*"
     },
-    "files" : [ "bin/constants.php" ]
-  },
-  "type" : "library",
-  "license" : "Unlicense",
-  "homepage" : "http://realejo.com.br",
-  "include-path" : [ "library/" ]
+    "autoload": {
+        "psr-0": {
+			"RW_": "library/"
+        },
+        "files": [ "bin/constants.php" ]
+    },
+    "include-path": [
+        "library/"
+    ]
 }

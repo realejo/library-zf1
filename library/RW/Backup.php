@@ -2,6 +2,8 @@
 /**
  * Controle de backup
  *
+ * @todo verificar se exite o mysqdump e zip instalado
+ *
  * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
