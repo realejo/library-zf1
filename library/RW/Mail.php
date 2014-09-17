@@ -1,6 +1,6 @@
 <?php
 /**
- * Bilioteca para envio de email
+ * Biblioteca para envio de email
  *
  * @todo impedir que o email vá para o cliente sem querer. Deixar tudo no "drop folder"
  * @todo header injection
@@ -51,8 +51,22 @@ class RW_Mail
      */
     private $_password;
 
-public function __construct($isException = false)
+    public function __construct($isException = false)
     {
+        // Configuração de remetente
+        $config = RW_Config::getApplicationIni();
+
+        $this->_name       = $config->cms->email->name;
+        $this->_email      = $config->cms->email->email;
+        $this->_returnPath = $config->cms->email->returnPath;
+
+        // Verifica se está em ambiente de teste
+        if (APPLICATION_ENV != 'production') {
+            $this->_name .= ' (teste local)';
+            $this->_email = 'sistemas@realejo.com.br';
+        }
+
+        // Configuração de envio de email
         $default = Zend_Mail::getDefaultTransport();
 
         // Verifica se há transport a ser usado
@@ -62,11 +76,6 @@ public function __construct($isException = false)
 
             } else {
 
-                $config = RW_Config::getApplicationIni();
-
-                $this->_name       = $config->cms->email->name;
-                $this->_email      = $config->cms->email->email;
-                $this->_returnPath = $config->cms->email->returnPath;
                 $this->_type       = ($isException) ? 'exception' : $config->cms->email->type;
                 $this->_username   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->username : '';
                 $this->_password   = isset($config->cms->email->smtp) ? $config->cms->email->smtp->password : '';
@@ -77,8 +86,6 @@ public function __construct($isException = false)
 
                 // Envio do servidor local. Deve impedir que o cliente receba sem querer
                 } elseif (APPLICATION_ENV != 'production') {
-                    $this->_name .= ' (teste local)';
-                    $this->_email = 'sistemas@realejo.com.br';
                     $transport = new Zend_Mail_Transport_Sendmail("-fsistemas@realejo.com.br");
 
                 // Configurações da Locaweb
@@ -109,12 +116,14 @@ public function __construct($isException = false)
                     );
 
                     // Verifica se há SSL
-                    if ( isset($config->cms->email->smtp->ssl) && $config->cms->email->smtp->ssl != '')
+                    if ( isset($config->cms->email->smtp->ssl) && $config->cms->email->smtp->ssl != '') {
                         $serverconfig['ssl'] = $config->cms->email->smtp->ssl;
+                    }
 
                     // veriufica se há uma porta definida
-                    if ( isset($config->cms->email->smtp->port) &&  $config->cms->email->smtp->port != '')
+                    if ( isset($config->cms->email->smtp->port) &&  $config->cms->email->smtp->port != '') {
                         $serverconfig['port'] = $config->cms->email->smtp->port;
+                    }
 
                     // Configura o transport
                     $transport = new Zend_Mail_Transport_Smtp($config->cms->email->smtp->host, $serverconfig);
@@ -140,37 +149,23 @@ public function __construct($isException = false)
         $message    = $this->_fixEncoding($message);
 
         // Verifica o email do destinatário
-        if ( $toEmail == '' || is_null($toEmail) ) {
+        if ( empty($toEmail) ) {
             throw new Exception ( 'Não há email de destino definido em RW_Mail');
         }
 
         // Verifica o nome do destinatário
-        if ( $toName == '' || is_null($toName) ) {
+        if ( empty($toName) ) {
             $toName = $toEmail;
         }
 
         // Verifica o nome do remetente
-        if ( $replyName == '' || is_null($replyName) ) {
+        if ( empty($replyName) ) {
             $replyName = $this->_name;
         }
 
         // Verifica o email de resposta do remetente
-        if ( $replyEmail == '' || is_null($replyEmail) ) {
+        if ( empty($replyEmail) ) {
             $replyEmail = $this->_email;
-        }
-
-        // Verifica se é debug
-        if (false) {
-            echo "
-                <h3>Dados do Email</h3>
-                De: $replyName &lt;{$this->email}&gt;<br>
-                Para: $toName &lt;$toEmail&gt;<br>
-                Reply-to: $replyName &lt;$replyEmail&gt;<br>
-                BCC: <%=bcc%><br>
-            <hr>
-                $message
-            <hr>
-            ";
         }
 
         // Cria o Zend_Mail
@@ -229,6 +224,13 @@ public function __construct($isException = false)
 
         // Assunto do E-mail
         $oMailer->setSubject($subject);
+
+        // Verifica se há headers para serem adicionados ao email
+        if ( is_array($opt) && isset($opt['headers']) &&  is_array($opt['headers'])) {
+            foreach ($opt['headers'] as $h=>$v) {
+                $oMailer->addHeader($h, $v);
+            }
+        }
 
         // Cria a mensagem
         $msgText = null;
