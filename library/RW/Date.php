@@ -211,4 +211,18 @@ class RW_Date extends Zend_Date
 
         return null;
     }
+    
+
+    public static function isDate($date, $format = null, $locale = null)
+    {
+        //parent::isDate($date, $format, $locale);
+        
+        $oData = Zend_Locale_Format::getDate($date, array('date_format'=>$format));
+        
+        if (checkdate($oData["month"], $oData["day"], $oData["year"])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

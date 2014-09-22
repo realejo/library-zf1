@@ -51,6 +51,42 @@ class DateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests RW_Date->dataInvalida()
+     */
+    public function testDataInvalida ()
+    {
+		$this->assertFalse(RW_Date::isDate("01/02/0000", "dd/MM/yyyy"), 'ano 0000 inválido');
+		$this->assertFalse(RW_Date::isDate("01/00/2012", "dd/MM/yyyy"), 'mes invalido');
+		$this->assertFalse(RW_Date::isDate("00/01/1212", "dd/MM/yyyy"), 'ano 1212 inválido');
+		
+		try {
+		    $this->assertFalse(RW_Date::isDate("35/06/2010", "dd/MM/yyyy"), 'ano 0000 inválido');
+		    $this->fail("Exception esperada não lançada");
+		    
+		} catch(Exception $e) {
+		    $this->assertEquals("Unable to parse date '35/06/2010' using 'dd/MM/yyyy' (d <> y)", $e->getMessage());
+		}
+		
+
+		try {
+		    $this->assertFalse(RW_Date::isDate("06/35/2012", "dd/MM/yyyy"), 'ano 0000 inválido');
+		    $this->fail("Exception esperada não lançada");
+		
+		} catch(Exception $e) {
+		    $this->assertEquals("Unable to parse date '06/35/2012' using 'dd/MM/yyyy' (M <> y)", $e->getMessage());
+		}
+		
+		$this->assertTrue(RW_Date::isDate("20/12/2012", "dd/MM/yyyy"), 'data inválido');
+		
+		// ano bissexto
+		$this->assertTrue(RW_Date::isDate("29/02/2016", "dd/MM/yyyy"), 'data inválida');
+		
+		// virada de ano
+		$this->assertTrue(RW_Date::isDate("31/12/2014", "dd/MM/yyyy"), 'data inválida');
+		$this->assertTrue(RW_Date::isDate("01/01/2015", "dd/MM/yyyy"), 'data inválida');
+    }
+
+    /**
      * Tests RW_Date::toMySQL()
      */
     public function testToMySQL ()
@@ -202,7 +238,6 @@ class DateTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->RW_Date->getData(''), null);
         $this->assertEquals($this->RW_Date->getData(null), null);
-        $this->assertEquals($this->RW_Date->getData('21/11/2012'), array('date_format'=>'dd/MM/yyyy', 'year'=>'2012', 'month'=>'11', 'day'=>'21', 'locale'=>'pt_BR'));
     }
 }
 
