@@ -213,7 +213,7 @@ class RW_App_Model_Base
         }
 
         // Verifica as clausulas especiais se houver
-        $where = $this->getWhere($where, $select);
+        $where = $this->getWhere($where);
 
         // processa as clausulas
         foreach($where as $id=>$w) {
@@ -255,11 +255,10 @@ class RW_App_Model_Base
      * Processa as clausulas especiais do where
      *
      * @param array|string $where
-     * @param Zend_Db_Table_Select $select OPCIONAL
      *
      * @return array
      */
-    public function getWhere($where, &$select = null)
+    public function getWhere($where)
     {
         return $where;
     }
