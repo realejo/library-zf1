@@ -204,5 +204,44 @@ class DateTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->RW_Date->getData(''), null);
         $this->assertEquals($this->RW_Date->getData(null), null);
     }
+
+    public function testConvertZendDateToDateTime()
+    {
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('MM/dd/yyyy'), 'm/d/Y');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('dd/MM/yyyy'), 'd/m/Y');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('ddMMyyyy'),   'dmY');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('dd\MM\yyyy'), 'd\m\Y');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('yyyy/MM/dd'), 'Y/m/d');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('yyyy-MM-dd'), 'Y-m-d');
+
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('MM/dd/yyyy HH:mm:ss'), 'm/d/Y h:i:s');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('dd/MM/yyyy HH:mm:ss'), 'd/m/Y h:i:s');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('ddMMyyyy HH:mm:ss'),   'dmY h:i:s');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('ddMMyyyy HHmmss'),   'dmY his');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('dd\MM\yyyy HH:mm:ss'), 'd\m\Y h:i:s');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('yyyy/MM/dd HH:mm:ss'), 'Y/m/d h:i:s');
+        $this->assertEquals($this->RW_Date->convertZendDateToDateTime('yyyy-MM-dd HH:mm:ss'), 'Y-m-d h:i:s');
+
+    }
+
+    public function testIsDate()
+    {
+        $data = '10/09/2012';
+        $this->assertTrue($this->RW_Date->isDate($data, 'dd/MM/yyyy'));
+        $this->assertFalse($this->RW_Date->isDate($data, 'ddMMyyyy'));
+
+        $data = '10092012';
+        $this->assertFalse($this->RW_Date->isDate($data, 'dd/MM/yyyy'));
+        $this->assertTrue($this->RW_Date->isDate($data, 'ddMMyyyy'));
+
+        $data = '10092012 00:00:00';
+        $this->assertFalse($this->RW_Date->isDate($data, 'dd/MM/yyyy HH:mm:ss'));
+        $this->assertTrue($this->RW_Date->isDate($data, 'ddMMyyyy HH:mm:ss'));
+
+        $data = '10092012 000000';
+        $this->assertFalse($this->RW_Date->isDate($data, 'dd/MM/yyyy HHmmss'));
+        $this->assertTrue($this->RW_Date->isDate($data, 'ddMMyyyy HHmmss'));
+
+    }
 }
 

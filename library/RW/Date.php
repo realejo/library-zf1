@@ -212,4 +212,61 @@ class RW_Date extends Zend_Date
         return null;
     }
 
+    static function convertZendDateToDateTime($format = 'dd/MM/yyyy')
+    {
+        if ($format === 'MM/dd/yyyy') {
+            $format = 'm/d/Y';
+
+        } elseif ($format === 'dd/MM/yyyy') {
+            $format = 'd/m/Y';
+
+        } elseif ($format === 'ddMMyyyy') {
+            $format = 'dmY';
+
+        } elseif ($format === 'dd\MM\yyyy') {
+            $format = 'd\m\Y';
+
+        } elseif ($format === 'yyyy/MM/dd') {
+            $format = 'Y/m/d';
+
+        } elseif ($format === 'yyyy-MM-dd') {
+            $format = 'Y-m-d';
+
+        } elseif ($format === 'MM/dd/yyyy HH:mm:ss') {
+            $format = 'm/d/Y h:i:s';
+
+        } elseif ($format === 'dd/MM/yyyy HH:mm:ss') {
+            $format = 'd/m/Y h:i:s';
+
+        } elseif ($format === 'ddMMyyyy HH:mm:ss') {
+            $format = 'Ymd h:i:s';
+
+        } elseif ($format === 'ddMMyyyy HHmmss') {
+            $format = 'Ymd his';
+
+        } elseif ($format === 'dd\MM\yyyy HH:mm:ss') {
+            $format = 'Y\m\d h:i:s';
+
+        } elseif ($format === 'yyyy/MM/dd HH:mm:ss') {
+            $format = 'Y/m/d h:i:s';
+
+        } elseif ($format === 'yyyy-MM-dd HH:mm:ss') {
+            $format = 'Y-m-d h:i:s';
+        }
+
+        return $format;
+    }
+
+    static public function isDate($date, $format = 'dd/MM/yyyy', $locale = null)
+    {
+
+        $dateTime = \DateTime::createFromFormat(self::convertZendDateToDateTime($format), $date);
+
+        // Verifica se apareceu algum erro
+        $errors = \DateTime::getLastErrors();
+        if (!empty($errors['warning_count'])) {
+            return false;
+        }
+        return $dateTime !== false;
+    }
 }
