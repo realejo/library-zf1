@@ -36,7 +36,7 @@ class RW_Backup
             $backupPath = $dumpPath .'/'. $backupFile;
 
             // Faz o dump completo em um arquivo SQL e cria um ZIP
-            $command = "mysqldump --opt --quote-names --host=$dbhost --user$dbuser --password=$dbpass --default-character-set=utf8 --dump-date $dbname > $backupPath;";
+            $command = "mysqldump --opt --quote-names --host=$dbhost --user$dbuser --password='$dbpass' --default-character-set=utf8 --dump-date $dbname > $backupPath;";
             system($command);
 
             // Cria um ZIP com o arquivo SQL criado
@@ -55,7 +55,7 @@ class RW_Backup
 
                 // Monta a linha de comando
                 //@todo --result-filename=?
-                $command = "mysqldump --opt --quote-names --host=$dbhost --user=$dbuser --password=$dbpass --default-character-set=utf8 --dump-date $dbname $tbl_name > $table";
+                $command = "mysqldump --opt --quote-names --host=$dbhost --user=$dbuser --password='$dbpass' --default-character-set=utf8 --dump-date $dbname $tbl_name > $table";
 
                 // Executa a linha de comando shell para realizar o dump
                 system($command);
