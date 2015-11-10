@@ -233,25 +233,25 @@ class RW_Date extends Zend_Date
             $format = 'Y-m-d';
 
         } elseif ($format === 'MM/dd/yyyy HH:mm:ss') {
-            $format = 'm/d/Y h:i:s';
+            $format = 'm/d/Y H:i:s';
 
         } elseif ($format === 'dd/MM/yyyy HH:mm:ss') {
-            $format = 'd/m/Y h:i:s';
+            $format = 'd/m/Y H:i:s';
 
         } elseif ($format === 'ddMMyyyy HH:mm:ss') {
-            $format = 'Ymd h:i:s';
+            $format = 'Ymd H:i:s';
 
         } elseif ($format === 'ddMMyyyy HHmmss') {
-            $format = 'Ymd his';
+            $format = 'Ymd His';
 
         } elseif ($format === 'dd\MM\yyyy HH:mm:ss') {
-            $format = 'Y\m\d h:i:s';
+            $format = 'Y\m\d H:i:s';
 
         } elseif ($format === 'yyyy/MM/dd HH:mm:ss') {
-            $format = 'Y/m/d h:i:s';
+            $format = 'Y/m/d H:i:s';
 
         } elseif ($format === 'yyyy-MM-dd HH:mm:ss') {
-            $format = 'Y-m-d h:i:s';
+            $format = 'Y-m-d H:i:s';
         }
 
         return $format;
