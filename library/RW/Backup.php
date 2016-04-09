@@ -2,7 +2,7 @@
 /**
  * Controle de backup
  *
- * @todo verificar se exite o mysqdump e zip instalado
+ * @todo verificar se exite o mysqldump e zip instalado
  *
  * @link      http://github.com/realejo/libraray-zf1
  * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
@@ -36,7 +36,7 @@ class RW_Backup
             $backupPath = $dumpPath .'/'. $backupFile;
 
             // Faz o dump completo em um arquivo SQL e cria um ZIP
-            $command = "mysqldump --opt --quote-names --host=$dbhost --user$dbuser --password=$dbpass --default-character-set=utf8 --dump-date $dbname > $backupPath;";
+            $command = "mysqldump --opt --quote-names --host=$dbhost --user$dbuser --password='$dbpass' --default-character-set=utf8 --dump-date $dbname > $backupPath;";
             system($command);
 
             // Cria um ZIP com o arquivo SQL criado
@@ -55,7 +55,7 @@ class RW_Backup
 
                 // Monta a linha de comando
                 //@todo --result-filename=?
-                $command = "mysqldump --opt --quote-names --host=$dbhost --user=$dbuser --password=$dbpass --default-character-set=utf8 --dump-date $dbname $tbl_name > $table";
+                $command = "mysqldump --opt --quote-names --host=$dbhost --user=$dbuser --password='$dbpass' --default-character-set=utf8 --dump-date $dbname $tbl_name > $table";
 
                 // Executa a linha de comando shell para realizar o dump
                 system($command);
@@ -104,97 +104,113 @@ class RW_Backup
     		throw new Exception('Arquivo não encontrado: '.$filepath.'.zip');
 	    }
 
-        // Define o deiratório temporario
-        $temp = 'temp'. time();
-
         // Cria o script
-        $script = "#!/bin/bash\n";
-        $script .= "echo \"***********\"\n";
-        $script .= "echo \"* RESTORE *\"\n";
-        $script .= "echo \"***********\"\n";
-        $script .= "echo \n";
-        $script .= "echo \"Confirme a configuracao:\"\n";
-        $script .= "\n";
-        $script .= "read -p \"HOST[$dbhost]: \" HOST\n";
-        $script .= "if [ \"\$HOST\" = \"\" ];	then\n";
-        $script .= "\tHOST=\"$dbhost\"\n";
-        $script .= "fi\n";
-        $script .= "\n";
-        $script .= "read -p \"DATABASE[$dbname]: \" DATABASE\n";
-        $script .= "if [ \"\$DATABASE\" = \"\" ];	then\n";
-        $script .= "\tDATABASE=\"$dbname\"\n";
-        $script .= "fi\n";
-        $script .= "\n";
-        $script .= "read -p \"USER [$dbuser]: \" USER\n";
-        $script .= "if [ \"\$USER\" = \"\" ]; then\n";
-        $script .= "\tUSER=\"$dbuser\"\n";
-        $script .= "fi\n";
-        $script .= "\n";
-        $script .= "read -s -p \"PASSWORD: \" PASSWORD\n";
-        $script .= "if [ \"\$PASSWORD\" = \"\" ]; then\n";
-        $script .= "\techo \"Senha invalida\"\n";
-        $script .= "\texit 1\n";
-        $script .= "else\n";
-        $script .= "echo \n";
-        $script .= "fi\n";
-        $script .= "\n\n";
+        $script = <<<'RESTORESCRIPT'
+#!/bin/bash
+echo "***********"
+echo "* RESTORE *"
+echo "***********"
+echo
+echo "Confirme a configuracao:"
 
-        $script .= "echo \n";
+read -p "Restore all files [Y,n]: " RESTOREALL
+case $RESTOREALL in
+	N|n)
+		RESTOREALL="N"
+		;;
+	*)
+		RESTOREALL="Y"
+		;;
+esac
 
-        $script .= "echo -n \"Verificando conectividade \$USER@\$HOST, PASSWORD:[yes], DATABASE:\$DATABASE ... \"\n";
-        $script .= "\n";
-        $script .= "if mysql --host=\$HOST --database=\$DATABASE --user=\$USER --password=\$PASSWORD -e \";\"; then\n";
-        $script .= "\techo \"ok\"\n";
-        $script .= "else\n";
-        $script .= "\techo \"Nao foi possivel se conectar ao servidor MYSQL\"\n";
-        $script .= "\texit 1\n";
-        $script .= "fi\n";
-        $script .= "echo \n\n";
+read -p "HOST[{{host}}]: " HOST
+if [ "$HOST" = "" ];	then
+	HOST="{{host}}"
+fi
 
-        // Cria o diretório temporário
-        $script .= "echo \"Criando diretorio temporario $temp\"\n";
-        $script .= "mkdir $temp;\n";
-        $script .= "echo \n\n";
+read -p "DATABASE[{{database}}]: " DATABASE
+if [ "$DATABASE" = "" ];	then
+	DATABASE="{{database}}"
+fi
 
-        // Extrai os arquivos
-        $script .= "echo -n \"Extraindo arquivo do arquivo $file ... \"\n";
-        $script .= "if unzip -q \"$file\" -d $temp; then\n";
-        $script .= "\techo \"ok\"\n";
-        $script .= "else\n";
-        $script .= "\techo \"arquivo ZIP nao encontrado\"\n";
-        $script .= "\trmdir $temp;\n";
-        $script .= "\texit 1\n";
-        $script .= "fi\n\n";
-        $script .= "echo \n\n";
+read -p "USER [{{user}}]: " USER
+if [ "$USER" = "" ]; then
+	USER="{{user}}"
+fi
 
-        // Processa as arquivos do ZIP
-        $za = new ZipArchive();
-        $za->open($filepath.'.zip');
-        for ($i=0; $i<$za->numFiles;$i++) {
-            // Recupera os daods do arquivo no ZIP
-            $file = $za->statIndex($i);
+read -s -p "PASSWORD: " PASSWORD
 
-            // Inicia a mensagem
-            $script .= "echo -n \"Restoring {$file['name']}...\"\n";
+TEMPCONFIG="
+[client]
+host = $HOST
+database = $DATABASE
+user = $USER
+password = $PASSWORD
+"
 
-            // Faz o restore no BD
-            $script .= "mysql --host=\$HOST --user=\$USER --password=\$PASSWORD \$DATABASE < $temp/{$file['name']};\n";
+echo
+echo -n "Verificando conectividade $USER@$HOST, DATABASE:$DATABASE ... "
 
-            // Apaga o arquivo
-            $script .= "rm -f $temp/{$file['name']};\n";
+if mysql --defaults-extra-file=<(printf "$TEMPCONFIG") -e ";"; then
+	echo "ok"
+else
+	echo "Nao foi possivel se conectar ao servidor MYSQL"
+	exit 1
+fi
+echo
 
-            // Finaliza a mensagem
-            $script .= "echo \" ok\"\n\n";
-        }
+echo -n "Criando diretorio temporario... "
+TEMPDIR="$(mktemp -d $(basename $0).XXXXXXXXXX)"
+echo "ok"
+echo
 
-        // Remove o diretório temporário
-        $script .= "echo \"Finalizando...\"\n";
-        $script .= "rmdir $temp;\n";
+echo -n "Extraindo arquivo do arquivo {{file}} ... "
+if unzip -q "{{file}}" -d $TEMPDIR; then
+	echo "ok"
+else
+	echo "arquivo ZIP nao encontrado"
+	rmdir $TEMPDIR;
+	exit 1
+fi
+echo
 
-        $script .= "\n";
-        $script .= "echo \n";
-        $script .= "echo \"*** Restore Completo*** \"\n";
-        $script .= "echo \n";
+for SQLFILE in "$TEMPDIR"/*.sql
+do
+	RESTOREFILE="Y"
+	if [ "$RESTOREALL" == "N" ]; then
+		echo
+		read -p "Restore $(basename "$SQLFILE") [y,N]: " RESTOREFILE
+		case $RESTOREFILE in
+			Y|y)
+				RESTOREFILE="Y"
+				;;
+			*)
+				RESTOREFILE="N"
+				;;
+		esac
+	fi
+	if [ "$RESTOREFILE" == "N" ]; then
+		echo -n -e "\e[2mSkipping $(basename "$SQLFILE") ... "
+	else
+		echo -n -e "Restoring \e[1m$(basename "$SQLFILE")\e[0m ... "
+		mysql --defaults-extra-file=<(printf "$TEMPCONFIG") < $SQLFILE;
+	fi
+	rm -f $SQLFILE;
+	echo -e "ok\e[0m"
+done
+
+echo "Finalizando..."
+rmdir $TEMPDIR;
+
+echo
+echo "*** Restore Completo*** "
+echo
+RESTORESCRIPT;
+
+        $script = str_replace('{{file}}', basename($filepath), $script);
+        $script = str_replace('{{host}}', basename($dbhost), $script);
+        $script = str_replace('{{database}}', basename($dbname), $script);
+        $script = str_replace('{{user}}', basename($dbuser), $script);
 
 	    // Retorna o comando ao usuário
 	    return $script;
