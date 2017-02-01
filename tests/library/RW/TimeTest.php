@@ -709,4 +709,10 @@ class TimeTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(RW_Time::isTime('--3'));
     }
 
+    public function testLongSeconds()
+    {
+        $time = new RW_Time(390526);
+        $this->assertSame('108:28:46', $time->toString());
+        $this->assertSame(390526, $time->getSeconds());
+    }
 }
