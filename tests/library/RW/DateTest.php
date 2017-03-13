@@ -242,6 +242,9 @@ class DateTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->RW_Date->isDate($data, 'dd/MM/yyyy HHmmss'));
         $this->assertTrue($this->RW_Date->isDate($data, 'ddMMyyyy HHmmss'));
 
+        $data = '01/02/2017';
+        $this->assertTrue($this->RW_Date->isDate($data, 'dd/MM/yyyy'));
+        $this->assertTrue($this->RW_Date->isDate($data));
     }
 }
 
