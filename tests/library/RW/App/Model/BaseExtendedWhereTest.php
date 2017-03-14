@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class AppModelBaseTest extends BaseTestCase
+class BaseExtendedWhereTest extends BaseTestCase
 {
     /**
      * @var string
