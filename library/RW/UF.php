@@ -79,7 +79,7 @@ class RW_UF
 		'SC' => 'SU',
 		'SP' => 'SE',
 		'SE' => 'NE',
-		'TO' => 'SU'
+		'TO' => 'NO'
     );
 
     /**
