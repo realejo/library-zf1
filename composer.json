@@ -11,7 +11,9 @@
         "cnpj", "cpf", "uf"
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
         "zendframework/zendframework1": ">=1.12.20"
     },
     "autoload": {
