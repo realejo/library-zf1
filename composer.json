@@ -11,10 +11,10 @@
         "cnpj", "cpf", "uf"
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": "^7.1"
     },
     "require-dev": {
-        "zendframework/zendframework1": ">=1.12.20"
+        "diablomedia/zendframework1": "^4.0.2"
     },
     "autoload": {
         "psr-0": {
