@@ -7,6 +7,9 @@ php:
   - 7.1
   - 7.4
 
+services:
+  - mysql
+
 before_script:
   - composer install
   - cd ./tests
