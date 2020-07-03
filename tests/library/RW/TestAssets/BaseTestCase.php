@@ -142,7 +142,7 @@ class BaseTestCase extends TestCase
             $this->fail('APPLICATION_DATA não definido');
         }
         // Verifica se a pasta existe e tem permissão de escrita
-        if (!is_dir(APPLICATION_DATA) || !is_writeable(APPLICATION_DATA)) {
+        if (!is_dir(APPLICATION_DATA) || !is_writable(APPLICATION_DATA)) {
             $this->fail('APPLICATION_DATA não definido');
         }
 
@@ -164,7 +164,7 @@ class BaseTestCase extends TestCase
         }
 
         // Retorna se está vazio
-        return (count(scandir(APPLICATION_DATA)) == 3);
+        return count(scandir(APPLICATION_DATA)) === 3;
     }
 
     public function rrmdir($dir)
