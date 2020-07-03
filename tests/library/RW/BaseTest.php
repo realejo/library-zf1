@@ -1,4 +1,9 @@
 <?php
+
+namespace RWTest;
+
+use RW_Base;
+
 /**
  * RW_Base test case.
  *
@@ -6,7 +11,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class BaseTest extends PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RW_Base
@@ -31,14 +36,6 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->RW_Base = null;
 
         parent::tearDown();
-    }
-
-    /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
     }
 
     /**

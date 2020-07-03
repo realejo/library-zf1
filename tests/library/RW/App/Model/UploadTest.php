@@ -1,4 +1,10 @@
 <?php
+
+namespace RWTest\App\Model;
+
+use RW_App_Model_Upload;
+use RWTest\TestAssets\BaseTestCase;
+
 /**
  * RW_App_Model_Upload test case.
  *
@@ -53,7 +59,7 @@ class UploadTest extends BaseTestCase
     /**
      * Tests RW_App_Model_Upload::getUrlPath()
      */
-    public function testGetUrlPath ()
+    public function testGetUrlPath()
     {
         // TODO Auto-generated RW_App_Model_UploadTest::testGetUrlPath()
         $this->markTestIncomplete("getUrlPath test not implemented");
@@ -63,7 +69,7 @@ class UploadTest extends BaseTestCase
     /**
      * Tests RW_App_Model_Upload::getUploadRoot()
      */
-    public function testGetUploadRoot ()
+    public function testGetUploadRoot()
     {
         // TODO Auto-generated RW_App_Model_UploadTest::testGetUploadRoot()
         $this->markTestIncomplete("getUploadRoot test not implemented");
@@ -73,7 +79,7 @@ class UploadTest extends BaseTestCase
     /**
      * Tests RW_App_Model_Upload::getUrlRoot()
      */
-    public function testGetUrlRoot ()
+    public function testGetUrlRoot()
     {
         // TODO Auto-generated RW_App_Model_UploadTest::testGetUrlRoot()
         $this->markTestIncomplete("getUrlRoot test not implemented");

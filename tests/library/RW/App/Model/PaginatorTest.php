@@ -1,4 +1,9 @@
 <?php
+
+namespace RWTest\App\Model;
+
+use PHPUnit\Framework\TestCase;
+
 /**
  * PaginatorTest test case.
  *
@@ -6,7 +11,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class PaginatorTest extends PHPUnit_Framework_TestCase
+class PaginatorTest extends TestCase
 {
     /**
      *
@@ -21,26 +26,11 @@ class PaginatorTest extends PHPUnit_Framework_TestCase
     public function getPaginator()
     {
         if ($this->Paginator === null) {
-            $this->Paginator = new RW_App_Model_Paginator();
+            $this->Paginator = new \RW_App_Model_Paginator();
         }
         return $this->Paginator;
     }
 
-    /**
-     * Prepares the environment before running a test.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
-     * Cleans up the environment after running a test.
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
 
     /**
      * getPageRange

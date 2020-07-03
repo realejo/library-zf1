@@ -1,4 +1,8 @@
 <?php
+namespace RWTest\App\Model;
+
+use RWTest\TestAssets\BaseTestCase;
+
 /**
  * CacheTest test case.
  *

@@ -1,4 +1,9 @@
 <?php
+
+namespace RWTest\View\Helper;
+
+use RW_View_Helper_GetTime;
+
 /**
  * RW_View_Helper_GetTime test case.
  *
@@ -6,79 +11,81 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-require_once 'RW/View/Helper/GetTime.php';
 
-class GetTimeTest extends PHPUnit_Framework_TestCase
+class GetTimeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RW_View_Helper_GetTime
      */
     private $RW_View_Helper_GetTime;
+
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp ()
+    protected function setUp()
     {
         parent::setUp();
         // TODO Auto-generated GetTimeTest::setUp()
         $this->RW_View_Helper_GetTime = new RW_View_Helper_GetTime(/* parameters */);
     }
+
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown ()
+    protected function tearDown()
     {
         // TODO Auto-generated GetTimeTest::tearDown()
         $this->RW_View_Helper_GetTime = null;
         parent::tearDown();
     }
+
     /**
      * Constructs the test case.
      */
-    public function __construct ()
+    public function __construct()
     {
         // TODO Auto-generated constructor
     }
+
     /**
      * Tests RW_View_Helper_GetTime->getTime()
      */
-    public function testGetTime ()
+    public function testGetTime()
     {
         // TODO Auto-generated GetTimeTest->testGetTime()
         //$this->markTestIncomplete("getTime test not implemented");
 
         //Diferença de 10 segundos
-    	$segundos = date('Y-m-d H:i:s',mktime(date('H'),date('i'),date('s')-10,date('m'),date('d'),date('Y')));
-    	$this->assertEquals('10 segundos', $this->RW_View_Helper_GetTime->getTime($segundos));
+        $segundos = date('Y-m-d H:i:s', mktime(date('H'), date('i'), date('s') - 10, date('m'), date('d'), date('Y')));
+        $this->assertEquals('10 segundos', $this->RW_View_Helper_GetTime->getTime($segundos));
 
-    	//Diferença de 2 minutos
-    	$minutos = date('Y-m-d H:i:s',mktime(date('H'),date('i')-2,date('s'),date('m'),date('d'),date('Y')));
-    	$this->assertEquals('2 minutos', $this->RW_View_Helper_GetTime->getTime($minutos));
+        //Diferença de 2 minutos
+        $minutos = date('Y-m-d H:i:s', mktime(date('H'), date('i') - 2, date('s'), date('m'), date('d'), date('Y')));
+        $this->assertEquals('2 minutos', $this->RW_View_Helper_GetTime->getTime($minutos));
 
-    	//Diferença de 2 horas
-    	$minutos = date('Y-m-d H:i:s',mktime(date('H')-2,date('i'),date('s'),date('m'),date('d'),date('Y')));
-    	$this->assertEquals('2 horas', $this->RW_View_Helper_GetTime->getTime($minutos));
+        //Diferença de 2 horas
+        $minutos = date('Y-m-d H:i:s', mktime(date('H') - 2, date('i'), date('s'), date('m'), date('d'), date('Y')));
+        $this->assertEquals('2 horas', $this->RW_View_Helper_GetTime->getTime($minutos));
 
-    	//Diferença de 2 dias
-    	$minutos = date('Y-m-d H:i:s',mktime(date('H')-48,date('i'),date('s'),date('m'),date('d'),date('Y')));
-    	$this->assertEquals('2 dias', $this->RW_View_Helper_GetTime->getTime($minutos));
+        //Diferença de 2 dias
+        $minutos = date('Y-m-d H:i:s', mktime(date('H') - 48, date('i'), date('s'), date('m'), date('d'), date('Y')));
+        $this->assertEquals('2 dias', $this->RW_View_Helper_GetTime->getTime($minutos));
 
-     	//Diferença de 2 dias
-    	$semanas = date('Y-m-d H:i:s',mktime(date('H'),date('i'),date('s'),date('m'),date('d')-16,date('Y')));
-    	$this->assertEquals('2 semanas', $this->RW_View_Helper_GetTime->getTime($semanas));
+        //Diferença de 2 dias
+        $semanas = date('Y-m-d H:i:s', mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 16, date('Y')));
+        $this->assertEquals('2 semanas', $this->RW_View_Helper_GetTime->getTime($semanas));
 
         //Data há 1 Mês
-        $mes = date('Y-m-d',mktime(date('H'),date('i'),date('s'),date('m'),date('d') - 30,date('Y')));
-    	$this->assertEquals('1 mês', $this->RW_View_Helper_GetTime->getTime($mes));
+        $mes = date('Y-m-d', mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 30, date('Y')));
+        $this->assertEquals('1 mês', $this->RW_View_Helper_GetTime->getTime($mes));
 
         //Data há 2 meses
-        $meses = date('Y-m-d',mktime(date('H'),date('i'),date('s'),date('m') - 2,date('d'),date('Y')));
-    	$this->assertEquals('2 meses', $this->RW_View_Helper_GetTime->getTime($meses));
+        $meses = date('Y-m-d', mktime(date('H'), date('i'), date('s'), date('m') - 2, date('d'), date('Y')));
+        $this->assertEquals('2 meses', $this->RW_View_Helper_GetTime->getTime($meses));
 
         //Data anos
-        $ano = date('Y-m-d',mktime(date('H'),date('i'),date('s'),date('m'),date('d'),date('Y')-1));
+        $ano = date('Y-m-d', mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('Y') - 1));
         $this->RW_View_Helper_GetTime->getTime($ano);
-
     }
 }
 

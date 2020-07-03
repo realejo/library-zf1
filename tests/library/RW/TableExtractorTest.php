@@ -1,4 +1,9 @@
 <?php
+namespace RWTest;
+
+use PHPUnit\Framework\TestCase;
+use RW_TableExtractor;
+
 /**
  * RW_tableExtractor test case.
  *
@@ -6,7 +11,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class TableExtractorTest extends PHPUnit_Framework_TestCase
+class TableExtractorTest extends TestCase
 {
     /**
      * @var RW_tableExtractor

@@ -1,4 +1,9 @@
 <?php
+
+namespace RWTest\View\Helper;
+
+use RW_View_Helper_FileSize;
+
 /**
  * RW_View_Helper_FileSize test case.
  *
@@ -6,9 +11,8 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-require_once 'RW/View/Helper/FileSize.php';
 
-class FileSizeTest extends PHPUnit_Framework_TestCase
+class FileSizeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RW_View_Helper_FileSize

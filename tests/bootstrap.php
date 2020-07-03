@@ -20,8 +20,6 @@ if (getenv('TRAVIS') !== false) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once 'library/TestAssets/BaseTestCase.php';
-
 Zend_Loader_Autoloader::getInstance();
 
 $locale = new Zend_Locale('pt_BR');

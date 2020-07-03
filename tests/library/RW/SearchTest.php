@@ -1,4 +1,10 @@
 <?php
+
+namespace RWTest;
+
+use RW_Search;
+use RWTest\TestAssets\BaseTestCase;
+
 /**
  * RW_Search test case.
  *
@@ -13,21 +19,6 @@ class SearchTest extends BaseTestCase
      * @var RW_Search
      */
     private $RW_Search;
-
-    /**
-     * Prepares the environment before running a test.
-     */
-    protected function setUp ()
-    {
-        parent::setUp();
-    }
-    /**
-     * Cleans up the environment after running a test.
-     */
-    protected function tearDown ()
-    {
-        parent::tearDown();
-    }
 
     /**
      * getCachePath sem nome da pasta

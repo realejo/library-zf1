@@ -14,11 +14,18 @@
         "php": "^7.1"
     },
     "require-dev": {
-        "diablomedia/zendframework1": "^4.0.2"
+        "diablomedia/zendframework1": "^4.0.2",
+        "phpunit/phpunit" : "^7.5"
     },
     "autoload": {
         "psr-0": {
 			"RW_": "library/"
+        },
+        "files": [ "bin/constants.php" ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RWTest\\": "tests/library/RW"
         },
         "files": [ "bin/constants.php" ]
     },

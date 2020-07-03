@@ -1,4 +1,9 @@
 <?php
+
+namespace RWTest\View\Helper;
+
+use RW_View_Helper_PrintDate;
+
 /**
  * RW_View_Helper_PrintDate test case.
  *
@@ -6,52 +11,58 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-require_once 'RW/View/Helper/PrintDate.php';
 
-class PrintDateTest extends PHPUnit_Framework_TestCase
+class PrintDateTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RW_View_Helper_PrintDate
      */
     private $RW_View_Helper_PrintDate;
+
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp ()
+    protected function setUp()
     {
         parent::setUp();
         // TODO Auto-generated PrintDateTest::setUp()
         $this->RW_View_Helper_PrintDate = new RW_View_Helper_PrintDate(/* parameters */);
     }
+
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown ()
+    protected function tearDown()
     {
         // TODO Auto-generated PrintDateTest::tearDown()
         $this->RW_View_Helper_PrintDate = null;
         parent::tearDown();
     }
+
     /**
      * Constructs the test case.
      */
-    public function __construct ()
+    public function __construct()
     {
         // TODO Auto-generated constructor
     }
+
     /**
      * Tests RW_View_Helper_PrintDate->printDate()
      */
-    public function testPrintDate ()
+    public function testPrintDate()
     {
-    	$dataCompleto = '2011-12-29 18:10:00';
-    	$data 		  = '2011-12-29';
-    	$dataBarra 	  = '29/12/2011';
-    	$dataHiphen   = '2011-12-29';
+        $dataCompleto = '2011-12-29 18:10:00';
+        $data = '2011-12-29';
+        $dataBarra = '29/12/2011';
+        $dataHiphen = '2011-12-29';
 
-    	$this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataHiphen , 'complete'));
-    	$this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataBarra , 'complete'));
-        $this->assertEquals('29/12/2011 18:10:00', $this->RW_View_Helper_PrintDate->printDate($dataCompleto , 'complete'));
+        $this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataHiphen, 'complete'));
+        $this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataBarra, 'complete'));
+        $this->assertEquals(
+            '29/12/2011 18:10:00',
+            $this->RW_View_Helper_PrintDate->printDate($dataCompleto, 'complete')
+        );
         $this->assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($data));
         $this->assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($dataBarra));
         $this->assertEquals($this->RW_View_Helper_PrintDate->printDate(), '');

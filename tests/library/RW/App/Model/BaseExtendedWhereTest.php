@@ -1,4 +1,11 @@
 <?php
+
+namespace RWTest\App\Model;
+
+use RW_App_Model_Base;
+use RWTest\TestAssets\BaseTestCase;
+use Zend_Db_Table_Select;
+
 /**
  * BaseTest test case.
  *
@@ -25,32 +32,32 @@ class BaseExtendedWhereTest extends BaseTestCase
      */
     private $Base;
 
-    protected $defaultValues = array(
-        array(
+    protected $defaultValues = [
+        [
             'id' => 1,
             'artist' => 'Rush',
             'title' => 'Rush',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 2,
             'artist' => 'Rush',
             'title' => 'Moving Pictures',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 3,
             'artist' => 'Dream Theater',
             'title' => 'Images And Words',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 4,
             'artist' => 'Claudia Leitte',
             'title' => 'Exttravasa',
             'deleted' => 1
-        )
-    );
+        ]
+    ];
 
     /**
      * @return self
@@ -58,13 +65,15 @@ class BaseExtendedWhereTest extends BaseTestCase
     public function insertDefaultRows()
     {
         foreach ($this->defaultValues as $row) {
-            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+            $this->getAdapter()->query(
+                "INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
                                         VALUES (
                                             {$row[$this->tableKeyName]},
                                             '{$row['artist']}',
                                             '{$row['title']}',
                                             {$row['deleted']}
-                                        );");
+                                        );"
+            );
         }
         return $this;
     }
@@ -119,7 +128,7 @@ class BaseExtendedWhereTest extends BaseTestCase
         $this->assertEquals(array('id', 'title'), $this->Base->getOrder());
 
         // Teste o select alterado
-        $order = $this->Base->getSelect(array('teste'=>true))->getPart('order');
+        $order = $this->Base->getSelect(array('teste' => true))->getPart('order');
         $this->assertCount(2, $order);
         $this->assertEquals('id', $order[0][0]);
         $this->assertEquals('title', $order[1][0]);
@@ -133,7 +142,7 @@ class BaseExtendedWhereTest extends BaseTestCase
     public function testWhere()
     {
         $this->assertEquals('123456789abcde', $this->Base->getWhere('123456789abcde'));
-        $this->assertEquals(array('123456789abcde'), $this->Base->getWhere(array('test'=>true, '123456789abcde')));
+        $this->assertEquals(array('123456789abcde'), $this->Base->getWhere(array('test' => true, '123456789abcde')));
     }
 
     /**
@@ -142,21 +151,40 @@ class BaseExtendedWhereTest extends BaseTestCase
     public function testGetSQlString()
     {
         // Verifica o padrão de não usar o campo deleted e não mostrar os removidos
-        $this->assertEquals('SELECT `album`.* FROM `album`', $this->Base->getSQlString(), 'showDeleted=false, useDeleted=false');
+        $this->assertEquals(
+            'SELECT `album`.* FROM `album`',
+            $this->Base->getSQlString(),
+            'showDeleted=false, useDeleted=false'
+        );
 
         // Marca para usar o campo deleted
         $this->Base->setUseDeleted(true);
-        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.deleted = 0)', $this->Base->getSQlString(), 'showDeleted=false, useDeleted=true');
+        $this->assertEquals(
+            'SELECT `album`.* FROM `album` WHERE (album.deleted = 0)',
+            $this->Base->getSQlString(),
+            'showDeleted=false, useDeleted=true'
+        );
 
         // Marca para não usar o campo deleted
         $this->Base->setUseDeleted(false);
 
-        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.id = 1234)', $this->Base->getSQlString(array('id'=>1234)));
-        $this->assertEquals("SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')", $this->Base->getSQlString(array('texto'=>'textotextotexto')));
+        $this->assertEquals(
+            'SELECT `album`.* FROM `album` WHERE (album.id = 1234)',
+            $this->Base->getSQlString(array('id' => 1234))
+        );
+        $this->assertEquals(
+            "SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')",
+            $this->Base->getSQlString(array('texto' => 'textotextotexto'))
+        );
 
-        $this->assertEquals("SELECT `album`.*, `album`.`id` AS `novoid` FROM `album` WHERE (album.id = 1234)", $this->Base->getSQlString(array('id'=>1234, 'test'=>true)));
-        $this->assertEquals("SELECT `album`.*, `album`.`id` AS `novoid` FROM `album` WHERE (album.texto = 'textotextotexto')", $this->Base->getSQlString(array('texto'=>'textotextotexto', 'test'=>true)));
-
+        $this->assertEquals(
+            "SELECT `album`.*, `album`.`id` AS `novoid` FROM `album` WHERE (album.id = 1234)",
+            $this->Base->getSQlString(array('id' => 1234, 'test' => true))
+        );
+        $this->assertEquals(
+            "SELECT `album`.*, `album`.`id` AS `novoid` FROM `album` WHERE (album.texto = 'textotextotexto')",
+            $this->Base->getSQlString(array('texto' => 'textotextotexto', 'test' => true))
+        );
     }
 }
 

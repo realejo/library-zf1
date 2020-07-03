@@ -1,4 +1,13 @@
 <?php
+
+namespace RWTest\App\Model;
+
+use InvalidArgumentException;
+use RW_App_Model_Base;
+use RWTest\TestAssets\BaseTestCase;
+use Zend_Db_Expr;
+use Zend_Dom_Query;
+
 /**
  * BaseTest test case.
  *
@@ -25,46 +34,48 @@ class AppModelBaseTest extends BaseTestCase
      */
     private $Base;
 
-    protected $defaultValues = array(
-        array(
+    protected $defaultValues = [
+        [
             'id' => 1,
             'artist' => 'Rush',
             'title' => 'Rush',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 2,
             'artist' => 'Rush',
             'title' => 'Moving Pictures',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 3,
             'artist' => 'Dream Theater',
             'title' => 'Images And Words',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 4,
             'artist' => 'Claudia Leitte',
             'title' => 'Exttravasa',
             'deleted' => 1
-        )
-    );
+        ]
+    ];
 
     /**
      * @return self
      */
-    public function insertDefaultRows()
+    public function insertDefaultRows(): self
     {
         foreach ($this->defaultValues as $row) {
-            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+            $this->getAdapter()->query(
+                "INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
                                         VALUES (
                                             {$row[$this->tableKeyName]},
                                             '{$row['artist']}',
                                             '{$row['title']}',
                                             {$row['deleted']}
-                                        );");
+                                        );"
+            );
         }
         return $this;
     }
@@ -72,7 +83,7 @@ class AppModelBaseTest extends BaseTestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -87,7 +98,7 @@ class AppModelBaseTest extends BaseTestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -100,76 +111,95 @@ class AppModelBaseTest extends BaseTestCase
 
     /**
      * Construct sem nome da tabela
-     * @expectedException InvalidArgumentException
      */
-    public function testConstructSemTableName()
+    public function testConstructSemTableName(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         new RW_App_Model_Base(null, $this->tableKeyName);
     }
 
     /**
      * Construct sem nome da chave
-     * @expectedException InvalidArgumentException
      */
-    public function testConstructSemKeyName()
+    public function testConstructSemKeyName(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         new RW_App_Model_Base($this->tableName, null);
     }
 
     /**
      * Definição de chave invalido
-     * @expectedException InvalidArgumentException
      */
-    public function testKeyNameInvalido()
+    public function testKeyNameInvalido(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->Base->setKey(null);
     }
 
     /**
      * Definição de ordem invalido
-     * @expectedException InvalidArgumentException
      */
-    public function testOrderInvalida()
+    public function testOrderInvalida(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->Base->setOrder(null);
     }
 
     /**
      * Definição de ordem invalido
-     * @expectedException InvalidArgumentException
      */
-    public function testfetchRowMultiKeyException()
+    public function testfetchRowMultiKeyException(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         // Cria a tabela com chave string
-        $this->Base->setKey(array(RW_App_Model_Base::KEY_INTEGER=>'id_int', RW_App_Model_Base::KEY_STRING=>'id_char'));
+        $this->Base->setKey(
+            array(RW_App_Model_Base::KEY_INTEGER => 'id_int', RW_App_Model_Base::KEY_STRING => 'id_char')
+        );
         $this->Base->fetchRow(1);
     }
 
     /**
      * Definição de chave invalido
      */
-    public function testGettersStters()
+    public function testGettersSetters(): void
     {
         $this->assertEquals('meuid', $this->Base->setKey('meuid')->getKey());
         $this->assertEquals('meuid', $this->Base->setKey('meuid')->getKey(true));
         $this->assertEquals('meuid', $this->Base->setKey('meuid')->getKey(false));
 
         $this->assertEquals(array('meuid', 'com array'), $this->Base->setKey(array('meuid', 'com array'))->getKey());
-        $this->assertEquals(array('meuid', 'com array'), $this->Base->setKey(array('meuid', 'com array'))->getKey(false));
+        $this->assertEquals(
+            array('meuid', 'com array'),
+            $this->Base->setKey(array('meuid', 'com array'))->getKey(false)
+        );
         $this->assertEquals('meuid', $this->Base->setKey(array('meuid', 'com array'))->getKey(true));
 
-        $this->assertInstanceOf('Zend_Db_Expr', $this->Base->setKey(new Zend_Db_Expr('chave muito exotica!'))->getKey());
-        $this->assertInstanceOf('Zend_Db_Expr', $this->Base->setKey(array(new Zend_Db_Expr('chave muito mais exotica!'), 'não existo'))->getKey(true));
+        $this->assertInstanceOf(
+            'Zend_Db_Expr',
+            $this->Base->setKey(new Zend_Db_Expr('chave muito exotica!'))->getKey()
+        );
+        $this->assertInstanceOf(
+            'Zend_Db_Expr',
+            $this->Base->setKey(
+                array(new Zend_Db_Expr('chave muito mais exotica!'), 'não existo')
+            )->getKey(true)
+        );
 
         $this->assertEquals('minhaordem', $this->Base->setOrder('minhaordem')->getOrder());
-        $this->assertEquals(array('minhaordem', 'comarray'), $this->Base->setOrder(array('minhaordem', 'comarray'))->getOrder());
-        $this->assertInstanceOf('Zend_Db_Expr', $this->Base->setOrder(new Zend_Db_Expr('ordem muito exotica!'))->getOrder());
+        $this->assertEquals(
+            array('minhaordem', 'comarray'),
+            $this->Base->setOrder(array('minhaordem', 'comarray'))->getOrder()
+        );
+        $this->assertInstanceOf(
+            'Zend_Db_Expr',
+            $this->Base->setOrder(new Zend_Db_Expr('ordem muito exotica!'))->getOrder()
+        );
     }
 
     /**
      * Test de criação com a conexão local de testes
      */
-    public function testCreateBase()
+    public function testCreateBase(): void
     {
         $Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName);
         $this->assertInstanceOf('RW_App_Model_Base', $Base);
@@ -183,14 +213,22 @@ class AppModelBaseTest extends BaseTestCase
 
         $Base = new RW_App_Model_Base($this->tableName, $this->tableKeyName);
         $this->assertInstanceOf('RW_App_Model_Base', $Base);
-        $this->assertInstanceOf(get_class($this->getAdapter()), $Base->getTableGateway()->getAdapter(), 'tem o Adapter padrão');
-        $this->assertEquals($this->getAdapter()->getConfig(), $Base->getTableGateway()->getAdapter()->getConfig(), 'tem a mesma configuração do adapter padrão');
+        $this->assertInstanceOf(
+            get_class($this->getAdapter()),
+            $Base->getTableGateway()->getAdapter(),
+            'tem o Adapter padrão'
+        );
+        $this->assertEquals(
+            $this->getAdapter()->getConfig(),
+            $Base->getTableGateway()->getAdapter()->getConfig(),
+            'tem a mesma configuração do adapter padrão'
+        );
     }
 
     /**
      * Tests Base->getOrder()
      */
-    public function testOrder()
+    public function testOrder(): void
     {
         // Verifica a ordem padrão
         $this->assertNull($this->Base->getOrder());
@@ -213,7 +251,7 @@ class AppModelBaseTest extends BaseTestCase
      *
      * Apenas para ter o coverage completo
      */
-    public function testWhere()
+    public function testWhere(): void
     {
         $this->assertEquals('123456789abcde', $this->Base->getWhere('123456789abcde'));
     }
@@ -221,7 +259,7 @@ class AppModelBaseTest extends BaseTestCase
     /**
      * Tests campo deleted
      */
-    public function testDeletedField()
+    public function testDeletedField(): void
     {
         // Verifica se deve remover o registro
         $this->Base->setUseDeleted(false);
@@ -238,42 +276,46 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertTrue($this->Base->getShowDeleted());
     }
 
-    /**
-     * Tests Base->getSQlString()
-     */
-    public function testGetSQlString()
+    public function testGetSQlString(): void
     {
         // Verifica o padrão de não usar o campo deleted e não mostrar os removidos
-        $this->assertEquals('SELECT `album`.* FROM `album`', $this->Base->getSQlString(), 'showDeleted=false, useDeleted=false');
+        $this->assertEquals(
+            'SELECT `album`.* FROM `album`',
+            $this->Base->getSQlString(),
+            'showDeleted=false, useDeleted=false'
+        );
 
         // Marca para usar o campo deleted
         $this->Base->setUseDeleted(true);
-        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.deleted = 0)', $this->Base->getSQlString(), 'showDeleted=false, useDeleted=true');
+        $this->assertEquals(
+            'SELECT `album`.* FROM `album` WHERE (album.deleted = 0)',
+            $this->Base->getSQlString(),
+            'showDeleted=false, useDeleted=true'
+        );
 
         // Marca para não usar o campo deleted
         $this->Base->setUseDeleted(false);
 
-        $this->assertEquals('SELECT `album`.* FROM `album` WHERE (album.id = 1234)', $this->Base->getSQlString(array('id'=>1234)));
-        $this->assertEquals("SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')", $this->Base->getSQlString(array('texto'=>'textotextotexto')));
-
+        $this->assertEquals(
+            'SELECT `album`.* FROM `album` WHERE (album.id = 1234)',
+            $this->Base->getSQlString(array('id' => 1234))
+        );
+        $this->assertEquals(
+            "SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')",
+            $this->Base->getSQlString(array('texto' => 'textotextotexto'))
+        );
     }
 
-    /**
-     * Tests Base->testGetSQlSelect()
-     */
-    public function testGetSQlSelect()
+    public function testGetSQlSelect(): void
     {
         $select = $this->Base->getTableSelect();
         $this->assertInstanceOf('Zend_Db_Table_Select', $select);
         $this->assertEquals($select->assemble(), $this->Base->getSQLString());
     }
 
-    /**
-     * Tests Base->fetchAll()
-     */
-    public function testFetchAll()
+    public function testFetchAll(): void
     {
-         // O padrão é não usar o campo deleted
+        // O padrão é não usar o campo deleted
         $albuns = $this->Base->fetchAll();
         $this->assertCount(4, $albuns, 'showDeleted=false, useDeleted=false');
 
@@ -306,8 +348,8 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertCount(3, $this->Base->fetchAll());
 
         // Verifica o where
-        $this->assertCount(2, $this->Base->fetchAll(array('artist'=>$albuns[0]['artist'])));
-        $this->assertNull($this->Base->fetchAll(array('artist'=>$this->defaultValues[3]['artist'])));
+        $this->assertCount(2, $this->Base->fetchAll(array('artist' => $albuns[0]['artist'])));
+        $this->assertNull($this->Base->fetchAll(array('artist' => $this->defaultValues[3]['artist'])));
 
         // Verifica o paginator com o padrão
         $paginator = $this->Base->setUsePaginator(true)->fetchAll();
@@ -317,7 +359,7 @@ class AppModelBaseTest extends BaseTestCase
         //http://framework.zend.com/issues/browse/ZF-9731
         $paginator = (array)json_decode($paginator);
         $temp = array();
-        foreach($paginator as $p) {
+        foreach ($paginator as $p) {
             $temp[] = $p;
         }
         $paginator = json_encode($temp);
@@ -328,8 +370,8 @@ class AppModelBaseTest extends BaseTestCase
 
         // Verifica o paginator alterando o paginator
         $this->Base->getPaginator()->setPageRange(2)
-                                        ->setCurrentPageNumber(1)
-                                        ->setItemCountPerPage(2);
+            ->setCurrentPageNumber(1)
+            ->setItemCountPerPage(2);
         $paginator = $this->Base->setUsePaginator(true)->fetchAll();
         $paginator = $paginator->toJson();
 
@@ -337,7 +379,7 @@ class AppModelBaseTest extends BaseTestCase
         //http://framework.zend.com/issues/browse/ZF-9731
         $paginator = (array)json_decode($paginator);
         $temp = array();
-        foreach($paginator as $p) {
+        foreach ($paginator as $p) {
             $temp[] = $p;
         }
         $paginator = json_encode($temp);
@@ -358,7 +400,9 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros');
 
         // Grava um registro "sem o cache saber"
-        $this->Base->getTableGateway()->insert(array('id'=>10, 'artist'=>'nao existo por enquanto', 'title'=>'bla bla', 'deleted' => 0));
+        $this->Base->getTableGateway()->insert(
+            array('id' => 10, 'artist' => 'nao existo por enquanto', 'title' => 'bla bla', 'deleted' => 0)
+        );
 
         $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros depois do insert "sem o cache saber"');
         $this->assertTrue($this->Base->getCache()->clean(), 'limpa o cache');
@@ -374,13 +418,9 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertCount(5, $this->Base->fetchAll(), 'Deve conter 5 registros');
         $this->assertTrue($this->Base->getCache()->clean(), 'apaga o cache');
         $this->assertCount(4, $this->Base->fetchAll(), 'Deve conter 4 registros 4');
-
     }
 
-    /**
-     * Tests Base->fetchRow()
-     */
-    public function testFetchRow()
+    public function testFetchRow(): void
     {
         // Marca pra usar o campo deleted
         $this->Base->setUseDeleted(true);
@@ -396,12 +436,9 @@ class AppModelBaseTest extends BaseTestCase
         $this->Base->setShowDeleted(false);
     }
 
-    /**
-     * Tests Base->fetchRow()
-     */
-    public function testFetchRowWithIntegerKey()
+    public function testFetchRowWithIntegerKey(): void
     {
-        $this->Base->setKey(array(RW_App_Model_Base::KEY_INTEGER=>'id'));
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_INTEGER => 'id'));
 
         // Marca pra usar o campo deleted
         $this->Base->setUseDeleted(true);
@@ -417,49 +454,48 @@ class AppModelBaseTest extends BaseTestCase
         $this->Base->setShowDeleted(false);
     }
 
-    /**
-     * Tests Base->fetchRow()
-     */
-    public function testFetchRowWithStringKey()
+    public function testFetchRowWithStringKey(): void
     {
         $this->dropTables()->createTables(array('album_string'));
-        $defaultValues = array(
-                array(
-                        'id' => 'A',
-                        'artist' => 'Rush',
-                        'title' => 'Rush',
-                        'deleted' => 0
-                ),
-                array(
-                        'id' => 'B',
-                        'artist' => 'Rush',
-                        'title' => 'Moving Pictures',
-                        'deleted' => 0
-                ),
-                array(
-                        'id' => 'C',
-                        'artist' => 'Dream Theater',
-                        'title' => 'Images And Words',
-                        'deleted' => 0
-                ),
-                array(
-                        'id' => 'D',
-                        'artist' => 'Claudia Leitte',
-                        'title' => 'Exttravasa',
-                        'deleted' => 1
-                )
-        );
+        $defaultValues = [
+            [
+                'id' => 'A',
+                'artist' => 'Rush',
+                'title' => 'Rush',
+                'deleted' => 0
+            ],
+            [
+                'id' => 'B',
+                'artist' => 'Rush',
+                'title' => 'Moving Pictures',
+                'deleted' => 0
+            ],
+            [
+                'id' => 'C',
+                'artist' => 'Dream Theater',
+                'title' => 'Images And Words',
+                'deleted' => 0
+            ],
+            [
+                'id' => 'D',
+                'artist' => 'Claudia Leitte',
+                'title' => 'Exttravasa',
+                'deleted' => 1
+            ]
+        ];
         foreach ($defaultValues as $row) {
-            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+            $this->getAdapter()->query(
+                "INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
                                         VALUES (
                                         '{$row['id']}',
                                         '{$row['artist']}',
                                         '{$row['title']}',
                                         {$row['deleted']}
-                                        );");
+                                        );"
+            );
         }
 
-        $this->Base->setKey(array(RW_App_Model_Base::KEY_STRING=>'id'));
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_STRING => 'id'));
 
         // Marca pra usar o campo deleted
         $this->Base->setUseDeleted(true);
@@ -475,77 +511,71 @@ class AppModelBaseTest extends BaseTestCase
         $this->Base->setShowDeleted(false);
     }
 
-    /**
-     * Tests Base->fetchRow()
-     */
-    public function testFetchRowWithMultipleKey()
+    public function testFetchRowWithMultipleKey(): void
     {
         $this->dropTables()->createTables(array('album_array'));
-        $defaultValues = array(
-                array(
-                        'id_int' => 1,
-                        'id_char' => 'A',
-                        'artist' => 'Rush',
-                        'title' => 'Rush',
-                        'deleted' => 0
-                ),
-                array(
-                        'id_int' => 2,
-                        'id_char' => 'B',
-                        'artist' => 'Rush',
-                        'title' => 'Moving Pictures',
-                        'deleted' => 0
-                ),
-                array(
-                        'id_int' => 3,
-                        'id_char' => 'C',
-                        'artist' => 'Dream Theater',
-                        'title' => 'Images And Words',
-                        'deleted' => 0
-                ),
-                array(
-                        'id_int' => 4,
-                        'id_char' => 'D',
-                        'artist' => 'Claudia Leitte',
-                        'title' => 'Exttravasa',
-                        'deleted' => 1
-                )
-        );
+        $defaultValues = [
+            [
+                'id_int' => 1,
+                'id_char' => 'A',
+                'artist' => 'Rush',
+                'title' => 'Rush',
+                'deleted' => 0
+            ],
+            [
+                'id_int' => 2,
+                'id_char' => 'B',
+                'artist' => 'Rush',
+                'title' => 'Moving Pictures',
+                'deleted' => 0
+            ],
+            [
+                'id_int' => 3,
+                'id_char' => 'C',
+                'artist' => 'Dream Theater',
+                'title' => 'Images And Words',
+                'deleted' => 0
+            ],
+            [
+                'id_int' => 4,
+                'id_char' => 'D',
+                'artist' => 'Claudia Leitte',
+                'title' => 'Exttravasa',
+                'deleted' => 1
+            ]
+        ];
         foreach ($defaultValues as $row) {
-            $this->getAdapter()->query("INSERT into album (id_int, id_char, artist, title, deleted)
+            $this->getAdapter()->query(
+                "INSERT into album (id_int, id_char, artist, title, deleted)
                                         VALUES (
                                         '{$row['id_int']}',
                                         '{$row['id_char']}',
                                         '{$row['artist']}',
                                         '{$row['title']}',
                                         {$row['deleted']}
-                                        );");
+                                        );"
+            );
         }
 
-        $this->Base->setKey(array(RW_App_Model_Base::KEY_STRING=>'id'));
+        $this->Base->setKey(array(RW_App_Model_Base::KEY_STRING => 'id'));
 
         // Marca pra usar o campo deleted
         $this->Base->setUseDeleted(true);
 
         // Verifica os itens que existem
-        $this->assertEquals($defaultValues[0], $this->Base->fetchRow(array('id_char'=>'A', 'id_int'=>1)));
-        $this->assertEquals($defaultValues[1], $this->Base->fetchRow(array('id_char'=>'B', 'id_int'=>2)));
-        $this->assertEquals($defaultValues[2], $this->Base->fetchRow(array('id_char'=>'C', 'id_int'=>3)));
+        $this->assertEquals($defaultValues[0], $this->Base->fetchRow(array('id_char' => 'A', 'id_int' => 1)));
+        $this->assertEquals($defaultValues[1], $this->Base->fetchRow(array('id_char' => 'B', 'id_int' => 2)));
+        $this->assertEquals($defaultValues[2], $this->Base->fetchRow(array('id_char' => 'C', 'id_int' => 3)));
 
-        $this->assertNull($this->Base->fetchRow(array('id_char'=>'C', 'id_int'=>2)));
+        $this->assertNull($this->Base->fetchRow(array('id_char' => 'C', 'id_int' => 2)));
 
         // Verifica o item removido
         $this->Base->setShowDeleted(true);
-        $this->assertEquals($defaultValues[3], $this->Base->fetchRow(array('id_char'=>'D', 'id_int'=>4)));
+        $this->assertEquals($defaultValues[3], $this->Base->fetchRow(array('id_char' => 'D', 'id_int' => 4)));
         $this->Base->setShowDeleted(false);
     }
 
-
-
-    /**
-     * Tests Base->fetchAssoc()
-     */
-    public function testFetchAssoc()
+    public function testFetchAssoc(): void
     {
         // O padrão é não usar o campo deleted
         $albuns = $this->Base->fetchAssoc();
@@ -569,10 +599,7 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertEquals($this->defaultValues[3], $albuns[4]);
     }
 
-    /**
-     * Tests Base->fetchAssoc()
-     */
-    public function testFetchAssocWithMultipleKeys()
+    public function testFetchAssocWithMultipleKeys(): void
     {
         $this->Base->setKey(array($this->tableKeyName, 'naoexisto'));
 
@@ -598,19 +625,23 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertEquals($this->defaultValues[3], $albuns[4]);
     }
 
-    public function testHtmlSelectGettersSetters()
+    public function testHtmlSelectGettersSetters(): void
     {
         $this->assertEquals('{nome}', $this->Base->getHtmlSelectOption(), 'padrão {nome}');
-        $this->assertInstanceOf('RW_App_Model_Base', $this->Base->setHtmlSelectOption('{title}'), 'setHtmlSelectOption() retorna RW_App_Model_Base');
+        $this->assertInstanceOf(
+            'RW_App_Model_Base',
+            $this->Base->setHtmlSelectOption('{title}'),
+            'setHtmlSelectOption() retorna RW_App_Model_Base'
+        );
         $this->assertEquals('{title}', $this->Base->getHtmlSelectOption(), 'troquei por {title}');
     }
 
-    public function testHtmlSelectWhere()
+    public function testHtmlSelectWhere(): void
     {
         $id = 'teste';
         $this->Base->setHtmlSelectOption('{title}');
 
-        $select = $this->Base->getHtmlSelect($id, null, array('where'=>array('artist'=>'Rush')));
+        $select = $this->Base->getHtmlSelect($id, null, array('where' => array('artist' => 'Rush')));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
 
@@ -622,14 +653,22 @@ class AppModelBaseTest extends BaseTestCase
 
         $options->next();
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 1");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 1"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do terceiro ok 1");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 1");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 1"
+        );
 
 
-        $select = $this->Base->getHtmlSelect($id, 1, array('where'=>array('artist'=>'Rush')));
+        $select = $this->Base->getHtmlSelect($id, 1, array('where' => array('artist' => 'Rush')));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
 
@@ -640,14 +679,22 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertNotEmpty($options->current()->getAttribute('value'), "o valor do primeiro não é vazio 2");
 
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 2");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 2");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 2"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 2");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 2"
+        );
     }
 
-    public function testHtmlSelectSemOptionValido()
+    public function testHtmlSelectSemOptionValido(): void
     {
         $id = 'teste';
 
@@ -663,19 +710,35 @@ class AppModelBaseTest extends BaseTestCase
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do segundo ok 1");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 1"
+        );
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do terceiro ok 1");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 1");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 1"
+        );
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do quarto ok 1");
-        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do quarto ok 1");
+        $this->assertEquals(
+            $this->defaultValues[2]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quarto ok 1"
+        );
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do quinto ok 1");
-        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quinto ok 1");
+        $this->assertEquals(
+            $this->defaultValues[3]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quinto ok 1"
+        );
 
         $select = $this->Base->setHtmlSelectOption('{nao_existo}')->getHtmlSelect($id);
         $this->assertNotEmpty($select);
@@ -689,22 +752,38 @@ class AppModelBaseTest extends BaseTestCase
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do segundo ok 2");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 2");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 2"
+        );
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 2");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 2"
+        );
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do quarto ok 2");
-        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do quarto ok 2");
+        $this->assertEquals(
+            $this->defaultValues[2]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quarto ok 2"
+        );
 
         $options->next();
         $this->assertEmpty($options->current()->nodeValue, "nome do quinto ok 2");
-        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quinto ok 2");
+        $this->assertEquals(
+            $this->defaultValues[3]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quinto ok 2"
+        );
     }
 
-    public function testHtmlSelectOption()
+    public function testHtmlSelectOption(): void
     {
         $id = 'teste';
 
@@ -721,36 +800,56 @@ class AppModelBaseTest extends BaseTestCase
 
         $options->next();
         $this->assertEquals($this->defaultValues[0]['artist'], $options->current()->nodeValue, "nome do segundo ok");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['artist'], $options->current()->nodeValue, "nome do terceiro ok");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[2]['artist'], $options->current()->nodeValue, "nome do quarto ok");
-        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do quarto ok");
+        $this->assertEquals(
+            $this->defaultValues[2]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quarto ok"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[3]['artist'], $options->current()->nodeValue, "nome do quinto ok");
-        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quinto ok");
+        $this->assertEquals(
+            $this->defaultValues[3]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quinto ok"
+        );
     }
 
-    public function testHtmlSelectPlaceholder()
+    public function testHtmlSelectPlaceholder(): void
     {
         $ph = 'myplaceholder';
-        $select = $this->Base->getHtmlSelect('nome_usado', null, array('placeholder'=>$ph));
+        $select = $this->Base->getHtmlSelect('nome_usado', null, array('placeholder' => $ph));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
         $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe');
-        $this->assertCount(1, $dom->query("select[placeholder=\"$ph\"]"), "placeholder select[placeholder=\"$ph\"] encontrado");
+        $this->assertCount(
+            1,
+            $dom->query("select[placeholder=\"$ph\"]"),
+            "placeholder select[placeholder=\"$ph\"] encontrado"
+        );
         $options = $dom->query("option");
         $this->assertCount(5, $options, " 5 opções encontradas");
         $this->assertEquals($ph, $options->current()->nodeValue, "placeholder é a primeira");
         $this->assertEmpty($options->current()->getAttribute('value'), "o valor do placeholder é vazio");
     }
 
-    public function testHtmlSelectShowEmpty()
+    public function testHtmlSelectShowEmpty(): void
     {
         $select = $this->Base->getHtmlSelect('nome_usado');
         $this->assertNotEmpty($select);
@@ -766,34 +865,40 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe COM valor padrão');
         $this->assertCount(4, $dom->query('option'), '4 opções existem COM valor padrão');
 
-        $select = $this->Base->getHtmlSelect('nome_usado', null, array('show-empty'=>false));
+        $select = $this->Base->getHtmlSelect('nome_usado', null, array('show-empty' => false));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
         $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe SEM valor padrão e show-empty=false');
         $this->assertCount(4, $dom->query('option'), '4 opções existem SEM valor padrão e show-empty=false');
 
         // sem mostrar o empty
-        $select = $this->Base->getHtmlSelect('nome_usado', 1, array('show-empty'=>false));
+        $select = $this->Base->getHtmlSelect('nome_usado', 1, array('show-empty' => false));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
         $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe com valor padrão e show-empty=false');
         $this->assertCount(4, $dom->query('option'), '4 opções existem com valor padrão e show-empty=false');
 
         // sem mostrar o empty
-        $select = $this->Base->getHtmlSelect('nome_usado', 1, array('show-empty'=>true));
+        $select = $this->Base->getHtmlSelect('nome_usado', 1, array('show-empty' => true));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
         $this->assertCount(1, $dom->query('#nome_usado'), 'id #nome_usado existe com valor padrão e show-empty=true');
         $this->assertCount(5, $dom->query('option'), '5 opções existem com valor padrão e show-empty=true');
-        $this->assertEmpty($dom->query('option')->current()->nodeValue, "a primeira é vazia com valor padrão e show-empty=true");
-        $this->assertEmpty($dom->query('option')->current()->getAttribute('value'), "o valor da primeira é vazio com valor padrão e show-empty=true");
+        $this->assertEmpty(
+            $dom->query('option')->current()->nodeValue,
+            "a primeira é vazia com valor padrão e show-empty=true"
+        );
+        $this->assertEmpty(
+            $dom->query('option')->current()->getAttribute('value'),
+            "o valor da primeira é vazio com valor padrão e show-empty=true"
+        );
     }
 
-    public function testHtmlSelectGrouped()
+    public function testHtmlSelectGrouped(): void
     {
         $id = 'teste';
 
-        $select = $this->Base->setHtmlSelectOption('{title}')->getHtmlSelect($id, 1, array('grouped'=>'artist'));
+        $select = $this->Base->setHtmlSelectOption('{title}')->getHtmlSelect($id, 1, array('grouped' => 'artist'));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
         $this->assertCount(1, $dom->query("#$id"), "id #$id existe");
@@ -802,45 +907,112 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertCount(4, $options, " 4 opções encontradas");
 
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do primeiro ok 1");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do primeiro ok 1");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do primeiro ok 1"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do segundo ok 1");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 1"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[2]['title'], $options->current()->nodeValue, "nome do terceiro ok 1");
-        $this->assertEquals($this->defaultValues[2]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 1");
+        $this->assertEquals(
+            $this->defaultValues[2]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 1"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[3]['title'], $options->current()->nodeValue, "nome do quarto ok 1");
-        $this->assertEquals($this->defaultValues[3]['id'], $options->current()->getAttribute('value'), "valor do quarto ok 1");
+        $this->assertEquals(
+            $this->defaultValues[3]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do quarto ok 1"
+        );
 
         $optgroups = $dom->query("optgroup");
         $this->assertCount(3, $optgroups, " 3 grupo de opções encontrados");
 
-        $this->assertEquals($this->defaultValues[0]['artist'], $optgroups->current()->getAttribute('label'), "nome do primeiro grupo ok");
+        $this->assertEquals(
+            $this->defaultValues[0]['artist'],
+            $optgroups->current()->getAttribute('label'),
+            "nome do primeiro grupo ok"
+        );
         $this->assertEquals(2, $optgroups->current()->childNodes->length, " 2 opções encontrados no priemiro optgroup");
-        $this->assertEquals($this->defaultValues[0]['title'], $optgroups->current()->firstChild->nodeValue, "nome do primeiro ok 2");
-        $this->assertEquals($this->defaultValues[0]['id'], $optgroups->current()->firstChild->getAttribute('value'), "valor do primeiro ok 2");
-        $this->assertEquals($this->defaultValues[1]['title'], $optgroups->current()->firstChild->nextSibling->nodeValue, "nome do segundo ok 2");
-        $this->assertEquals($this->defaultValues[1]['id'], $optgroups->current()->firstChild->nextSibling->getAttribute('value'), "valor do segundo ok 2");
+        $this->assertEquals(
+            $this->defaultValues[0]['title'],
+            $optgroups->current()->firstChild->nodeValue,
+            "nome do primeiro ok 2"
+        );
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $optgroups->current()->firstChild->getAttribute('value'),
+            "valor do primeiro ok 2"
+        );
+        $this->assertEquals(
+            $this->defaultValues[1]['title'],
+            $optgroups->current()->firstChild->nextSibling->nodeValue,
+            "nome do segundo ok 2"
+        );
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $optgroups->current()->firstChild->nextSibling->getAttribute('value'),
+            "valor do segundo ok 2"
+        );
 
         $optgroups->next();
-        $this->assertEquals($this->defaultValues[2]['artist'], $optgroups->current()->getAttribute('label'), "nome do segundo grupo ok");
+        $this->assertEquals(
+            $this->defaultValues[2]['artist'],
+            $optgroups->current()->getAttribute('label'),
+            "nome do segundo grupo ok"
+        );
         $this->assertEquals(1, $optgroups->current()->childNodes->length, " 2 opções encontrados");
-        $this->assertEquals($this->defaultValues[2]['title'], $optgroups->current()->firstChild->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[2]['id'], $optgroups->current()->firstChild->getAttribute('value'), "valor do terceiro ok 2");
+        $this->assertEquals(
+            $this->defaultValues[2]['title'],
+            $optgroups->current()->firstChild->nodeValue,
+            "nome do terceiro ok 2"
+        );
+        $this->assertEquals(
+            $this->defaultValues[2]['id'],
+            $optgroups->current()->firstChild->getAttribute('value'),
+            "valor do terceiro ok 2"
+        );
 
         $optgroups->next();
-        $this->assertEquals($this->defaultValues[3]['artist'], $optgroups->current()->getAttribute('label'), "nome do terceiro grupo ok");
+        $this->assertEquals(
+            $this->defaultValues[3]['artist'],
+            $optgroups->current()->getAttribute('label'),
+            "nome do terceiro grupo ok"
+        );
         $this->assertEquals(1, $optgroups->current()->childNodes->length, " 2 opções encontrados");
-        $this->assertEquals($this->defaultValues[3]['title'], $optgroups->current()->firstChild->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[3]['id'], $optgroups->current()->firstChild->getAttribute('value'), "valor do terceiro ok 2");
+        $this->assertEquals(
+            $this->defaultValues[3]['title'],
+            $optgroups->current()->firstChild->nodeValue,
+            "nome do terceiro ok 2"
+        );
+        $this->assertEquals(
+            $this->defaultValues[3]['id'],
+            $optgroups->current()->firstChild->getAttribute('value'),
+            "valor do terceiro ok 2"
+        );
 
         // SELECT VAZIO!
 
-        $select = $this->Base->setHtmlSelectOption('{title}')->getHtmlSelect($id, 1, array('grouped'=>'artist', 'where'=>array('id'=>100)));
+        $select = $this->Base->setHtmlSelectOption('{title}')->getHtmlSelect(
+            $id,
+            1,
+            array(
+                'grouped' => 'artist',
+                'where' => array('id' => 100)
+            )
+        );
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
         $this->assertCount(1, $dom->query("#$id"), "id #$id existe");
@@ -852,7 +1024,7 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertEmpty($dom->query("option")->current()->getAttribute('value'), "o valor do primeiro é vazio");
     }
 
-    public function testHtmlSelectMultipleKey()
+    public function testHtmlSelectMultipleKey(): void
     {
         // Define a chave multipla
         // como ele deve considerar apenas o primeiro o teste abaixo é o mesmo de testHtmlSelectWhere
@@ -861,7 +1033,7 @@ class AppModelBaseTest extends BaseTestCase
         $id = 'teste';
         $this->Base->setHtmlSelectOption('{title}');
 
-        $select = $this->Base->getHtmlSelect($id, null, array('where'=>array('artist'=>'Rush')));
+        $select = $this->Base->getHtmlSelect($id, null, array('where' => array('artist' => 'Rush')));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
 
@@ -873,14 +1045,21 @@ class AppModelBaseTest extends BaseTestCase
 
         $options->next();
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 1");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 1"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do terceiro ok 1");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 1");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 1"
+        );
 
-
-        $select = $this->Base->getHtmlSelect($id, 1, array('where'=>array('artist'=>'Rush')));
+        $select = $this->Base->getHtmlSelect($id, 1, array('where' => array('artist' => 'Rush')));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
 
@@ -891,23 +1070,31 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertNotEmpty($options->current()->getAttribute('value'), "o valor do primeiro não é vazio 2");
 
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 2");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 2");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 2"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 2");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 2"
+        );
     }
 
-    public function testHtmlSelectMultipleKeyWithCast()
+    public function testHtmlSelectMultipleKeyWithCast(): void
     {
         // Define a chave multipla
         // como ele deve considerar apenas o primeiro o teste abaixo é o mesmo de testHtmlSelectWhere
-        $this->Base->setKey(array('CAST'=>'id', 'nao-existo'));
+        $this->Base->setKey(array('CAST' => 'id', 'nao-existo'));
 
         $id = 'teste';
         $this->Base->setHtmlSelectOption('{title}');
 
-        $select = $this->Base->getHtmlSelect($id, null, array('where'=>array('artist'=>'Rush')));
+        $select = $this->Base->getHtmlSelect($id, null, array('where' => array('artist' => 'Rush')));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
 
@@ -919,14 +1106,22 @@ class AppModelBaseTest extends BaseTestCase
 
         $options->next();
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 1");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 1");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 1"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do terceiro ok 1");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 1");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 1"
+        );
 
 
-        $select = $this->Base->getHtmlSelect($id, 1, array('where'=>array('artist'=>'Rush')));
+        $select = $this->Base->getHtmlSelect($id, 1, array('where' => array('artist' => 'Rush')));
         $this->assertNotEmpty($select);
         $dom = new Zend_Dom_Query($select);
 
@@ -937,10 +1132,18 @@ class AppModelBaseTest extends BaseTestCase
         $this->assertNotEmpty($options->current()->getAttribute('value'), "o valor do primeiro não é vazio 2");
 
         $this->assertEquals($this->defaultValues[0]['title'], $options->current()->nodeValue, "nome do segundo ok 2");
-        $this->assertEquals($this->defaultValues[0]['id'], $options->current()->getAttribute('value'), "valor do segundo ok 2");
+        $this->assertEquals(
+            $this->defaultValues[0]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do segundo ok 2"
+        );
 
         $options->next();
         $this->assertEquals($this->defaultValues[1]['title'], $options->current()->nodeValue, "nome do terceiro ok 2");
-        $this->assertEquals($this->defaultValues[1]['id'], $options->current()->getAttribute('value'), "valor do terceiro ok 2");
+        $this->assertEquals(
+            $this->defaultValues[1]['id'],
+            $options->current()->getAttribute('value'),
+            "valor do terceiro ok 2"
+        );
     }
 }

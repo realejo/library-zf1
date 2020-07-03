@@ -1,4 +1,10 @@
 <?php
+
+namespace RWTest\App\Model;
+
+use RW_App_Model_Db;
+use RWTest\TestAssets\BaseTestCase;
+
 /**
  * TableAdapterTest test case.
  *
@@ -25,32 +31,32 @@ class DbTest extends BaseTestCase
      */
     private $Db;
 
-    protected $defaultValues = array(
-        array(
+    protected $defaultValues = [
+        [
             'id' => 1,
             'artist' => 'Rush',
             'title' => 'Rush',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 2,
             'artist' => 'Rush',
             'title' => 'Moving Pictures',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 3,
             'artist' => 'Dream Theater',
             'title' => 'Images And Words',
             'deleted' => 0
-        ),
-        array(
+        ],
+        [
             'id' => 4,
             'artist' => 'Claudia Leitte',
             'title' => 'Exttravasa',
             'deleted' => 1
-        )
-    );
+        ]
+    ];
 
     /**
      * @return self
@@ -58,13 +64,15 @@ class DbTest extends BaseTestCase
     public function insertDefaultRows()
     {
         foreach ($this->defaultValues as $row) {
-            $this->getAdapter()->query("INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+            $this->getAdapter()->query(
+                "INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
                                         VALUES (
                                             {$row[$this->tableKeyName]},
                                             '{$row['artist']}',
                                             '{$row['title']}',
                                             {$row['deleted']}
-                                        );");
+                                        );"
+            );
         }
         return $this;
     }
@@ -144,10 +152,18 @@ class DbTest extends BaseTestCase
         $this->assertEquals($row, $this->Db->getLastInsertSet(), 'Verifica o set do ultimo insert');
         $this->assertCount(1, $this->Db->fetchAll(), 'Verifica se apenas um registro foi adicionado');
 
-        $row = array_merge(array('id'=>$id), $row);
+        $row = array_merge(array('id' => $id), $row);
 
-        $this->assertEquals(array($row), $this->Db->fetchAll(), 'Verifica se o registro adicionado corresponde ao original pelo fetchAll()');
-        $this->assertEquals($row, $this->Db->fetchRow(1), 'Verifica se o registro adicionado corresponde ao original pelo fetchRow()');
+        $this->assertEquals(
+            array($row),
+            $this->Db->fetchAll(),
+            'Verifica se o registro adicionado corresponde ao original pelo fetchAll()'
+        );
+        $this->assertEquals(
+            $row,
+            $this->Db->fetchRow(1),
+            'Verifica se o registro adicionado corresponde ao original pelo fetchRow()'
+        );
 
         $row = array(
             'id' => 2,
@@ -160,7 +176,11 @@ class DbTest extends BaseTestCase
         $this->assertEquals(2, $id, 'Verifica a chave criada=2');
 
         $this->assertCount(2, $this->Db->fetchAll(), 'Verifica que há DOIS registro');
-        $this->assertEquals($row, $this->Db->fetchRow(2), 'Verifica se o SEGUNDO registro adicionado corresponde ao original pelo fetchRow()');
+        $this->assertEquals(
+            $row,
+            $this->Db->fetchRow(2),
+            'Verifica se o SEGUNDO registro adicionado corresponde ao original pelo fetchRow()'
+        );
         $this->assertEquals($row, $this->Db->getLastInsertSet());
 
         $row = array(
@@ -170,15 +190,23 @@ class DbTest extends BaseTestCase
         );
         $id = $this->Db->insert($row);
         $this->assertEquals(3, $id);
-        $this->assertEquals($row, $this->Db->getLastInsertSet(), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo getLastInsertSet()');
+        $this->assertEquals(
+            $row,
+            $this->Db->getLastInsertSet(),
+            'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo getLastInsertSet()'
+        );
 
-        $row = array_merge(array('id'=>$id), $row);
+        $row = array_merge(array('id' => $id), $row);
 
         $this->assertCount(3, $this->Db->fetchAll());
-        $this->assertEquals($row, $this->Db->fetchRow(3), 'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo fetchRow()');
+        $this->assertEquals(
+            $row,
+            $this->Db->fetchRow(3),
+            'Verifica se o TERCEIRO registro adicionado corresponde ao original pelo fetchRow()'
+        );
 
         // Teste com Zend_Db_Expr
-        $id = $this->Db->insert(array('title'=>new Zend_Db_Expr('now()')));
+        $id = $this->Db->insert(array('title' => new Zend_Db_Expr('now()')));
         $this->assertEquals(4, $id);
     }
 
@@ -192,15 +220,15 @@ class DbTest extends BaseTestCase
 
         $row1 = array(
             'id' => 1,
-            'artist'  => 'Não me altere',
-            'title'   => 'Presto',
+            'artist' => 'Não me altere',
+            'title' => 'Presto',
             'deleted' => 0
         );
 
         $row2 = array(
             'id' => 2,
-            'artist'  => 'Rush',
-            'title'   => 'Rush',
+            'artist' => 'Rush',
+            'title' => 'Rush',
             'deleted' => 0
         );
 
@@ -213,8 +241,8 @@ class DbTest extends BaseTestCase
         $this->assertEquals($row2, $this->Db->fetchRow(2));
 
         $row = array(
-            'artist'  => 'Rush',
-            'title'   => 'Moving Pictures',
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
         );
 
         $this->Db->update($row, 2);
@@ -223,7 +251,7 @@ class DbTest extends BaseTestCase
 
         $this->assertNotNull($this->Db->fetchAll());
         $this->assertCount(2, $this->Db->fetchAll());
-        $this->assertEquals($row, $this->Db->fetchRow(2), 'Alterou o 2?' );
+        $this->assertEquals($row, $this->Db->fetchRow(2), 'Alterou o 2?');
 
         $this->assertEquals($row1, $this->Db->fetchRow(1), 'Alterou o 1?');
         $this->assertNotEquals($row2, $this->Db->fetchRow(2), 'O 2 não é mais o mesmo?');
@@ -231,7 +259,11 @@ class DbTest extends BaseTestCase
         unset($row['id']);
         unset($row['deleted']);
         $this->assertEquals($row, $this->Db->getLastUpdateSet(), 'Os dados diferentes foram os alterados?');
-        $this->assertEquals(array('title'=>array($row2['title'], $row['title'])), $this->Db->getLastUpdateDiff(), 'As alterações foram detectadas corretamente?');
+        $this->assertEquals(
+            array('title' => array($row2['title'], $row['title'])),
+            $this->Db->getLastUpdateDiff(),
+            'As alterações foram detectadas corretamente?'
+        );
 
         $this->assertFalse($this->Db->update(array(), 2));
         $this->assertFalse($this->Db->update(null, 2));
@@ -250,8 +282,8 @@ class DbTest extends BaseTestCase
         );
         $row2 = array(
             'id' => 2,
-            'artist'  => 'Rush',
-            'title'   => 'Moving Pictures',
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
             'deleted' => 0
         );
 
@@ -297,21 +329,20 @@ class DbTest extends BaseTestCase
      */
     public function testDeleteIntegerKey()
     {
-
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id'));
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id'));
 
         // Abaixo é igual ao testDelete
         $row1 = array(
-                'id' => 1,
-                'artist' => 'Rush',
-                'title' => 'Presto',
-                'deleted' => 0
+            'id' => 1,
+            'artist' => 'Rush',
+            'title' => 'Presto',
+            'deleted' => 0
         );
         $row2 = array(
-                'id' => 2,
-                'artist'  => 'Rush',
-                'title'   => 'Moving Pictures',
-                'deleted' => 0
+            'id' => 2,
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
+            'deleted' => 0
         );
 
         $this->Db->insert($row1);
@@ -363,23 +394,22 @@ class DbTest extends BaseTestCase
      */
     public function testDeleteStringKey()
     {
-
         // Cria a tabela com chave string
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_STRING=>'id'));
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_STRING => 'id'));
         $this->dropTables()->createTables(array('album_string'));
 
         // Abaixo é igual ao testDelete trocando 1, 2 por A, B
         $row1 = array(
-                'id' => 'A',
-                'artist' => 'Rush',
-                'title' => 'Presto',
-                'deleted' => 0
+            'id' => 'A',
+            'artist' => 'Rush',
+            'title' => 'Presto',
+            'deleted' => 0
         );
         $row2 = array(
-                'id' => 'B',
-                'artist'  => 'Rush',
-                'title'   => 'Moving Pictures',
-                'deleted' => 0
+            'id' => 'B',
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
+            'deleted' => 0
         );
 
         $this->Db->insert($row1);
@@ -433,7 +463,7 @@ class DbTest extends BaseTestCase
      */
     public function testDeleteInvalidArrayKey()
     {
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id_int', RW_App_Model_Db::KEY_STRING=>'id_char'));
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id_int', RW_App_Model_Db::KEY_STRING => 'id_char'));
         $this->Db->delete('A');
     }
 
@@ -444,8 +474,8 @@ class DbTest extends BaseTestCase
      */
     public function testDeleteInvalidArraySingleKey()
     {
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id_int', RW_App_Model_Db::KEY_STRING=>'id_char'));
-        $this->Db->delete(array('id_int'=>'A'));
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id_int', RW_App_Model_Db::KEY_STRING => 'id_char'));
+        $this->Db->delete(array('id_int' => 'A'));
     }
 
 
@@ -454,69 +484,68 @@ class DbTest extends BaseTestCase
      */
     public function testDeleteArrayKey()
     {
-
         // Cria a tabela com chave string
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER=>'id_int', RW_App_Model_Db::KEY_STRING=>'id_char'));
+        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id_int', RW_App_Model_Db::KEY_STRING => 'id_char'));
         $this->dropTables()->createTables(array('album_array'));
         $this->Db->setUseAllKeys(false);
 
         // Abaixo é igual ao testDelete trocando 1, 2 por A, B
         $row1 = array(
-                'id_int' => 1,
-                'id_char' => 'A',
-                'artist' => 'Rush',
-                'title' => 'Presto',
-                'deleted' => 0
+            'id_int' => 1,
+            'id_char' => 'A',
+            'artist' => 'Rush',
+            'title' => 'Presto',
+            'deleted' => 0
         );
         $row2 = array(
-                'id_int' => 2,
-                'id_char' => 'B',
-                'artist'  => 'Rush',
-                'title'   => 'Moving Pictures',
-                'deleted' => 0
+            'id_int' => 2,
+            'id_char' => 'B',
+            'artist' => 'Rush',
+            'title' => 'Moving Pictures',
+            'deleted' => 0
         );
 
         $this->Db->insert($row1);
         $this->Db->insert($row2);
 
         // Verifica se o registro existe
-        $this->assertEquals($row1, $this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 existe');
-        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 existe');
+        $this->assertEquals($row1, $this->Db->fetchRow(array('id_char' => 'A', 'id_int' => 1)), 'row1 existe');
+        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char' => 'B', 'id_int' => 2)), 'row2 existe');
 
         // Marca para usar o campo deleted
         $this->Db->setUseDeleted(true)->setShowDeleted(true);
 
         // Remove o registro
-        $this->Db->delete(array('id_char'=>'A'));
+        $this->Db->delete(array('id_char' => 'A'));
         $row1['deleted'] = 1;
 
         // Verifica se foi removido
-        $row = $this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1));
+        $row = $this->Db->fetchRow(array('id_char' => 'A', 'id_int' => 1));
         $this->assertEquals(1, $row['deleted'], 'row1 marcado como deleted');
-        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v1');
+        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char' => 'B', 'id_int' => 2)), 'row2 ainda existe v1');
 
         // Marca para mostrar os removidos
         $this->Db->setShowDeleted(true);
 
         // Verifica se o registro existe
-        $this->assertEquals($row1, $this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 ainda existe v1');
-        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v2');
+        $this->assertEquals($row1, $this->Db->fetchRow(array('id_char' => 'A', 'id_int' => 1)), 'row1 ainda existe v1');
+        $this->assertEquals($row2, $this->Db->fetchRow(array('id_char' => 'B', 'id_int' => 2)), 'row2 ainda existe v2');
 
         // Marca para remover o registro da tabela
         $this->Db->setUseDeleted(false);
 
         // Remove o registro qwue não existe
-        $this->Db->delete(array('id_char'=>'C'));
+        $this->Db->delete(array('id_char' => 'C'));
 
         // Verifica se ele foi removido
-        $this->assertNotEmpty($this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 ainda existe v3');
-        $this->assertNotEmpty($this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v3');
+        $this->assertNotEmpty($this->Db->fetchRow(array('id_char' => 'A', 'id_int' => 1)), 'row1 ainda existe v3');
+        $this->assertNotEmpty($this->Db->fetchRow(array('id_char' => 'B', 'id_int' => 2)), 'row2 ainda existe v3');
 
         // Remove o registro
-        $this->Db->delete(array('id_char'=>'A'));
+        $this->Db->delete(array('id_char' => 'A'));
 
         // Verifica se ele foi removido
-        $this->assertNull($this->Db->fetchRow(array('id_char'=>'A', 'id_int'=>1)), 'row1 não existe v4');
-        $this->assertNotEmpty($this->Db->fetchRow(array('id_char'=>'B', 'id_int'=>2)), 'row2 ainda existe v4');
+        $this->assertNull($this->Db->fetchRow(array('id_char' => 'A', 'id_int' => 1)), 'row1 não existe v4');
+        $this->assertNotEmpty($this->Db->fetchRow(array('id_char' => 'B', 'id_int' => 2)), 'row2 ainda existe v4');
     }
 }

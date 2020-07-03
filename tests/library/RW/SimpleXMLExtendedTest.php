@@ -1,4 +1,9 @@
 <?php
+namespace RWTest;
+
+use PHPUnit\Framework\TestCase;
+use RW_SimpleXMLExtended;
+
 /**
  * RW_SimpleXMLExtended test case.
  *
@@ -6,7 +11,7 @@
  * @copyright Copyright (c) 2011-2014 Realejo Design Ltda. (http://www.realejo.com.br)
  */
 
-class SimpleXMLExtendedTest extends PHPUnit_Framework_TestCase
+class SimpleXMLExtendedTest extends TestCase
 {
     /**
      * @var RW_SimpleXMLExtended

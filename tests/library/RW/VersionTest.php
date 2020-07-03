@@ -1,4 +1,10 @@
 <?php
+
+namespace RWTest;
+
+use PHPUnit\Framework\TestCase;
+use RW_Version;
+
 /**
  * RW_Version test case.
  *
@@ -6,7 +12,7 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class VersionTest extends PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
     public function testGetLatest()
     {
@@ -16,7 +22,7 @@ class VersionTest extends PHPUnit_Framework_TestCase
     public function testCompareVersion()
     {
         $this->assertEquals(0, RW_Version::compareVersion(RW_Version::VERSION));
-        $this->assertContains(RW_Version::compareVersion(RW_Version::getLatest()), array(-1,0,1));
+        $this->assertContains(RW_Version::compareVersion(RW_Version::getLatest()), array(-1, 0, 1));
     }
 }
 

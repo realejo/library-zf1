@@ -1,4 +1,10 @@
 <?php
+
+namespace RWTest;
+
+use RW_Mail;
+use RWTest\TestAssets\BaseTestCase;
+
 /**
  * RW_Mail test case.
  *
@@ -16,7 +22,7 @@ class MailTest extends BaseTestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp ()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -29,7 +35,7 @@ class MailTest extends BaseTestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown ()
+    protected function tearDown()
     {
         // TODO Auto-generated MailTest::tearDown()
         $this->RW_Mail = null;
@@ -39,7 +45,7 @@ class MailTest extends BaseTestCase
     /**
      * Constructs the test case.
      */
-    public function __construct ()
+    public function __construct()
     {
         // TODO Auto-generated constructor
     }
@@ -47,7 +53,7 @@ class MailTest extends BaseTestCase
     /**
      * Tests RW_Mail->__construct()
      */
-    public function test__construct ()
+    public function test__construct()
     {
         // TODO Auto-generated MailTest->test__construct()
         $this->markTestIncomplete("__construct test not implemented");
@@ -57,7 +63,7 @@ class MailTest extends BaseTestCase
     /**
      * Tests RW_Mail->SendEmail()
      */
-    public function testSendEmail ()
+    public function testSendEmail()
     {
         // TODO Auto-generated MailTest->testSendEmail()
         $this->markTestIncomplete("SendEmail test not implemented");
@@ -67,7 +73,7 @@ class MailTest extends BaseTestCase
     /**
      * Tests RW_Mail->sendFeedback()
      */
-    public function testSendFeedback ()
+    public function testSendFeedback()
     {
         // TODO Auto-generated MailTest->testSendFeedback()
         $this->markTestIncomplete("sendFeedback test not implemented");
@@ -77,7 +83,7 @@ class MailTest extends BaseTestCase
     /**
      * Tests RW_Mail::isEmail()
      */
-    public function testIsEmail ()
+    public function testIsEmail()
     {
         // TODO Auto-generated MailTest::testIsEmail()
         $this->markTestIncomplete("isEmail test not implemented");

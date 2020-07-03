@@ -1,4 +1,11 @@
 <?php
+
+namespace RWTest;
+
+
+use PHPUnit\Framework\TestCase;
+use RW_CPF;
+
 /**
  * RW_CPF test case.
  *
@@ -6,51 +13,56 @@
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-class CPFTest extends PHPUnit_Framework_TestCase
+class CPFTest extends TestCase
 {
     /**
      * @var RW_CPF
      */
     private $RW_CPF;
+
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp ()
+    protected function setUp()
     {
         parent::setUp();
         // TODO Auto-generated CPFTest::setUp()
         $this->RW_CPF = new RW_CPF(/* parameters */);
     }
+
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown ()
+    protected function tearDown()
     {
         // TODO Auto-generated CPFTest::tearDown()
         $this->RW_CPF = null;
         parent::tearDown();
     }
+
     /**
      * Constructs the test case.
      */
-    public function __construct ()
+    public function __construct()
     {
         // TODO Auto-generated constructor
     }
+
     /**
      * Tests RW_CPF::valid()
      */
-    public function testValid ()
+    public function testValid()
     {
-		$this->assertTrue(RW_CPF::valid('06003014601'));
-		$this->assertFalse(RW_CPF::valid('111.111.111-01'));
+        $this->assertTrue(RW_CPF::valid('06003014601'));
+        $this->assertFalse(RW_CPF::valid('111.111.111-01'));
     }
+
     /**
      * Tests RW_CPF::format()
      */
-    public function testFormat ()
+    public function testFormat()
     {
-		$this->assertEquals('060.030.146-01', RW_CPF::format('06003014601'));
+        $this->assertEquals('060.030.146-01', RW_CPF::format('06003014601'));
     }
 }
 
