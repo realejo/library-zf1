@@ -45,7 +45,7 @@ class BaseTestCaseTest extends TestCase
     /**
      * Prepares the environment before running ALL tests.
      */
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Inicializa o ZF
         $inifile = (getenv('TRAVIS') !== false) ? 'application.travis.ini' : 'application.ini';
