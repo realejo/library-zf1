@@ -41,20 +41,12 @@ class CPFTest extends TestCase
     }
 
     /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
-
-    /**
      * Tests RW_CPF::valid()
      */
     public function testValid()
     {
-        $this->assertTrue(RW_CPF::valid('06003014601'));
-        $this->assertFalse(RW_CPF::valid('111.111.111-01'));
+       self::assertTrue(RW_CPF::valid('06003014601'));
+       self::assertFalse(RW_CPF::valid('111.111.111-01'));
     }
 
     /**
@@ -62,7 +54,7 @@ class CPFTest extends TestCase
      */
     public function testFormat()
     {
-        $this->assertEquals('060.030.146-01', RW_CPF::format('06003014601'));
+       self::assertEquals('060.030.146-01', RW_CPF::format('06003014601'));
     }
 }
 

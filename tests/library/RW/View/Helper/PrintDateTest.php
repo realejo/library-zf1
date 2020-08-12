@@ -11,7 +11,6 @@ use RW_View_Helper_PrintDate;
  * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
  * @license   http://unlicense.org
  */
-
 class PrintDateTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -40,14 +39,6 @@ class PrintDateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
-
-    /**
      * Tests RW_View_Helper_PrintDate->printDate()
      */
     public function testPrintDate()
@@ -57,15 +48,15 @@ class PrintDateTest extends \PHPUnit\Framework\TestCase
         $dataBarra = '29/12/2011';
         $dataHiphen = '2011-12-29';
 
-        $this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataHiphen, 'complete'));
-        $this->assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataBarra, 'complete'));
-        $this->assertEquals(
+        self::assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataHiphen, 'complete'));
+        self::assertEquals('29/12/2011 00:00:00', $this->RW_View_Helper_PrintDate->printDate($dataBarra, 'complete'));
+        self::assertEquals(
             '29/12/2011 18:10:00',
             $this->RW_View_Helper_PrintDate->printDate($dataCompleto, 'complete')
         );
-        $this->assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($data));
-        $this->assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($dataBarra));
-        $this->assertEquals($this->RW_View_Helper_PrintDate->printDate(), '');
+        self::assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($data));
+        self::assertEquals('29/12/2011', $this->RW_View_Helper_PrintDate->printDate($dataBarra));
+        self::assertEquals($this->RW_View_Helper_PrintDate->printDate(), '');
     }
 }
 

@@ -126,7 +126,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($urlRetorno, RW_Base::seourl($url));
 
         $url 		= utf8_decode('fazendo uma tremenda bagunça e uma GRANDE confusão');
-    	$urlRetorno = 'fazendo-uma-tremenda-bagunca-e-uma-grande-confusao';
+    	$urlRetorno = 'fazendo-uma-tremenda-baguna-e-uma-grande-confuso';
         $this->assertEquals($urlRetorno, RW_Base::seourl($url));
     }
 

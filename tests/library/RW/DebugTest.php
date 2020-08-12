@@ -2,6 +2,7 @@
 
 namespace RWTest;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use RW_Debug;
 
@@ -40,31 +41,24 @@ class DebugTest extends TestCase
     }
 
     /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
-
-    /**
      * Tests RW_Debug::log()
      */
     public function testLog()
     {
-        if (APPLICATION_ENV != 'production') {
-            $this->assertInstanceOf('Zend_Log', $this->RW_Debug->log('Teste'));
+        if (APPLICATION_ENV !== 'production') {
+            self::assertInstanceOf('Zend_Log', $this->RW_Debug->log('Teste'));
         }
     }
 
     /**
      * Tests RW_Debug::logToFile()
-     * @expectedException Exception
+     *
      * @todo ao invés de esperar exception, verificar se o arquivo de log existe
      */
     public function testLogToFile()
     {
-        $this->assertInstanceOf('Zend_Log', $this->RW_Debug->logToFile('Teste'));
+        $this->expectException(Exception::class);
+        self::assertInstanceOf('Zend_Log', $this->RW_Debug->logToFile('Teste'));
     }
 
     /**
@@ -74,11 +68,11 @@ class DebugTest extends TestCase
     {
         $error = RW_Debug::sendError('Teste', 404);
 
-        $this->assertEquals('Página não encontrada', $error);
+        self::assertEquals('Página não encontrada', $error);
 
         $error = RW_Debug::sendError('Teste', 500);
 
-        $this->assertEquals('Erro encontrado no site', $error);
+        self::assertEquals('Erro encontrado no site', $error);
     }
 }
 

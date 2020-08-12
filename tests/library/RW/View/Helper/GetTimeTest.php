@@ -40,14 +40,6 @@ class GetTimeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
-
-    /**
      * Tests RW_View_Helper_GetTime->getTime()
      */
     public function testGetTime()

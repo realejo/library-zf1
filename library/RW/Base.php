@@ -133,12 +133,12 @@ class RW_Base
     /**
      * Transforma uma string em url friendly
      *
-     * @param str $string
-     * @param str $space
+     * @param string $string
+     * @param string $space
      *
      * @return string
      */
-    static public function seourl($string, $space="-")
+    public static function seourl($string, $space="-")
     {
         // Passa apra UTF8
         $string = self::toUTF8(trim($string));

@@ -1,6 +1,7 @@
 <?php
 namespace RWTest\App\Model;
 
+use RW_App_Model_Cache;
 use RWTest\TestAssets\BaseTestCase;
 
 /**
@@ -41,31 +42,31 @@ class CacheTest extends BaseTestCase
     /**
      * getCachePath sem nome da pasta
      *
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testGetCacheRootSemAPPLICATION_DATA()
     {
         if (defined("APPLICATION_DATA")) {
-            throw new Exception('APPLICATION_DATA já foi definido em outro lugar');
+            throw new \Exception('APPLICATION_DATA já foi definido em outro lugar');
         }
 
-        RW_App_Model_Cache::getCacheRoot();
+        \RW_App_Model_Cache::getCacheRoot();
     }
 
     /**
      * getCachePath sem nome da pasta
      */
-    public function testGetCacheRoot()
+    public function testGetCacheRoot(): void
     {
         $this->setApplicationConstants()->clearApplicationData();
 
         // Recupera a pasta aonde será salva as informações
-        $path = RW_App_Model_Cache::getCacheRoot();
+        $path = \RW_App_Model_Cache::getCacheRoot();
 
         // Verifica se tere o retorno correto
-        $this->assertNotNull($path, 'a path foi retornado');
-        $this->assertTrue(is_dir($path), "$path é um diretório");
-        $this->assertTrue(is_writable($path), 'tem permissão de escrita');
+        self::assertNotNull($path, 'a path foi retornado');
+        self::assertDirectoryExists($path, "$path é um diretório");
+        self::assertTrue(is_writable($path), 'tem permissão de escrita');
 
         $this->clearApplicationData();
     }
@@ -78,37 +79,37 @@ class CacheTest extends BaseTestCase
         $this->setApplicationConstants()->clearApplicationData();
 
         // Verifica se todas as opções são iguais
-        $this->assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(null));
-        $this->assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(''));
-        $this->assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath());
+        self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(null));
+        self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(''));
+        self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath());
 
         // Cria ou recupera a pasta album
         $path = RW_App_Model_Cache::getCachePath('Album');
 
         // Verifica se foi criada corretamente a pasta
-        $this->assertNotNull($path);
-        $this->assertEquals(RW_App_Model_Cache::getCacheRoot() . '/album', $path);
-        $this->assertNotEquals(RW_App_Model_Cache::getCacheRoot() . '/Album', $path);
-        $this->assertTrue(file_exists($path));
-        $this->assertTrue(is_dir($path));
-        $this->assertTrue(is_writable($path));
+        self::assertNotNull($path);
+        self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/album', $path);
+        self::assertNotEquals(RW_App_Model_Cache::getCacheRoot() . '/Album', $path);
+        self::assertFileExists($path);
+        self::assertDirectoryExists($path);
+        self::assertTrue(is_writable($path));
 
         // Apaga a pasta
         $this->rrmdir($path);
 
         // Verifica se a pasta foi apagada
-        $this->assertFalse(file_exists($path));
+        self::assertFileNotExists($path);
 
         // Cria ou recupera a pasta album
         $path = RW_App_Model_Cache::getCachePath('album');
 
         // Verifica se foi criada corretamente a pasta
-        $this->assertNotNull($path);
-        $this->assertEquals(RW_App_Model_Cache::getCacheRoot() . '/album', $path);
-        $this->assertNotEquals(RW_App_Model_Cache::getCacheRoot() . '/Album', $path);
-        $this->assertTrue(file_exists($path), 'Verifica se a pasta album existe');
-        $this->assertTrue(is_dir($path), 'Verifica se a pasta album é uma pasta');
-        $this->assertTrue(is_writable($path), 'Verifica se a pasta album tem permissão de escrita');
+        self::assertNotNull($path);
+        self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/album', $path);
+        self::assertNotEquals(RW_App_Model_Cache::getCacheRoot() . '/Album', $path);
+        self::assertFileExists($path, 'Verifica se a pasta album existe');
+        self::assertDirectoryExists($path, 'Verifica se a pasta album é uma pasta');
+        self::assertTrue(is_writable($path), 'Verifica se a pasta album tem permissão de escrita');
 
         // Apaga a pasta
         $this->rrmdir($path);

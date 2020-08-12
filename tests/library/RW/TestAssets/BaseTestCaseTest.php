@@ -61,7 +61,7 @@ class BaseTestCaseTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $this->assertInstanceOf('Zend_Db_Adapter_Abstract', $this->BaseTestCase->getAdapter());
+       self::assertInstanceOf('Zend_Db_Adapter_Abstract', $this->BaseTestCase->getAdapter());
     }
 
     /**
@@ -70,17 +70,17 @@ class BaseTestCaseTest extends TestCase
     public function testTestSetupMysql()
     {
         $tables = array('album');
-        $this->assertInstanceOf('BaseTestCase', $this->BaseTestCase->setTables($tables));
-        $this->assertEquals($tables, $this->BaseTestCase->getTables());
+       self::assertInstanceOf(BaseTestCase::class, $this->BaseTestCase->setTables($tables));
+       self::assertEquals($tables, $this->BaseTestCase->getTables());
 
         $dbTest = $this->BaseTestCase->createTables();
-        $this->assertInstanceOf('BaseTestCase', $dbTest);
+       self::assertInstanceOf(BaseTestCase::class, $dbTest);
 
         $dbTest = $this->BaseTestCase->dropTables();
-        $this->assertInstanceOf('BaseTestCase', $dbTest);
+       self::assertInstanceOf(BaseTestCase::class, $dbTest);
 
         $dbTest = $this->BaseTestCase->createTables()->dropTables();
-        $this->assertInstanceOf('BaseTestCase', $dbTest);
+       self::assertInstanceOf(BaseTestCase::class, $dbTest);
     }
 
     public function testClearApplicationData()
@@ -109,24 +109,24 @@ class BaseTestCaseTest extends TestCase
         file_put_contents($folder . '/sample.txt', 'teste teste');
 
         // Verifica se a pasta está vazia
-        $this->assertFalse($this->BaseTestCase->isApplicationDataEmpty());
+       self::assertFalse($this->BaseTestCase->isApplicationDataEmpty());
 
         $this->BaseTestCase->clearApplicationData();
 
         // Verifica se está vazia
         $files = $objects = scandir(APPLICATION_DATA);
-        $this->assertCount(3, $files, 'não tem mais nada no APPLICATION_DATA');
-        $this->assertEquals(array('.', '..', '.gitignore'), $files, 'não tem mais nada no APPLICATION_DATA');
+       self::assertCount(3, $files, 'não tem mais nada no APPLICATION_DATA');
+       self::assertEquals(array('.', '..', '.gitignore'), $files, 'não tem mais nada no APPLICATION_DATA');
 
         // Verifica se a pasta está vazia
-        $this->assertTrue($this->BaseTestCase->isApplicationDataEmpty());
+       self::assertTrue($this->BaseTestCase->isApplicationDataEmpty());
 
         // Grava mais coisa no raiz do APPLICATION_DATA
         file_put_contents(APPLICATION_DATA . '/sample.txt', 'outro teste');
 
         // Verifica se a pasta está vazia depois de apagar
-        $this->assertFalse($this->BaseTestCase->isApplicationDataEmpty());
-        $this->assertTrue($this->BaseTestCase->clearApplicationData());
+       self::assertFalse($this->BaseTestCase->isApplicationDataEmpty());
+       self::assertTrue($this->BaseTestCase->clearApplicationData());
     }
 }
 

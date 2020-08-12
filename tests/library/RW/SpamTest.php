@@ -40,25 +40,6 @@ class SpamTest extends TestCase
     }
 
     /**
-     * Tests RW_Spam::isSpam()
-     */
-    public function testIsSpam()
-    {
-        // TODO Auto-generated SpamTest->testChkTrigger()
-        $this->markTestIncomplete("isSpam test not implemented");
-        RW_Spam::isSpam(/* parameters */);
-        /*    	$this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui'));
-                $this->assertEquals(true, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está cialis htaccess lesbian'));
-                $this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está cialis'));
-                $this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está htaccess'));
-                $this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está lesbian'));
-                $this->assertEquals(false, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está'));
-                $this->assertEquals(true, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está porn fuckin bondage pennis windows free nursing'));
-                $this->assertEquals(true, RW_Spam::isSpam('teste', 'http://rw.rw', 'aqui estamos para testar está porn nipples lesbian <script> metabo acomplia'));
-        */
-    }
-
-    /**
      * Tests RW_Spam->chkTrigger()
      */
     public function testChkTrigger()
@@ -71,10 +52,10 @@ class SpamTest extends TestCase
         $texto3 = 'aqui estamos para testar está hazzard nude online wedding free sex';
         $texto4 = 'aqui estamos';
 
-        $this->assertEquals(false, $this->RW_Spam->chkTrigger($texto4));
-        $this->assertEquals(true, $this->RW_Spam->chkTrigger($texto1));
-        $this->assertEquals(true, $this->RW_Spam->chkTrigger($texto2));
-        $this->assertEquals(true, $this->RW_Spam->chkTrigger($texto3));
+       self::assertEquals(false, $this->RW_Spam->chkTrigger($texto4));
+       self::assertEquals(true, $this->RW_Spam->chkTrigger($texto1));
+       self::assertEquals(true, $this->RW_Spam->chkTrigger($texto2));
+       self::assertEquals(true, $this->RW_Spam->chkTrigger($texto3));
     }
 }
 

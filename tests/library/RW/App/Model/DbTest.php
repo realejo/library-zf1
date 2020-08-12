@@ -4,6 +4,7 @@ namespace RWTest\App\Model;
 
 use RW_App_Model_Db;
 use RWTest\TestAssets\BaseTestCase;
+use Zend_Db_Expr;
 
 /**
  * TableAdapterTest test case.

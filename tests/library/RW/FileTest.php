@@ -42,21 +42,13 @@ class FileTest extends TestCase
     }
 
     /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
-
-    /**
      * Tests RW_File::readfile_chunked()
      */
     public function testReadfile_chunked()
     {
         $file = $this->filePath . '/testFile.txt';
         ob_start();
-        $this->assertEquals(31, RW_File::readfile_chunked($file));
+       self::assertEquals(31, RW_File::readfile_chunked($file));
         ob_end_clean();
     }
 }

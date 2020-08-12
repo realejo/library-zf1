@@ -29,7 +29,7 @@ class BaseTestCase extends TestCase
      */
     protected $tables = array();
 
-    public function __construct($tables = null)
+    public function wrongConstruct($tables = null)
     {
         if (!empty($tables) && is_array($tables)) {
             $this->tables = $tables;
@@ -110,9 +110,6 @@ class BaseTestCase extends TestCase
         return $this;
     }
 
-    /**
-     * @return SetupTest
-     */
     public function dropTables($tables = null)
     {
         if (empty($tables)) {
@@ -156,11 +153,11 @@ class BaseTestCase extends TestCase
     {
         // Verifica se há APPLICATION_DATA
         if (!defined('APPLICATION_DATA')) {
-            $this->fail('APPLICATION_DATA não definido');
+            self::fail('APPLICATION_DATA não definido');
         }
         // Verifica se a pasta existe e tem permissão de escrita
-        if (!is_dir(APPLICATION_DATA) || !is_writeable(APPLICATION_DATA)) {
-            $this->fail('APPLICATION_DATA não definido');
+        if (!is_dir(APPLICATION_DATA) || !is_writable(APPLICATION_DATA)) {
+            self::fail('APPLICATION_DATA não definido');
         }
 
         // Retorna se está vazio

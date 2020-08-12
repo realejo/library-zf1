@@ -113,25 +113,25 @@ class BaseExtendedWhereTest extends BaseTestCase
     public function testOrder()
     {
         // Verifica a ordem padrão
-        $this->assertNull($this->Base->getOrder());
+        self::assertNull($this->Base->getOrder());
 
         // Define uma nova ordem com string
         $this->Base->setOrder('id');
-        $this->assertEquals('id', $this->Base->getOrder());
+        self::assertEquals('id', $this->Base->getOrder());
 
         // Define uma nova ordem com string
         $this->Base->setOrder('title');
-        $this->assertEquals('title', $this->Base->getOrder());
+        self::assertEquals('title', $this->Base->getOrder());
 
         // Define uma nova ordem com array
         $this->Base->setOrder(array('id', 'title'));
-        $this->assertEquals(array('id', 'title'), $this->Base->getOrder());
+        self::assertEquals(array('id', 'title'), $this->Base->getOrder());
 
         // Teste o select alterado
         $order = $this->Base->getSelect(array('teste' => true))->getPart('order');
-        $this->assertCount(2, $order);
-        $this->assertEquals('id', $order[0][0]);
-        $this->assertEquals('title', $order[1][0]);
+        self::assertCount(2, $order);
+        self::assertEquals('id', $order[0][0]);
+        self::assertEquals('title', $order[1][0]);
     }
 
     /**
@@ -141,8 +141,8 @@ class BaseExtendedWhereTest extends BaseTestCase
      */
     public function testWhere()
     {
-        $this->assertEquals('123456789abcde', $this->Base->getWhere('123456789abcde'));
-        $this->assertEquals(array('123456789abcde'), $this->Base->getWhere(array('test' => true, '123456789abcde')));
+        self::assertEquals('123456789abcde', $this->Base->getWhere('123456789abcde'));
+        self::assertEquals(array('123456789abcde'), $this->Base->getWhere(array('test' => true, '123456789abcde')));
     }
 
     /**
@@ -151,7 +151,7 @@ class BaseExtendedWhereTest extends BaseTestCase
     public function testGetSQlString()
     {
         // Verifica o padrão de não usar o campo deleted e não mostrar os removidos
-        $this->assertEquals(
+        self::assertEquals(
             'SELECT `album`.* FROM `album`',
             $this->Base->getSQlString(),
             'showDeleted=false, useDeleted=false'
@@ -159,7 +159,7 @@ class BaseExtendedWhereTest extends BaseTestCase
 
         // Marca para usar o campo deleted
         $this->Base->setUseDeleted(true);
-        $this->assertEquals(
+        self::assertEquals(
             'SELECT `album`.* FROM `album` WHERE (album.deleted = 0)',
             $this->Base->getSQlString(),
             'showDeleted=false, useDeleted=true'
@@ -168,21 +168,21 @@ class BaseExtendedWhereTest extends BaseTestCase
         // Marca para não usar o campo deleted
         $this->Base->setUseDeleted(false);
 
-        $this->assertEquals(
+        self::assertEquals(
             'SELECT `album`.* FROM `album` WHERE (album.id = 1234)',
             $this->Base->getSQlString(array('id' => 1234))
         );
-        $this->assertEquals(
+        self::assertEquals(
             "SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')",
             $this->Base->getSQlString(array('texto' => 'textotextotexto'))
         );
 
-        $this->assertEquals(
-            "SELECT `album`.*, `album`.`id` AS `novoid` FROM `album` WHERE (album.id = 1234)",
+        self::assertEquals(
+            "SELECT `album`.* FROM `album` WHERE (album.id = 1234)",
             $this->Base->getSQlString(array('id' => 1234, 'test' => true))
         );
-        $this->assertEquals(
-            "SELECT `album`.*, `album`.`id` AS `novoid` FROM `album` WHERE (album.texto = 'textotextotexto')",
+        self::assertEquals(
+            "SELECT `album`.* FROM `album` WHERE (album.texto = 'textotextotexto')",
             $this->Base->getSQlString(array('texto' => 'textotextotexto', 'test' => true))
         );
     }
