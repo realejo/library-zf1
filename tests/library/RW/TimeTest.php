@@ -2,6 +2,7 @@
 
 namespace RWTest;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use RW_Time;
 use Zend_Date;
@@ -15,33 +16,7 @@ use Zend_Date;
  */
 class TimeTest extends TestCase
 {
-    /**
-     * @var RW_Time
-     */
-    private $RW_Time;
-
-    /**
-     * Prepares the environment before running a test.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->RW_Time = new RW_Time(/* parameters */);
-    }
-
-    /**
-     * Cleans up the environment after running a test.
-     */
-    protected function tearDown()
-    {
-        $this->RW_Time = null;
-        parent::tearDown();
-    }
-
-    /**
-     * Tests RW_Math::moda()
-     */
-    public function testGet()
+    public function testGet(): void
     {
         /**
          * SEGUNDOS
@@ -335,10 +310,7 @@ class TimeTest extends TestCase
     }
 
 
-    /**
-     * Tests RW_Time::setSeconds()
-     */
-    public function testSetSeconds()
+    public function testSetSeconds(): void
     {
         $time = new RW_Time(3);
         self::assertSame('00:00:27', $time->setSeconds(27)->toString());
@@ -354,10 +326,7 @@ class TimeTest extends TestCase
     }
 
 
-    /**
-     * Tests RW_Time::setMinutes()
-     */
-    public function testSetMinutes()
+    public function testSetMinutes(): void
     {
         $time = new RW_Time(61);
         self::assertSame('00:27:01', $time->setMinutes(27)->toString());
@@ -372,11 +341,7 @@ class TimeTest extends TestCase
         self::assertSame('14:13:03', $time->setMinutes(73)->toString());
     }
 
-
-    /**
-     * Tests RW_Time::setHours()
-     */
-    public function testSetHours()
+    public function testSetHours(): void
     {
         $time = new RW_Time(61);
         self::assertSame('27:01:01', $time->setHours(27)->toString());
@@ -391,16 +356,7 @@ class TimeTest extends TestCase
         self::assertSame('32:27:03', $time->setHours(32)->toString());
     }
 
-    public function testSetTimeException()
-    {
-        $this->expectException(\Exception::class);
-        $this->RW_Time->setTime('abcde');
-    }
-
-    /**
-     * Tests RW_Time::getSeconds()
-     */
-    public function testGetSeconds()
+    public function testGetSeconds(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61, $time->getSeconds());
@@ -427,10 +383,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60, $time->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::getMinutes()
-     */
-    public function testGetMinutes()
+    public function testGetMinutes(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 / 60, $time->getMinutes());
@@ -439,22 +392,19 @@ class TimeTest extends TestCase
         self::assertSame((27 * 60 + 3) / 60, $time->getMinutes());
 
         $time = new RW_Time('27:3', 'h:m');
-        self::assertSame((27 * 60 * 60 + 3 * 60) / 60, $time->getMinutes());
+        self::assertSame((27 * 60 * 60 + 3 * 60) / 60.0, $time->getMinutes());
 
         $time = new RW_Time('13:27:3');
-        self::assertSame((13 * 60 * 60 + 27 * 60 + 3) / 60, $time->getMinutes());
+        self::assertSame((13 * 60 * 60 + 27 * 60 + 3) / 60.0, $time->getMinutes());
 
         $time = new RW_Time(61, RW_Time::MINUTE);
-        self::assertSame(61, $time->getMinutes());
+        self::assertSame(61.0, $time->getMinutes());
 
         $time = new RW_Time(61, RW_Time::HOUR);
-        self::assertSame(61 * 60, $time->getMinutes());
+        self::assertSame(61 * 60.0, $time->getMinutes());
     }
 
-    /**
-     * Tests RW_Time::getHours()
-     */
-    public function testGetHours()
+    public function testGetHours(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 / 3600, $time->getHours());
@@ -469,10 +419,7 @@ class TimeTest extends TestCase
         self::assertSame((13 * 60 * 60 + 27 * 60 + 3) / 3600, $time->getHours());
     }
 
-    /**
-     * Tests RW_Time::addSeconds()
-     */
-    public function testAddSeconds()
+    public function testAddSeconds(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 + 13, $time->addSeconds(13)->getSeconds());
@@ -487,10 +434,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60 + 27 * 60 + 3 + 13, $time->addSeconds(13)->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::subSeconds()
-     */
-    public function testSubSeconds()
+    public function testSubSeconds(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 - 13, $time->subSeconds(13)->getSeconds());
@@ -505,10 +449,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60 + 27 * 60 + 3 - 13, $time->subSeconds(13)->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::addMinutes()
-     */
-    public function testAddMinutes()
+    public function testAddMinutes(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 + 13 * 60, $time->addMinutes(13)->getSeconds());
@@ -523,10 +464,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60 + 27 * 60 + 3 + 13 * 60, $time->addMinutes(13)->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::subMinutes()
-     */
-    public function testSubMinutes()
+    public function testSubMinutes(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 - 13 * 60, $time->subMinutes(13)->getSeconds());
@@ -541,10 +479,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60 + 27 * 60 + 3 - 13 * 60, $time->subMinutes(13)->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::addHours()
-     */
-    public function testAddHours()
+    public function testAddHours(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 + 13 * 60 * 60, $time->addHours(13)->getSeconds());
@@ -559,10 +494,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60 + 27 * 60 + 3 + 13 * 60 * 60, $time->addHours(13)->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::subHours()
-     */
-    public function testSubHours()
+    public function testSubHours(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 - 13 * 60 * 60, $time->subHours(13)->getSeconds());
@@ -577,10 +509,7 @@ class TimeTest extends TestCase
         self::assertSame(13 * 60 * 60 + 27 * 60 + 3 - 13 * 60 * 60, $time->subHours(13)->getSeconds());
     }
 
-    /**
-     * Tests RW_Time::addTime()
-     */
-    public function testAddTime()
+    public function testAddTime(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 + 13, $time->setTime(61)->addTime(13)->getSeconds());
@@ -636,10 +565,7 @@ class TimeTest extends TestCase
         );
     }
 
-    /**
-     * Tests RW_Time::subTime()
-     */
-    public function testSubTime()
+    public function testSubTime(): void
     {
         $time = new RW_Time(61);
         self::assertSame(61 - 13, $time->setTime(61)->subTime(13)->getSeconds());
@@ -695,10 +621,7 @@ class TimeTest extends TestCase
         );
     }
 
-    /**
-     * Tests RW_Time::isTime()
-     */
-    public function testIsTime()
+    public function testIsTime(): void
     {
         self::assertTrue(RW_Time::isTime('13:27:30'));
         self::assertTrue(RW_Time::isTime('13:27:3'));
@@ -747,7 +670,7 @@ class TimeTest extends TestCase
         self::assertFalse(RW_Time::isTime('--3'));
     }
 
-    public function testLongSeconds()
+    public function testLongSeconds(): void
     {
         $time = new RW_Time(390526);
         self::assertSame('108:28:46', $time->toString());

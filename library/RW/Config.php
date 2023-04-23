@@ -27,10 +27,7 @@ class RW_Config
         }
 
         // Opções de localização do application.ini
-        $configs = array(
-            APPLICATION_PATH . "/../configs/$file_prefix.ini",
-            APPLICATION_PATH . "/configs/$file_prefix.ini"
-        );
+        $configs = [APPLICATION_PATH . "/../configs/$file_prefix.ini", APPLICATION_PATH . "/configs/$file_prefix.ini"];
 
         // Verifica se a constante da marca (BFFC) esta definida
         if (defined('MARCA')) {

@@ -8,15 +8,9 @@
  */
 class RW_App_Loader
 {
-    /**
-     * @var array
-     */
-    private $_models;
+    private ?array $_models = null;
 
-    /**
-     * @var array
-     */
-    private $_tables;
+    private ?array $_tables = null;
 
     /**
      * @param string $model

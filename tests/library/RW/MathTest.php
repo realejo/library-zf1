@@ -22,7 +22,7 @@ class MathTest extends TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->RW_Math = new RW_Math(/* parameters */);
@@ -31,7 +31,7 @@ class MathTest extends TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated MathTest::tearDown()
         $this->RW_Math = null;

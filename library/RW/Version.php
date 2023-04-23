@@ -12,7 +12,7 @@ class RW_Version
      * Indentificador de versão
      * @see compareVersion()
      */
-    CONST VERSION = '1.4.2';
+    public CONST VERSION = '1.4.2';
 
     /**
      * A ultima versão disponível

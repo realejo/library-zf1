@@ -20,7 +20,7 @@ class RW_App_Model_Db extends RW_App_Model_Base
 
     private $_lastUpdateSet;
 
-    private $_lastUpdateDiff;
+    private ?array $_lastUpdateDiff = null;
 
     private $_lastUpdateKey;
 
@@ -121,9 +121,9 @@ class RW_App_Model_Db extends RW_App_Model_Base
         $this->_lastUpdateKey  = $key;
 
         // Grava o que foi alterado
-        $this->_lastUpdateDiff = array();
+        $this->_lastUpdateDiff = [];
         foreach ($diff as $field=>$value) {
-            $this->_lastUpdateDiff[$field] = array($row[$field], $value);
+            $this->_lastUpdateDiff[$field] = [$row[$field], $value];
         }
 
         // Verifica se há algo para atualizar
@@ -165,7 +165,7 @@ class RW_App_Model_Db extends RW_App_Model_Base
 
         // Verifica se deve marcar como removido ou remover o registro
         if ($this->useDeleted === true) {
-            $return = $this->getTableGateway()->update(array('deleted' => 1), $this->_getKeyWhere($key));
+            $return = $this->getTableGateway()->update(['deleted' => 1], $this->_getKeyWhere($key));
         } else {
             $return = $this->getTableGateway()->delete($this->_getKeyWhere($key));
         }
@@ -217,8 +217,8 @@ class RW_App_Model_Db extends RW_App_Model_Base
             return "{$this->getKey()} = '$key'";
 
         } elseif (is_array($this->getKey())) {
-            $where = array();
-            $usedKeys = array();
+            $where = [];
+            $usedKeys = [];
 
             // Verifica as chaves definidas
             foreach ($this->getKey() as $type=>$definedKey) {

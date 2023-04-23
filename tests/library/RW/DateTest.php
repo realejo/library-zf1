@@ -23,7 +23,7 @@ class DateTest extends TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // TODO Auto-generated DateTest::setUp()
@@ -33,7 +33,7 @@ class DateTest extends TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated DateTest::tearDown()
         $this->RW_Date = null;

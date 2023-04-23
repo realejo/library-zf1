@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./bootstrap.php" colors="true"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <php>
+        <env name="CI_TEST" value="true"/>
+    </php>
     <coverage>
         <include>
-            <directory suffix=".php">../library/RW</directory>
+            <directory>../library</directory>
         </include>
     </coverage>
-    <testsuite name="Realejo Library ZF1 Test Suite">
-        <directory>./library/RW</directory>
+    <testsuite name="library">
+        <directory>./library</directory>
     </testsuite>
 </phpunit>

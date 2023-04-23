@@ -2,6 +2,10 @@
 
 namespace RWTest\App\Model;
 
+use Exception;
+use InvalidArgumentException;
+use LogicException;
+use RW_App_Model_Base;
 use RW_App_Model_Db;
 use RWTest\TestAssets\BaseTestCase;
 use Zend_Db_Expr;
@@ -81,7 +85,7 @@ class DbTest extends BaseTestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -96,7 +100,7 @@ class DbTest extends BaseTestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -113,28 +117,20 @@ class DbTest extends BaseTestCase
         $this->assertEquals('album', $this->tableName);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testConstructSemTableName()
     {
+        $this->expectException(Exception::class);
         new RW_App_Model_Db(null, $this->tableKeyName);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testConstructSemKeyName()
     {
+        $this->expectException(Exception::class);
         new RW_App_Model_Db($this->tableName, null);
     }
 
-    /**
-     * Tests Db->insert()
-     */
-    public function testInsert()
+    public function testInsert(): void
     {
-        // Certifica que a tabela está vazia
         $this->assertNull($this->Db->fetchAll(), 'Verifica se há algum registro pregravado');
 
         $this->assertFalse($this->Db->insert(array()), 'Verifica inclusão inválida 1');
@@ -211,13 +207,9 @@ class DbTest extends BaseTestCase
         $this->assertEquals(4, $id);
     }
 
-    /**
-     * Tests Db->update()
-     */
-    public function testUpdate()
+    public function testUpdate(): void
     {
-        // Certifica que a tabela está vazia
-        $this->assertNull($this->Db->fetchAll());
+        $this->assertNull($this->Db->fetchAll(), 'Sanity check');
 
         $row1 = array(
             'id' => 1,
@@ -270,10 +262,7 @@ class DbTest extends BaseTestCase
         $this->assertFalse($this->Db->update(null, 2));
     }
 
-    /**
-     * Tests TableAdapter->delete()
-     */
-    public function testDelete()
+    public function testDelete(): void
     {
         $row1 = array(
             'id' => 1,
@@ -325,10 +314,7 @@ class DbTest extends BaseTestCase
         $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v3');
     }
 
-    /**
-     * Tests TableAdapter->delete()
-     */
-    public function testDeleteIntegerKey()
+    public function testDeleteIntegerKey(): void
     {
         $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id'));
 
@@ -390,10 +376,7 @@ class DbTest extends BaseTestCase
         $this->assertNotEmpty($this->Db->fetchRow(2), 'row2 ainda existe v4');
     }
 
-    /**
-     * Tests TableAdapter->delete()
-     */
-    public function testDeleteStringKey()
+    public function testDeleteStringKey(): void
     {
         // Cria a tabela com chave string
         $this->Db->setKey(array(RW_App_Model_Db::KEY_STRING => 'id'));
@@ -459,34 +442,32 @@ class DbTest extends BaseTestCase
 
     /**
      * Acesso de chave multiplica com acesso simples
-     *
-     * @expectedException InvalidArgumentException
      */
-    public function testDeleteInvalidArrayKey()
+    public function testDeleteInvalidArrayKey(): void
     {
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id_int', RW_App_Model_Db::KEY_STRING => 'id_char'));
+        $this->expectException(InvalidArgumentException::class);
+        $this->Db->setKey(array(RW_App_Model_Base::KEY_INTEGER => 'id_int', RW_App_Model_Base::KEY_STRING => 'id_char')
+        );
         $this->Db->delete('A');
     }
 
     /**
      * Acesso de chave multiplica com acesso simples
-     *
-     * @expectedException LogicException
      */
     public function testDeleteInvalidArraySingleKey()
     {
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id_int', RW_App_Model_Db::KEY_STRING => 'id_char'));
+        $this->expectException(LogicException::class);
+        $this->Db->setKey(array(RW_App_Model_Base::KEY_INTEGER => 'id_int', RW_App_Model_Base::KEY_STRING => 'id_char')
+        );
         $this->Db->delete(array('id_int' => 'A'));
     }
 
 
-    /**
-     * Tests TableAdapter->delete()
-     */
     public function testDeleteArrayKey()
     {
         // Cria a tabela com chave string
-        $this->Db->setKey(array(RW_App_Model_Db::KEY_INTEGER => 'id_int', RW_App_Model_Db::KEY_STRING => 'id_char'));
+        $this->Db->setKey(array(RW_App_Model_Base::KEY_INTEGER => 'id_int', RW_App_Model_Base::KEY_STRING => 'id_char')
+        );
         $this->dropTables()->createTables(array('album_array'));
         $this->Db->setUseAllKeys(false);
 

@@ -89,8 +89,8 @@ class RW_Search extends Zend_Search_Lucene
 
         $text = str_replace('&nbsp;', ' ', $text);
 
-        $pattern = array('/[\n\r\f\t]?/', '/(\s\s)+/');
-        $replacement = array('',' ');
+        $pattern = ['/[\n\r\f\t]?/', '/(\s\s)+/'];
+        $replacement = ['', ' '];
         $text = preg_replace($pattern, $replacement, $text);
 
         return trim($text);

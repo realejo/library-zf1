@@ -11,11 +11,7 @@
  */
 class RW_App_Model_Paginator
 {
-    private $_paginator   = array(
-            'PageRange'         => 10,
-            'CurrentPageNumber' => 1,
-            'ItemCountPerPage'  => 10
-    );
+    private array $_paginator   = ['PageRange'         => 10, 'CurrentPageNumber' => 1, 'ItemCountPerPage'  => 10];
 
     public function setPageRange($pageRange)
     {

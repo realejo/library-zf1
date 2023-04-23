@@ -24,11 +24,7 @@ class RW_Mediawiki
         $user_name     = $config->wiki->$userType->user_name;
         $user_password = $config->wiki->$userType->user_password;
 
-        return array(
-                    'apiurl'        => $apiurl,
-                    'user_name'     => $user_name,
-                    'user_password' => $user_password
-                );
+        return ['apiurl'        => $apiurl, 'user_name'     => $user_name, 'user_password' => $user_password];
     }
 
     /**
@@ -80,11 +76,11 @@ class RW_Mediawiki
 
         // Configura o Cookie da Sessão
         if ($result['login']['result'] === 'Success') {
-            setcookie($result['login']['cookieprefix'].'LoggedOut', '-',  1, '/', $_SERVER['HTTP_HOST'], false, true);
-            setcookie($result['login']['cookieprefix'].'_session', $result['login']['sessionid'],  time() + 7200, '/', $_SERVER['HTTP_HOST'], false, true);
-            setcookie($result['login']['cookieprefix'].'UserName', $result['login']['lgusername'], time() + 7200, '/', $_SERVER['HTTP_HOST'], false, true);
-            setcookie($result['login']['cookieprefix'].'UserID',   $result['login']['lguserid'],   time() + 7200, '/', $_SERVER['HTTP_HOST'], false, true);
-            setcookie($result['login']['cookieprefix'].'Token',    $result['login']['lgtoken'],    time() + 7200, '/', $_SERVER['HTTP_HOST'], false, true);
+            setcookie($result['login']['cookieprefix'].'LoggedOut', '-', ['expires' => 1, 'path' => '/', 'domain' => $_SERVER['HTTP_HOST'], 'secure' => false, 'httponly' => true]);
+            setcookie($result['login']['cookieprefix'].'_session', $result['login']['sessionid'], ['expires' => time() + 7200, 'path' => '/', 'domain' => $_SERVER['HTTP_HOST'], 'secure' => false, 'httponly' => true]);
+            setcookie($result['login']['cookieprefix'].'UserName', $result['login']['lgusername'], ['expires' => time() + 7200, 'path' => '/', 'domain' => $_SERVER['HTTP_HOST'], 'secure' => false, 'httponly' => true]);
+            setcookie($result['login']['cookieprefix'].'UserID',   $result['login']['lguserid'], ['expires' => time() + 7200, 'path' => '/', 'domain' => $_SERVER['HTTP_HOST'], 'secure' => false, 'httponly' => true]);
+            setcookie($result['login']['cookieprefix'].'Token',    $result['login']['lgtoken'], ['expires' => time() + 7200, 'path' => '/', 'domain' => $_SERVER['HTTP_HOST'], 'secure' => false, 'httponly' => true]);
 
             return true;
         } else {
@@ -129,7 +125,7 @@ class RW_Mediawiki
         $cookies = $response->getHeader('Set-Cookie');
         foreach ($cookies as $c) {
             $c = explode('=',$c,2);
-            setcookie($c[0],'deleted',1, '/', $_SERVER['HTTP_HOST'], false, true);
+            setcookie($c[0],'deleted', ['expires' => 1, 'path' => '/', 'domain' => $_SERVER['HTTP_HOST'], 'secure' => false, 'httponly' => true]);
         }
 
        // RW_Debug::dump($_COOKIE);

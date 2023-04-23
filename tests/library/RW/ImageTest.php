@@ -5,13 +5,6 @@ namespace RWTest;
 use PHPUnit\Framework\TestCase;
 use RW_Image;
 
-/**
- * RW_Image test case.
- *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
- */
 class ImageTest extends TestCase
 {
     /**
@@ -27,7 +20,7 @@ class ImageTest extends TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->Image = new RW_Image(/* parameters */);
@@ -39,7 +32,7 @@ class ImageTest extends TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated ImageTest::tearDown()
         $this->Image = null;
@@ -53,54 +46,54 @@ class ImageTest extends TestCase
     {
         //Abrir JPG
         $file = $this->imgPath . '/exemplo.jpg';
-       self::assertTrue($this->Image->open($file));
+        self::assertTrue($this->Image->open($file));
         // Verifica se foi criado o resource
-       self::assertTrue($this->Image->isLoaded());
+        self::assertTrue($this->Image->isLoaded());
 
         // Verifica se o mimetype é JPEG
         $mimeType = $this->Image->mimeType;
-       self::assertEquals('jpeg', $mimeType);
+        self::assertSame('jpeg', $mimeType);
 
         // Fecha a imagem
         $this->Image->close();
 
         //Abrir arquivo inexistente
         $file = $this->imgPath . '/naoexiste.jpg';
-       self::assertFalse($this->Image->open($file));
+        self::assertFalse($this->Image->open($file));
 
         //Abrir PNG
         $file = $this->imgPath . '/exemplo.png';
-       self::assertTrue($this->Image->open($file));
+        self::assertTrue($this->Image->open($file));
 
         //Verifica se foi criado o resource
-       self::assertTrue($this->Image->isLoaded());
+        self::assertTrue($this->Image->isLoaded());
 
         // Verifica se o mimetype é PNG
         $mimeType = $this->Image->mimeType;
         //$this->assertEqual('png',$mineType);
-       self::assertSame('png', $mimeType);
+        self::assertSame('png', $mimeType);
 
         // Fecha a imagem
         $this->Image->close();
 
         //Abrir GIF
         $file = $this->imgPath . '/exemplo.gif';
-       self::assertTrue($this->Image->open($file));
+        self::assertTrue($this->Image->open($file));
 
         //Verifica se foi criado o resource
-       self::assertTrue($this->Image->isLoaded());
+        self::assertTrue($this->Image->isLoaded());
 
         // Verifica se o mimetype é gif
         $mimeType = $this->Image->mimeType;
         //$this->assertEqual('gif',$mineType);
-       self::assertSame('gif', $mimeType);
+        self::assertSame('gif', $mimeType);
 
         // Fecha a imagem
         $this->Image->close();
 
         //Abrir um arquivo em formato nao suportado
         $file = $this->imgPath . '/exemplo.tif';
-       self::assertFalse($this->Image->open($file));
+        self::assertFalse($this->Image->open($file));
     }
 
     /**
@@ -113,7 +106,7 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Fecha o arquivo
-       self::assertTrue($this->Image->close());
+        self::assertTrue($this->Image->close());
     }
 
     /**
@@ -129,7 +122,7 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Verifica o resource
-       self::assertTrue($this->Image->isLoaded());
+        self::assertTrue($this->Image->isLoaded());
 
         // Fecha a imagem
         $this->Image->close();
@@ -145,13 +138,13 @@ class ImageTest extends TestCase
         $this->Image->save();
 
         // Verifica se is loades
-       self::assertTrue($this->Image->isLoaded());
+        self::assertTrue($this->Image->isLoaded());
 
         // Salva a imagem com opção de fechar
         $this->Image->save($file, true);
 
         // veriicca o isLoaded
-       self::assertFalse($this->Image->isLoaded());
+        self::assertFalse($this->Image->isLoaded());
 
         // apago o arquivo temporário
         unlink($file);
@@ -169,7 +162,7 @@ class ImageTest extends TestCase
 
         $this->Image->open($file);
 
-       self::assertTrue($this->Image->save(true));
+        self::assertTrue($this->Image->save(true));
     }
 
     /**
@@ -194,17 +187,17 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Reduz o tamanho do JPG com crop
-       self::assertTrue($this->Image->resize('500', '150', true, true));
+        self::assertTrue($this->Image->resize(500, 150, true, true));
 
         //Salva Mudanças
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->save());
 
         //Pega tamanho da imagens após mudança
         list($width, $height, $type, $attr) = getimagesize($file);
 
         //Compra os tamanhos passados e reais da imagem
-       self::assertEquals('500', $width);
-       self::assertEquals('150', $height);
+        self::assertSame(500, $width);
+        self::assertSame(150, $height);
 
         //Fecha o arquivo
         $this->Image->close();
@@ -213,15 +206,15 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Aumenta a imagem JPG com Crop e forçado
-       self::assertTrue($this->Image->resize('1000', '2', true, true));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize(1000, 2, true, true));
+        self::assertTrue($this->Image->save());
 
         //Pega tamanho da imagem após mudança
         list($width, $height, $type, $attr) = getimagesize($file);
 
         //Compara os tamanhos pedidos e reais
-       self::assertEquals('1000', $width);
-       self::assertEquals('2', $height);
+        self::assertSame(1000, $width);
+        self::assertSame(2, $height);
 
         //Fecha a imagem
         $this->Image->close();
@@ -230,14 +223,14 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Reduz a imagem JPG com Crop e forçado
-       self::assertTrue($this->Image->resize('50', '1', true, true));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize(50, 1, true, true));
+        self::assertTrue($this->Image->save());
 
         //Retornar os atributos da imagem
         list($width, $height, $type, $attr) = getimagesize($file);
 
-       self::assertEquals('50', $width);
-       self::assertEquals('1', $height);
+        self::assertSame(50, $width);
+        self::assertSame(1, $height);
         unlink($file);
 
         //Sem Crop e reduzindo forçado
@@ -247,15 +240,15 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Reduzir imagem sem crop e forçado
-       self::assertTrue($this->Image->resize('113', '150', false, true));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize(113, 150, false, true));
+        self::assertTrue($this->Image->save());
 
         //Pega tamanho da imagem após mudança
         list($width, $height, $type, $attr) = getimagesize($file);
 
         //Compra os tamanhos pedidos e reais
-       self::assertEquals('113', $width);
-       self::assertEquals('150', $height);
+        self::assertSame(113, $width);
+        self::assertSame(150, $height);
 
         //Fecha a imagem
         $this->Image->close();
@@ -264,14 +257,14 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //Reduz a imagem JPG com Crop e forçado
-       self::assertTrue($this->Image->resize('10', '149', false, true));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize('10', '149', false, true));
+        self::assertTrue($this->Image->save());
 
         //Retornar os atributos da imagem
         list($width, $height, $type, $attr) = getimagesize($file);
 
-       self::assertEquals('10', $width);
-       self::assertEquals('13', $height);
+        self::assertSame(10, $width);
+        self::assertSame(13, $height);
 
         unlink($file);
 
@@ -285,25 +278,25 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //aumentando o PNG COM CROP
-       self::assertTrue($this->Image->resize('1000', '500', true, true));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize(1000, 500, true, true));
+        self::assertTrue($this->Image->save());
 
         //conferindo os valores salvos
         list($width, $height, $type, $attr) = getimagesize($file);
-       self::assertEquals('1000', $width);
-       self::assertEquals('500', $height);
+        self::assertSame(1000, $width);
+        self::assertSame(500, $height);
 
         //Abirndo o PNG
         $this->Image->open($file);
 
         //Reduzir PNG
-       self::assertTrue($this->Image->resize('200', '100'));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize(200, 100));
+        self::assertTrue($this->Image->save());
 
         //conferindo os valores
         list($width, $height, $type, $attr) = getimagesize($file);
-       self::assertEquals('200', $width);
-       self::assertEquals('100', $height);
+        self::assertSame(200, $width);
+        self::assertSame(100, $height);
 
         //fechando o arquivo
         $this->Image->close();
@@ -319,8 +312,8 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //rezudindo o arquivo SEM CROP
-       self::assertTrue($this->Image->resize('1000', '10', false, true));
-       self::assertTrue($this->Image->save());
+        self::assertTrue($this->Image->resize(1000, 10, false, true));
+        self::assertTrue($this->Image->save());
 
         //fechando o arquivo
         $this->Image->close();
@@ -345,7 +338,7 @@ class ImageTest extends TestCase
         $this->Image->open($file);
 
         //remove os metadados
-       self::assertTrue($this->Image->removeMetadata());
+        self::assertTrue($this->Image->removeMetadata());
 
         //salva as alterações
         $this->Image->save(null, true);
@@ -354,7 +347,7 @@ class ImageTest extends TestCase
         $atual = exif_read_data($file);
 
         //Compara os metadados
-       self::assertNotEquals($metadados, $atual);
+        self::assertNotEquals($metadados, $atual);
         unlink($file);
     }
 }

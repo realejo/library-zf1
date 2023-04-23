@@ -20,13 +20,8 @@ class RW_App_Model_Cache
     static public function getFrontend($class = '')
     {
         // Configura o cache
-        $frontendOptions = array(
-            'automatic_serialization' => true,
-            'lifetime'                => 86400 // 60*60*24
-        );
-        $backendOptions = array(
-            'cache_dir' => self::getCachePath($class)
-        );
+        $frontendOptions = ['automatic_serialization' => true, 'lifetime'                => 86400];
+        $backendOptions = ['cache_dir' => self::getCachePath($class)];
         $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
 
         return $cache;
@@ -46,12 +41,14 @@ class RW_App_Model_Cache
      *
      * @return string
      */
-    static public function getCacheRoot()
+    static public function getCacheRoot(): string
     {
         // Verifica se a pasta de cache existe
         if (! defined('APPLICATION_DATA')) {
             throw new Exception('A pasta raiz do data  não está definido em APPLICATION_DATA em RW_App_Model_Cache::getCacheRoot()');
-        } elseif (! is_dir(APPLICATION_DATA) || ! is_writable(APPLICATION_DATA)) {
+        }
+
+        if (! is_dir(APPLICATION_DATA) || ! is_writable(APPLICATION_DATA)) {
             throw new Exception("A pasta raiz do data(APPLICATION_DATA) '" . APPLICATION_DATA . "' não existe ou não tem permissão de escrita em RW_App_Model_Cache::getCacheRoot()'");
         }
 
@@ -71,12 +68,11 @@ class RW_App_Model_Cache
      * Retorna a pasta de cache para o model baseado no nome da classe
      * Se a pasta não existir ela será criada
      *
-     * @param string $class
-     *            Nome da classe a ser usada
+     * @param string $class Nome da classe a ser usada
      *
      * @return string
      */
-    static public function getCachePath($class = '')
+    public static function getCachePath(string $class = '')
     {
         // Define a pasta de cache
         $cachePath = self::getCacheRoot() . '/' . str_replace('_', '/', strtolower($class));

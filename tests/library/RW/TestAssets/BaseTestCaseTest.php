@@ -22,7 +22,7 @@ class BaseTestCaseTest extends TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -34,7 +34,7 @@ class BaseTestCaseTest extends TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated DbAdapterTest::tearDown()
         $this->BaseTestCase = null;
@@ -48,7 +48,7 @@ class BaseTestCaseTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         // Inicializa o ZF
-        $inifile = (getenv('TRAVIS') !== false) ? 'application.travis.ini' : 'application.ini';
+        $inifile = (getenv('CI_TEST') !== false) ? 'application.ci.ini' : 'application.ini';
         $bootstrap = new Zend_Application(
             'testing',
             TEST_ROOT . '/assets/application/configs/' . $inifile

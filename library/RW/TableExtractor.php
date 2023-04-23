@@ -24,22 +24,22 @@
  */
 class RW_TableExtractor {
 
-    var $source            = NULL;
-    var $anchor            = NULL;
-    var $anchorWithin      = false;
-    var $headerRow         = true;
-    var $startRow          = 0;
-    var $maxRows           = 0;
-    var $startCol          = 0;
-    var $maxCols           = 0;
-    var $stripTags         = false;
-    var $extraCols         = array();
-    var $rowCount          = 0;
-    var $dropRows          = NULL;
+    public $source            = NULL;
+    public $anchor            = NULL;
+    public $anchorWithin      = false;
+    public $headerRow         = true;
+    public $startRow          = 0;
+    public $maxRows           = 0;
+    public $startCol          = 0;
+    public $maxCols           = 0;
+    public $stripTags         = false;
+    public $extraCols         = [];
+    public $rowCount          = 0;
+    public $dropRows          = NULL;
 
-    var $cleanHTML         = NULL;
-    var $rawArray          = NULL;
-    var $finalArray        = NULL;
+    public $cleanHTML         = NULL;
+    public $rawArray          = NULL;
+    public $finalArray        = NULL;
 
 
     public function __construct($source = null, $options = null)
@@ -83,13 +83,13 @@ class RW_TableExtractor {
                 With thanks to Khary Sharp for suggesting and writing
                 the anchor within functionality.
             ------------------------------------------------------------*/
-            $anchorPos = stripos($this->source, $this->anchor) + strlen($this->anchor);
+            $anchorPos = stripos($this->source, (string) $this->anchor) + strlen($this->anchor);
             $sourceSnippet = strrev(substr($this->source, 0, $anchorPos));
             $tablePos = stripos($sourceSnippet, strrev(("<table"))) + 6;
             $startSearch = strlen($sourceSnippet) - $tablePos;
         }
         else {
-            $startSearch = stripos($this->source, $this->anchor);
+            $startSearch = stripos($this->source, (string) $this->anchor);
         }
 
 
@@ -132,7 +132,7 @@ class RW_TableExtractor {
         //var_dump($table);
 
         // define array for new table
-        $tableCleaned = array();
+        $tableCleaned = [];
 
         // define variables for looping through table
         $rowCount = 0;
@@ -240,7 +240,7 @@ class RW_TableExtractor {
     function createArray() {
 
         // define array to store table data
-        $tableData = array();
+        $tableData = [];
 
         //var_dump($this->headerRow);
 
@@ -251,8 +251,8 @@ class RW_TableExtractor {
             $row = $this->rawArray[$this->headerRow];
 
             // set column names array
-            $columnNames = array();
-            $uniqueNames = array();
+            $columnNames = [];
+            $uniqueNames = [];
 
             // loop over column names
             $colCount = 0;
@@ -296,7 +296,7 @@ class RW_TableExtractor {
         if($this->maxRows)
             $endRow = $this->startRow + $this->maxRows - 1;
         else
-            $endRow = count($this->rawArray);
+            $endRow = is_countable($this->rawArray) ? count($this->rawArray) : 0;
 
         // loop over row array
         $rowCount = 0;
@@ -311,17 +311,17 @@ class RW_TableExtractor {
                 $newRowCount++;
 
                 // create new array to store data
-                $tableData[$newRowCount] = array();
+                $tableData[$newRowCount] = [];
 
                 //$tableData[$newRowCount]['origRow'] = $rowCount;
                 //$tableData[$newRowCount]['data'] = array();
-                $tableData[$newRowCount] = array();
+                $tableData[$newRowCount] = [];
 
                 // set the end column
                 if($this->maxCols)
                     $endCol = $this->startCol + $this->maxCols - 1;
                 else
-                    $endCol = count($row);
+                    $endCol = is_countable($row) ? count($row) : 0;
 
                 // loop over cell array
                 $colCount = 0;

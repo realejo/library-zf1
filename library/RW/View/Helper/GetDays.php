@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Calcula o tempo da data até o dia atual
  *
@@ -8,11 +9,9 @@
  */
 class RW_View_Helper_GetDays extends Zend_View_Helper_Abstract
 {
-    /**
-     * @param date $d data a ser comparada
-     */
-    public function getDays($d) {
-        $now = time();
+    public function getDays(string $d)
+    {
+        $now = strtotime('today');
         $date = new Zend_Date($d, Zend_Date::ISO_8601);
         $time = $now - $date->getTimestamp();
 
@@ -20,16 +19,16 @@ class RW_View_Helper_GetDays extends Zend_View_Helper_Abstract
             $time = 'hoje';
         } elseif ($time < 172800) { //60*60*24*2
             $time = 'ontem';
-        //mostrar quantidade de dias até 14 dias
-        }  elseif ($time < 604800) { //60*60*24*30
-            $time ='há '. round(floatval($time) / 86400) . ' dias';
-        //mostrar quantidades de semanas apartir da 2 semana até 1 mes
-        } elseif ($time > 1209600 && $time <= 2592000) { //60*60*24*(7*4)
-            $time = 'há ' . round(floatval($time) / 604800) . ' semanas';
-        } elseif ($time > 2592000 && $time <= 5184000) { //60*60*24*30 && 60*60*24*30*2
-            $time = 'há ' . round(floatval($time) / 2592000) . ' mês';
-        } elseif ($time > 5184000 && $time < 31104000) { //60*60*24*30*2  && 60*60*24*30*12
-            $time = 'há ' . round(floatval($time) / 2592000) . ' meses';
+        } elseif ($time < 604800) { //60*60*24*30
+            $time = 'há ' . round($time / 86400) . ' dias';
+        } elseif ($time < 1_209_600) { //60*60*24*(7*4)
+            $time = 'há 1 semana';
+        } elseif ($time >= 1_209_600 && $time < 2_592_000) { //60*60*24*(7*4)
+            $time = 'há ' . round($time / 604800) . ' semanas';
+        } elseif ($time >= 2_592_000 && $time < 5_184_000) { //60*60*24*30 && 60*60*24*30*2
+            $time = 'há 1 mês';
+        } elseif ($time >= 5_184_000 && $time < 31_104_000) { //60*60*24*30*2  && 60*60*24*30*12
+            $time = 'há ' . round($time / 2_592_000) . ' meses';
         } else {//if ($time < 31104000) { //60*60*24*30*12
             $time = 'há mais de um ano (' . $date->toString() . ')';
         }
