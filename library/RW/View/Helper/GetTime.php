@@ -12,12 +12,10 @@ class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
     /**
      * Imprime a data no formato correto
      *
-     * @param date $d Data a ser impressa
-     * @param string $format Formato da data
      * @param string $locale Localização da data
      *
      */
-    public function getTime($d, $format = null, $locale = null)
+    public function getTime(string $d, string $format = null, $locale = null): string
     {
         // Define o formato
         if (!isset($format)) {
@@ -59,7 +57,7 @@ class RW_View_Helper_GetTime extends Zend_View_Helper_Abstract
         } elseif ($time > 5_184_000 && $time < 31_104_000) { //60*60*24*30*2  && 60*60*24*30*12
             $time = round($time / 2_592_000) . ' meses';
         } else {//if ($time < 31104000) { //60*60*24*30*12
-            $time = ' mais de um ano (' . $date->toString() . ')';
+            $time = 'mais de um ano (' . $date->toString() . ')';
         }
         return $time;
     }
