@@ -21,7 +21,7 @@ class CNPJTest extends \PHPUnit\Framework\TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // TODO Auto-generated CNPJTest::setUp()
@@ -31,7 +31,7 @@ class CNPJTest extends \PHPUnit\Framework\TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated CNPJTest::tearDown()
         $this->RW_CNPJ = null;

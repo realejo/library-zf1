@@ -8,79 +8,14 @@
  */
 class RW_UF
 {
-    public $uf = array(
-        'AC' => 'Acre',
-        'AL' => 'Alagoas',
-        'AM' => 'Amazonas',
-        'AP' => 'Amapá',
-        'BA' => 'Bahia',
-        'CE' => 'Ceará',
-        'DF' => 'Distrito Federal',
-        'ES' => 'Espírito Santo',
-        'GO' => 'Goiás',
-        'MA' => 'Maranhão',
-        'MS' => 'Mato Grosso do Sul',
-        'MT' => 'Mato Grosso',
-        'MG' => 'Minas Gerais',
-        'PA' => 'Pará',
-        'PB' => 'Paraíba',
-        'PR' => 'Paraná',
-        'PE' => 'Pernambuco',
-        'PI' => 'Piauí',
-        'RJ' => 'Rio de Janeiro',
-        'RN' => 'Rio Grande do Norte',
-        'RS' => 'Rio Grande do Sul',
-        'RO' => 'Rondonia',
-        'RR' => 'Roraima',
-        'SC' => 'Santa Catarina',
-        'SP' => 'São Paulo',
-        'SE' => 'Sergipe',
-        'TO' => 'Tocantins'
-    );
+    public $uf = ['AC' => 'Acre', 'AL' => 'Alagoas', 'AM' => 'Amazonas', 'AP' => 'Amapá', 'BA' => 'Bahia', 'CE' => 'Ceará', 'DF' => 'Distrito Federal', 'ES' => 'Espírito Santo', 'GO' => 'Goiás', 'MA' => 'Maranhão', 'MS' => 'Mato Grosso do Sul', 'MT' => 'Mato Grosso', 'MG' => 'Minas Gerais', 'PA' => 'Pará', 'PB' => 'Paraíba', 'PR' => 'Paraná', 'PE' => 'Pernambuco', 'PI' => 'Piauí', 'RJ' => 'Rio de Janeiro', 'RN' => 'Rio Grande do Norte', 'RS' => 'Rio Grande do Sul', 'RO' => 'Rondonia', 'RR' => 'Roraima', 'SC' => 'Santa Catarina', 'SP' => 'São Paulo', 'SE' => 'Sergipe', 'TO' => 'Tocantins'];
 
     /**
      * Regioes geograficas
      */
-    public $regioes = array(
-        'CO' => 'Centro-Oeste',
-        'NO' => 'Norte',
-        'NE' => 'Nordeste',
-        'SE' => 'Sudeste',
-        'SU' => 'Sul'
-    );
+    public $regioes = ['CO' => 'Centro-Oeste', 'NO' => 'Norte', 'NE' => 'Nordeste', 'SE' => 'Sudeste', 'SU' => 'Sul'];
 
-    public $UFRegiao = array (
-		'AO' => 'EX',
-		'PT' => 'EX',
-        'CH' => 'EX',
-		'AC' => 'NO',
-		'AL' => 'NE',
-		'AM' => 'NO',
-		'AP' => 'NO',
-		'BA' => 'NE',
-		'CE' => 'NE',
-		'DF' => 'CO',
-		'ES' => 'SE',
-		'GO' => 'CO',
-		'MA' => 'NE',
-		'MS' => 'CO',
-		'MT' => 'CO',
-		'MG' => 'SE',
-		'PA' => 'NO',
-		'PB' => 'NE',
-		'PR' => 'SU',
-		'PE' => 'NE',
-		'PI' => 'NE',
-		'RJ' => 'SE',
-		'RN' => 'NE',
-		'RS' => 'SU',
-		'RO' => 'NO',
-		'RR' => 'NO',
-		'SC' => 'SU',
-		'SP' => 'SE',
-		'SE' => 'NE',
-		'TO' => 'NO'
-    );
+    public $UFRegiao = ['AO' => 'EX', 'PT' => 'EX', 'CH' => 'EX', 'AC' => 'NO', 'AL' => 'NE', 'AM' => 'NO', 'AP' => 'NO', 'BA' => 'NE', 'CE' => 'NE', 'DF' => 'CO', 'ES' => 'SE', 'GO' => 'CO', 'MA' => 'NE', 'MS' => 'CO', 'MT' => 'CO', 'MG' => 'SE', 'PA' => 'NO', 'PB' => 'NE', 'PR' => 'SU', 'PE' => 'NE', 'PI' => 'NE', 'RJ' => 'SE', 'RN' => 'NE', 'RS' => 'SU', 'RO' => 'NO', 'RR' => 'NO', 'SC' => 'SU', 'SP' => 'SE', 'SE' => 'NE', 'TO' => 'NO'];
 
     /**
      * Retorna as Ufs
@@ -95,8 +30,8 @@ class RW_UF
         if (is_null($regiao)) {
             return $uf->uf;
         } else {
-            $ufs = array();
-            if (!is_array($regiao)) $regiao = array($regiao);
+            $ufs = [];
+            if (!is_array($regiao)) $regiao = [$regiao];
             foreach ($regiao as $r) {
                 foreach ($uf->uf as $u=>$nome) {
                     if (isset($uf->UFRegiao[$u]) && $uf->UFRegiao[$u] == $r) {

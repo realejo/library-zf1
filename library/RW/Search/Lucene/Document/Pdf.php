@@ -45,7 +45,7 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
         $pdf = Zend_Pdf::load($fileName);
 
         // Data holders
-        $coreProperties = array('Key' => md5_file($fileName));
+        $coreProperties = ['Key' => md5_file($fileName)];
 
         // Go through each meta data item and add to meta data properties
         foreach ($pdf->properties as $meta => $metaValue) {
@@ -134,11 +134,11 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
          * element and a "data" element. This can then be used to decode the
          * data.
          */
-        $a_chunks = array();
+        $a_chunks = [];
         foreach ($a_obj as $obj) {
             $a_filter = $this->getDataArray($obj, "<<", ">>");
             if (is_array($a_filter) && isset($a_filter[0])) {
-                if (!isset($a_chunks[$j])) $a_chunks[$j] = array();
+                if (!isset($a_chunks[$j])) $a_chunks[$j] = [];
                 $a_chunks[$j]["filter"] = $a_filter[0];
                 $a_data = $this->getDataArray($obj, "stream", "endstream");
                 if (is_array($a_data) && isset($a_data[0])) {
@@ -164,7 +164,7 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
                     // If we got data then attempt to extract it.
                     if (trim($data) != "") {
                         // Specially for ccentuated characters ... per example \343 = &atilde; but also valid for other
-                        $data = preg_replace('~\\\\([0-9]{3})~ei', 'chr(octdec("\\1"))', $data);
+                        $data = preg_replace_callback('~\\\([0-9]{3})~i', fn($matches) => chr(octdec("\x01")), $data);
                         // Convert encoding. Surpress warnings and remove invalid characters
                         if ($this->_fileEncoding != $this->_internalEncoding){
                             $data = @iconv($this->_fileEncoding, $this->_internalEncoding.'//TRANSLIT//IGNORE', $data);
@@ -235,7 +235,7 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
      * @return String
      */
     protected function _clearString($sString) {
-        if (in_array(strtolower($this->_internalEncoding), array('utf-8', 'utf8'))){
+        if (in_array(strtolower($this->_internalEncoding), ['utf-8', 'utf8'])){
             $sString = utf8_decode($sString);
         }
         $string = strtr($sString, $this->_get_html_translation_table_CP1252());
@@ -300,7 +300,7 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
     {
         $start    = 0;
         $end      = 0;
-        $a_result = array();
+        $a_result = [];
 
         while ($start !== false && $end !== false) {
             $start = strpos($data, $start_word, $end);

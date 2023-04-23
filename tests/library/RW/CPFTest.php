@@ -23,7 +23,7 @@ class CPFTest extends TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // TODO Auto-generated CPFTest::setUp()
@@ -33,7 +33,7 @@ class CPFTest extends TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated CPFTest::tearDown()
         $this->RW_CPF = null;

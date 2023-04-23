@@ -12,7 +12,7 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
 {
 
     // Possíveis paths onde o CKEditor po de encontrado
-    protected $availablePaths = array('/js/_', '/vendor/');
+    protected $availablePaths = ['/js/_', '/vendor/'];
 
     /**
      * Cria o JavaScript necessário para utilizar o CKEditor
@@ -64,10 +64,10 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         }
 
         // Verifica os inputs que deve colocar o CKEditor
-        if ( !is_array($campos) && is_string($campos) ) $campos = array($campos);
+        if ( !is_array($campos) && is_string($campos) ) $campos = [$campos];
 
         // Cria a configuração da opções
-        $options = array();
+        $options = [];
 
         // Verifica o CKFinder
         if ($ckfinder !== false) {
@@ -95,12 +95,12 @@ class RW_View_Helper_CKEDITOR extends Zend_View_Helper_Abstract
         $script = "$(document).ready(function(){ $config });";
 
         // Carrega a biblioteca do CKEditor
-        $this->view->headScript()->appendFile($ckeditor . '/ckeditor.js', 'text/javascript', array('minify_disabled' => true));
+        $this->view->headScript()->appendFile($ckeditor . '/ckeditor.js', 'text/javascript', ['minify_disabled' => true]);
 
         // Carrega o JQuery Adapter
-        $this->view->headScript()->appendFile($ckeditor . '/adapters/jquery.js', 'text/javascript', array('minify_disabled' => true));
+        $this->view->headScript()->appendFile($ckeditor . '/adapters/jquery.js', 'text/javascript', ['minify_disabled' => true]);
 
         // Carrega o código CKEditor
-        $this->view->headScript()->appendScript($script, 'text/javascript', array('minify_disabled' => true));
+        $this->view->headScript()->appendScript($script, 'text/javascript', ['minify_disabled' => true]);
     }
 }

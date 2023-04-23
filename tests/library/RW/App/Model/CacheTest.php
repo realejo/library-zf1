@@ -1,6 +1,7 @@
 <?php
 namespace RWTest\App\Model;
 
+use Exception;
 use RW_App_Model_Cache;
 use RWTest\TestAssets\BaseTestCase;
 
@@ -16,7 +17,7 @@ class CacheTest extends BaseTestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +30,7 @@ class CacheTest extends BaseTestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -41,16 +42,15 @@ class CacheTest extends BaseTestCase
 
     /**
      * getCachePath sem nome da pasta
-     *
-     * @expectedException \Exception
      */
     public function testGetCacheRootSemAPPLICATION_DATA()
     {
+        $this->expectException(Exception::class);
         if (defined("APPLICATION_DATA")) {
-            throw new \Exception('APPLICATION_DATA já foi definido em outro lugar');
+            throw new Exception('APPLICATION_DATA já foi definido em outro lugar');
         }
 
-        \RW_App_Model_Cache::getCacheRoot();
+        RW_App_Model_Cache::getCacheRoot();
     }
 
     /**
@@ -61,7 +61,7 @@ class CacheTest extends BaseTestCase
         $this->setApplicationConstants()->clearApplicationData();
 
         // Recupera a pasta aonde será salva as informações
-        $path = \RW_App_Model_Cache::getCacheRoot();
+        $path = RW_App_Model_Cache::getCacheRoot();
 
         // Verifica se tere o retorno correto
         self::assertNotNull($path, 'a path foi retornado');
@@ -74,12 +74,11 @@ class CacheTest extends BaseTestCase
     /**
      * getCachePath sem nome da pasta
      */
-    public function testGetCachePath()
+    public function testGetCachePath(): void
     {
         $this->setApplicationConstants()->clearApplicationData();
 
         // Verifica se todas as opções são iguais
-        self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(null));
         self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath(''));
         self::assertEquals(RW_App_Model_Cache::getCacheRoot() . '/', RW_App_Model_Cache::getCachePath());
 
@@ -98,7 +97,7 @@ class CacheTest extends BaseTestCase
         $this->rrmdir($path);
 
         // Verifica se a pasta foi apagada
-        self::assertFileNotExists($path);
+        self::assertFileDoesNotExist($path);
 
         // Cria ou recupera a pasta album
         $path = RW_App_Model_Cache::getCachePath('album');

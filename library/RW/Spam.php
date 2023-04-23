@@ -10,8 +10,8 @@
  */
 class RW_Spam
 {
-    const API_KEY = '17f998c89b39';
-    const BLOG    = 'http://www.pinmeup.com.br/';
+    public const API_KEY = '17f998c89b39';
+    public const BLOG    = 'http://www.pinmeup.com.br/';
 
     public static function isSpam($name, $url, $message)
     {
@@ -22,27 +22,16 @@ class RW_Spam
             //  Verifica se é SPAM
             $akismet = new Zend_Service_Akismet(self::API_KEY, self::BLOG );
 
-            $data = array(
-                'user_ip'               => $_SERVER["REMOTE_ADDR"],
-                'user_agent'            => $_SERVER["HTTP_USER_AGENT"],
-                'comment_type'          => 'comment',
-                'comment_author'        => $name,
-                'comment_author_url'    => $url,
-                'comment_content'       => $message
-            );
+            $data = ['user_ip'               => $_SERVER["REMOTE_ADDR"], 'user_agent'            => $_SERVER["HTTP_USER_AGENT"], 'comment_type'          => 'comment', 'comment_author'        => $name, 'comment_author_url'    => $url, 'comment_content'       => $message];
 
             return $akismet->isSpam($data);
         }
     }
 
     public function chkTrigger($texto) {
-    	$tagsLight = array('porn', 'fuckin', 'bondage', 'masturbation', 'mastuberting','lolita', 'guestbook', 'free',
-    					   'rubias', 'fetish', 'pennis', 'hentai', 'blowjob', 'wrestling', 'prescription',
-    	                   'online', 'nude', 'hazzard', 'windows', 'wedding', 'free', 'nursing', 'sex', 'hosting',
-    	                   'htaccess', 'naked', 'casino', 'http', 'ready', 'txt', 'insurance', 'adult');
-    	$tagsMedium = array('lesbian', 'nipples');
-    	$tagsHard = array('cialis', 'viagra', 'levitra', 'diazepam', 'xanax', 'meridia', 'propecia', 'phentermine', 'xxx',
-    					  '<script>', 'metabo', 'acomplia', 'wellbutrin', 'href', 'url', 'drunk girl', 'redtube', 'comment', 'gangbang');
+    	$tagsLight = ['porn', 'fuckin', 'bondage', 'masturbation', 'mastuberting', 'lolita', 'guestbook', 'free', 'rubias', 'fetish', 'pennis', 'hentai', 'blowjob', 'wrestling', 'prescription', 'online', 'nude', 'hazzard', 'windows', 'wedding', 'free', 'nursing', 'sex', 'hosting', 'htaccess', 'naked', 'casino', 'http', 'ready', 'txt', 'insurance', 'adult'];
+    	$tagsMedium = ['lesbian', 'nipples'];
+    	$tagsHard = ['cialis', 'viagra', 'levitra', 'diazepam', 'xanax', 'meridia', 'propecia', 'phentermine', 'xxx', '<script>', 'metabo', 'acomplia', 'wellbutrin', 'href', 'url', 'drunk girl', 'redtube', 'comment', 'gangbang'];
     	$spamTrigger = 5;
     	$spamLevel = 0;
     	$resultado = false;

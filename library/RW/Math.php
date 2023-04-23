@@ -18,21 +18,18 @@ class RW_Math
      * @return array Valores mais observados no vetor
      */
     static function moda(array $a, &$quantidade = 0) {
-        $moda = array();
+        $moda = [];
         if (empty($a)) {
             return $moda;
         }
 
 
         // Calcular quantidade de ocorrencias de cada valor
-        $ocorrencias = array();
+        $ocorrencias = [];
         foreach ($a as $valor) {
             $valor_str = var_export($valor, true);
             if (!isset($ocorrencias[$valor_str])) {
-                $ocorrencias[$valor_str] = array(
-                    'ocorrencias' => 0,
-                    'valor'       => $valor
-                );
+                $ocorrencias[$valor_str] = ['ocorrencias' => 0, 'valor'       => $valor];
             }
             $ocorrencias[$valor_str]['ocorrencias'] = $ocorrencias[$valor_str]['ocorrencias'] + 1;
         }

@@ -12,8 +12,8 @@
  */
 class RW_App_Model_Base
 {
-    const KEY_STRING  = 'STRING';
-    const KEY_INTEGER = 'INTEGER';
+    public const KEY_STRING  = 'STRING';
+    public const KEY_INTEGER = 'INTEGER';
 
     /**
      * @var RW_App_Loader
@@ -22,9 +22,8 @@ class RW_App_Model_Base
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
-     * @var RW_App_Model_Paginator
      */
-    private $_paginator;
+    private ?\RW_App_Model_Paginator $_paginator = null;
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
@@ -34,9 +33,8 @@ class RW_App_Model_Base
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
-     * @var RW_App_Model_Upload
      */
-    private $_upload;
+    private ?\RW_App_Model_Upload $_upload = null;
 
     /**
      * Define se deve usar o cache ou não
@@ -198,13 +196,13 @@ class RW_App_Model_Base
         // Checks $where is not null
         if (empty($where)) {
             if ($this->getUseDeleted() && !$this->getShowDeleted()) {
-                $where = array('deleted' => 0);
+                $where = ['deleted' => 0];
             }
         }
 
         // Veriifca se é um array para fazer o processamento abaixo
         if (!is_array($where)) {
-            $where = (empty($where)) ? array() : array($where);
+            $where = (empty($where)) ? [] : [$where];
         }
 
         // Checks $where is deleted
@@ -386,7 +384,7 @@ class RW_App_Model_Base
 
                 // Verifica se é uma chave simples com cast
                 if (count($this->key) == 1) {
-                    $where = array($this->getKey(true)=>$where);
+                    $where = [$this->getKey(true)=>$where];
 
                 // Não é possível acessar um registro com chave multipla usando apenas uma delas
                 } else {
@@ -394,7 +392,7 @@ class RW_App_Model_Base
                 }
 
             } else {
-                $where = array($this->key=>$where);
+                $where = [$this->key=>$where];
             }
         }
 
@@ -429,7 +427,7 @@ class RW_App_Model_Base
         }
 
         // Associa pela chave da tabela
-        $fetchAssoc = array();
+        $fetchAssoc = [];
         $key = $this->getKey(true);
         foreach ($fetchAll as $row) {
             $fetchAssoc[$row[$key]] = $row;
@@ -493,14 +491,12 @@ class RW_App_Model_Base
     public function getHtmlSelect($nome, $selecionado = null, $opts = null)
     {
         // Recupera os registros
-        $where = (isset($opts['where'])) ? $opts['where'] : null;
+        $where = $opts['where'] ?? null;
         $fetchAll = $this->fetchAll($where);
 
         // Verifica o select_option_data
         if (isset($this->htmlSelectOptionData) && is_string($this->htmlSelectOptionData)) {
-            $this->htmlSelectOptionData = array(
-                $this->htmlSelectOptionData
-            );
+            $this->htmlSelectOptionData = [$this->htmlSelectOptionData];
         }
 
         // Verifica se deve mostrar a primeira opção em branco
@@ -508,12 +504,12 @@ class RW_App_Model_Base
         $neverShowEmpty = (isset($opts['show-empty']) && $opts['show-empty'] === false);
 
         // Define ao placeholder a ser usado
-        $placeholder = $selectPlaceholder = (isset($opts['placeholder'])) ? $opts['placeholder'] : '';
+        $placeholder = $selectPlaceholder = $opts['placeholder'] ?? '';
         if (!empty($placeholder)) {
             $selectPlaceholder = "placeholder=\"$selectPlaceholder\"";
         }
 
-        $grouped = (isset($opts['grouped'])) ? $opts['grouped'] : false;
+        $grouped = $opts['grouped'] ?? false;
 
         // Define a chave a ser usada
         if (isset($opts['key']) && !empty($opts['key']) && is_string($opts['key'])) {
@@ -531,7 +527,7 @@ class RW_App_Model_Base
 
                 // Troca pelos valores
                 foreach ($matches[1] as $i => $m) {
-                    $matches[1][$i] = (isset($row[$m])) ? $row[$m] : '';
+                    $matches[1][$i] = $row[$m] ?? '';
                 }
 
                 // Define o option

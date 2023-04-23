@@ -7,7 +7,7 @@
  */
 class RW_Date extends Zend_Date
 {
-    const QUARTER = 'Q';
+    public const QUARTER = 'Q';
 
     /**
      * Inclusão do formato mysql
@@ -78,9 +78,9 @@ class RW_Date extends Zend_Date
         switch ($part)
         {
             case 'a':
-                return floor($diff / 31536000); # 60*60*24*365
+                return floor($diff / 31_536_000); # 60*60*24*365
             case 'm':
-                return floor($diff / 2592000); # 60*60*24*30
+                return floor($diff / 2_592_000); # 60*60*24*30
             case 'w':
                 return floor($diff / 604800); # 60*60*24*7
             case 'd':
@@ -123,20 +123,7 @@ class RW_Date extends Zend_Date
      */
     static function getMeses()
     {
-        return array(
-            1  => 'Janeiro',
-            2  => 'Fevereiro',
-            3  => 'Março',
-            4  => 'Abril',
-            5  => 'Maio',
-            6  => 'Junho',
-            7  => 'Julho',
-            8  => 'Agosto',
-            9  => 'Setembro',
-            10 => 'Outubro',
-            11 => 'Novembro',
-            12 => 'Dezembro'
-        );
+        return [1  => 'Janeiro', 2  => 'Fevereiro', 3  => 'Março', 4  => 'Abril', 5  => 'Maio', 6  => 'Junho', 7  => 'Julho', 8  => 'Agosto', 9  => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'];
     }
 
     /**
@@ -152,7 +139,7 @@ class RW_Date extends Zend_Date
         $meses = self::getMeses();
 
         // Retorna se o mes existir
-        return (isset($meses[$m])) ? $meses[$m] : null;
+        return $meses[$m] ?? null;
     }
 
     /**
@@ -164,8 +151,9 @@ class RW_Date extends Zend_Date
      */
     static public function getSemana($d = null)
     {
-    	// Configura a semana
-    	$nome_semana = array('domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado');
+    	$tempData = null;
+     // Configura a semana
+    	$nome_semana = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
 
     	if (is_string($d)) $tempData = strlen($d) > 1 ? $d : (int) $d;
 
@@ -187,7 +175,7 @@ class RW_Date extends Zend_Date
 
 	    // Verifica se é um semana
     	} elseif (is_numeric($tempData)) {
-    		return isset($nome_semana[$d]) ? $nome_semana[$d] : null;
+    		return $nome_semana[$d] ?? null;
 
     	} else {
     		// Retorna as semanas
@@ -206,7 +194,7 @@ class RW_Date extends Zend_Date
     static function getData($date, $format = 'dd/MM/yyyy')
     {
         if (!empty($date) && parent::isDate($date, $format)) {
-            return Zend_Locale_Format::getDate($date, array('date_format'=>$format));
+            return Zend_Locale_Format::getDate($date, ['date_format'=>$format]);
         }
 
         return null;

@@ -98,22 +98,19 @@ class RW_Mail
 
                 // Configurações do GMail
                 } elseif ( $this->_type == 'gmail' ) {
-                    $serverconfig = array(
+                    $serverconfig = [
                         'auth' => 'login',
                         'username' => $this->_username,
                         'password' => $this->_password,
-                        'ssl' => 'ssl', //'tls',
-                        'port' => 465
-                    );
+                        'ssl' => 'ssl',
+                        //'tls',
+                        'port' => 465,
+                    ];
                     $transport = new Zend_Mail_Transport_Smtp('smtp.gmail.com', $serverconfig);
 
                 // Configuração genérica de SMTP
                 } elseif ( $this->_type == 'smtp' ) {
-                    $serverconfig = array(
-                        'auth' => 'login',
-                        'username' => $this->_username,
-                        'password' => $this->_password
-                    );
+                    $serverconfig = ['auth' => 'login', 'username' => $this->_username, 'password' => $this->_password];
 
                     // Verifica se há SSL
                     if ( isset($config->cms->email->smtp->ssl) && $config->cms->email->smtp->ssl != '') {
@@ -138,7 +135,7 @@ class RW_Mail
         }
     }
 
-    public function SendEmail($replyName, $replyEmail, $toName, $toEmail, $subject, $message, $opt = array() )
+    public function SendEmail($replyName, $replyEmail, $toName, $toEmail, $subject, $message, $opt = [] )
     {
         // Verifica a codificação
         $replyName  = $this->_fixEncoding($replyName);
@@ -315,7 +312,7 @@ class RW_Mail
 
         $config = new Zend_Config_Ini($configpath, APPLICATION_ENV);
         $config = $config->toArray();
-        $opts = array();
+        $opts = [];
 
         // arruma os destinatarios
         foreach ($config['destinatarios'] as $id=>$campo) {
@@ -351,10 +348,7 @@ class RW_Mail
             $view = new Zend_View();
             $view->setScriptPath(APPLICATION_PATH . '/views/scripts');
             $html = $emailCliente = $view->partial('/_modelos/feedback/' . $config['modelo'] . '.phtml',
-                array(
-                    'valores' => $post,
-                    'config' => $config
-                ));
+                ['valores' => $post, 'config' => $config]);
             $text = $this->_extractText($html);
         } else {
             // Cria o HTML para enviar no email
@@ -362,12 +356,12 @@ class RW_Mail
             $text = '';
             foreach ($config['campos'] as $campo=>$nome) {
                 if ( (isset($post[$campo]) && ($post[$campo] != '') ) || $config['mostraVazios'] == 1) {
-                    $text .= "$nome: " . ( (isset($post[$campo]))?$post[$campo]:'') . "\n";
+                    $text .= "$nome: " . ( $post[$campo] ?? '') . "\n";
 
                     $html .= '<tr>';
                         $html .= '<td align="right" valign="top"><font face="verdana" size="2">' . $nome. '</font></td>';
                         $html .= '<td></td>';
-                        $html .= '<td valign="top"><font face="verdana" size="2">' . ( (isset($post[$campo]))?$post[$campo]:'' ) . '</font></td>';
+                        $html .= '<td valign="top"><font face="verdana" size="2">' . ( $post[$campo] ?? '' ) . '</font></td>';
                     $html .= '</tr>';
                 }
             }
@@ -415,7 +409,7 @@ class RW_Mail
                 $post[$config['nome']], $post[$config['email']],
                 null, $config['destinatarios'],
                 $config['titulo'],
-                array('html'=>$html, 'text'=>$text ),
+                ['html'=>$html, 'text'=>$text],
                 $opts
             );
         } else {
@@ -424,7 +418,7 @@ class RW_Mail
                     $post[$config['nome']], $post[$config['email']],
                     $nome, $email,
                     $config['titulo'],
-                    array('html'=>$html, 'text'=>$text )
+                    ['html'=>$html, 'text'=>$text]
                 );
             }
 
@@ -436,7 +430,7 @@ class RW_Mail
                     $post[$config['nome']], $post[$config['email']],
                     $config['bcc'], $config['bcc'],
                     $config['titulo'],
-                    array('html'=>$html, 'text'=>$text )
+                    ['html'=>$html, 'text'=>$text]
                 );
             }
         }

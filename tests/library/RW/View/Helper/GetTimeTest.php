@@ -22,7 +22,7 @@ class GetTimeTest extends \PHPUnit\Framework\TestCase
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // TODO Auto-generated GetTimeTest::setUp()
@@ -32,7 +32,7 @@ class GetTimeTest extends \PHPUnit\Framework\TestCase
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // TODO Auto-generated GetTimeTest::tearDown()
         $this->RW_View_Helper_GetTime = null;
