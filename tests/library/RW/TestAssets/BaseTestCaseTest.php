@@ -48,7 +48,7 @@ class BaseTestCaseTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         // Inicializa o ZF
-        $inifile = (getenv('TRAVIS') !== false) ? 'application.travis.ini' : 'application.ini';
+        $inifile = (getenv('CI_TEST') !== false) ? 'application.ci.ini' : 'application.ini';
         $bootstrap = new Zend_Application(
             'testing',
             TEST_ROOT . '/assets/application/configs/' . $inifile

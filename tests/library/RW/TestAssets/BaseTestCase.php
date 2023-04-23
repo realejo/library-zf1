@@ -42,7 +42,7 @@ class BaseTestCase extends TestCase
     public static function setUpBeforeClass(): void
     {
         // Inicializa o ZF
-        $inifile = (getenv('TRAVIS') !== false) ? 'application.travis.ini' : 'application.ini';
+        $inifile = (getenv('CI_TEST') !== false) ? 'application.ci.ini' : 'application.ini';
         $bootstrap = new Zend_Application(
             'testing',
             TEST_ROOT . '/assets/application/configs/' . $inifile
@@ -70,8 +70,6 @@ class BaseTestCase extends TestCase
     /**
      * Define as constantes necessárias nos models
      * Elas devem estar no index.php do projeto
-     *
-     * @return self
      */
     public function setApplicationConstants(): self
     {

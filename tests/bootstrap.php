@@ -7,6 +7,8 @@
  * @license   http://unlicense.org
  */
 
+
+
 // Define path to application directory
 defined('TEST_ROOT')
     || define('TEST_ROOT', realpath(__DIR__));
@@ -14,9 +16,15 @@ defined('TEST_ROOT')
 // Define application environment
 define('APPLICATION_ENV', 'testing');
 
-if (getenv('TRAVIS') !== false) {
-    define('MARCA', 'travis');
+if (getenv('CI_TEST') !== false) {
+    define('MARCA', 'ci');
 }
+
+// Application.ini file cannot read env vars from my github actions
+if ($db_port = getenv('DB_PORT')) {
+    define('DB_PORT', $db_port);
+}
+echo "$db_port";
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
