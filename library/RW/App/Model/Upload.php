@@ -1,11 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Model com acesso ao BD, Cache e Paginator padronizado.
  * Também permite que tenha acesso ao Loader
- *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
  */
 class RW_App_Model_Upload
 {

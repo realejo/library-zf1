@@ -1,30 +1,29 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Controle de backup
  *
  * @todo verificar se exite o mysqldump e zip instalado
- *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
  */
 class RW_Backup
 {
     /**
      * Cria um dump das tabelas do banco de dados.
      *
-     * @param array $tables OPCIONAL Tabelas para criar o backuop.
+     * @param array|null $tables OPCIONAL Tabelas para criar o backuop.
      *                      Se não informado será feito backup de todas as tabelas.
      * @throws Exception
      */
-    static public function create($tables = null)
+    public static function create(array $tables = null)
     {
         $config = RW_Config::getApplicationIni();
 
         // Grava os dados de acesso a banco de dados
-        $dbhost	= $config->resources->db->params->host;
-        $dbuser	= $config->resources->db->params->username;
-        $dbpass	= $config->resources->db->params->password;
+        $dbhost = $config->resources->db->params->host;
+        $dbuser = $config->resources->db->params->username;
+        $dbpass = $config->resources->db->params->password;
         $dbname = $config->resources->db->params->dbname;
 
         // Define o diretório dos dumps
@@ -33,7 +32,7 @@ class RW_Backup
         // Verifica se é para criar um dump com um arquivo por tabela ou um arquivo único
         if (empty($tables)) {
             $backupFile = date("Y-m-d-H-i-s") . '.sql';
-            $backupPath = $dumpPath .'/'. $backupFile;
+            $backupPath = $dumpPath . '/' . $backupFile;
 
             // Faz o dump completo em um arquivo SQL e cria um ZIP
             $command = "mysqldump --opt --quote-names --host=$dbhost --user$dbuser --password='$dbpass' --default-character-set=utf8 --dump-date $dbname > $backupPath;";
@@ -42,16 +41,14 @@ class RW_Backup
             // Cria um ZIP com o arquivo SQL criado
             $command = "zip -mjq  $backupPath.zip $backupPath";
             system($command);
-
         } else {
-
             // Cria o nome do arquivo e seu diretório
             $backupFile = date("Y-m-d-H-i-s");
-            $backupPath = $dumpPath .'/'. $backupFile;
+            $backupPath = $dumpPath . '/' . $backupFile;
             $zipTables = '';
 
-            foreach ($tables as $k=>$tbl_name) {
-                $table = $dumpPath .'/'.$tbl_name.'.sql';
+            foreach ($tables as $k => $tbl_name) {
+                $table = $dumpPath . '/' . $tbl_name . '.sql';
 
                 // Monta a linha de comando
                 //@todo --result-filename=?
@@ -77,32 +74,28 @@ class RW_Backup
      * Cria um script para fazer um restore a partir dos dumps contidos no ZIP
      *
      * @param string $file nome do arquivo ZIP dentro da pasta dumps
-     *
-     * @throws Exception
-     *
-     * @return string
      */
-    static public function restore($file)
+    public static function restore(string $file): string
     {
         $config = RW_Config::getApplicationIni();
 
         // Grava os dados de acesso a banco de dados
-        $dbhost	= $config->resources->db->params->host;
-        $dbuser	= $config->resources->db->params->username;
-        $dbpass	= 'PASSWORD'; //$config->resources->db->params->password;
+        $dbhost = $config->resources->db->params->host;
+        $dbuser = $config->resources->db->params->username;
+        $dbpass = 'PASSWORD'; //$config->resources->db->params->password;
         $dbname = $config->resources->db->params->dbname;
 
         // Recupera o diretório dos dumps
         $dumpPath = self::getPath();
 
         // Define o caminho do arquivo
-		$filepath = $dumpPath.'/'.str_replace('.zip', '', $file);
+        $filepath = $dumpPath . '/' . str_replace('.zip', '', $file);
 
         // Verifica se o zip existe
-    	if (!file_exists($filepath.'.zip')){
-    		require_once 'Zend/Controller/Action/Exception.php';
-    		throw new Exception('Arquivo não encontrado: '.$filepath.'.zip');
-	    }
+        if (!file_exists($filepath . '.zip')) {
+            require_once 'Zend/Controller/Action/Exception.php';
+            throw new Exception('Arquivo não encontrado: ' . $filepath . '.zip');
+        }
 
         // Cria o script
         $script = <<<'RESTORESCRIPT'
@@ -212,25 +205,23 @@ RESTORESCRIPT;
         $script = str_replace('{{database}}', basename($dbname), $script);
         $script = str_replace('{{user}}', basename($dbuser), $script);
 
-	    // Retorna o comando ao usuário
-	    return $script;
+        // Retorna o comando ao usuário
+        return $script;
     }
 
     /**
      * Retorna o caminho padrão até a pasta onde são salvas os arquivos de backup
-     *
-     * @return string
      */
-    static public function getPath()
+    public static function getPath(): string
     {
         // Verifica se a pasta de upload existe
-        if ( !defined('APPLICATION_DATA')  || realpath(APPLICATION_DATA) == false) {
+        if (!defined('APPLICATION_DATA') || !realpath(APPLICATION_DATA)) {
             throw new Exception('A pasta raiz do data não está definido em APPLICATION_DATA em RW_Backup::getPath()');
         }
 
         // Verifica se a pasta do cache existe
         $cachePath = APPLICATION_DATA . '/dumps';
-        if (! file_exists($cachePath)) {
+        if (!file_exists($cachePath)) {
             $oldumask = umask(0);
             mkdir($cachePath, 0777, true);
             umask($oldumask);

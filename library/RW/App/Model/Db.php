@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Model basico para o RW_App_Model_Base com as funções de insert, update e delete
  *
@@ -7,10 +10,6 @@
  *
  * Sempre é preciso informar todas as chaves. Caso queira usar apenas algumas
  * use useAllKeys = false
- *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
  */
 class RW_App_Model_Db extends RW_App_Model_Base
 {

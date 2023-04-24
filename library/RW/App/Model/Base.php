@@ -1,58 +1,50 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Model com acesso ao BD, Cache e Paginator padronizado.
  * Também permite que tenha acesso ao Loader
  *
  * Quando usar chaves multiplas deve sempre ser informado como array
  * Ex: array(key1=>val1, $key2=>$val2);
- *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
  */
 class RW_App_Model_Base
 {
-    public const KEY_STRING  = 'STRING';
+    public const KEY_STRING = 'STRING';
     public const KEY_INTEGER = 'INTEGER';
 
-    /**
-     * @var RW_App_Loader
-     */
-    private $_loader;
+    private RW_App_Loader $_loader;
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
      */
-    private ?\RW_App_Model_Paginator $_paginator = null;
-
-    /**
-     * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
-     * @var RW_App_Model_Cache
-     */
-    private $_cache;
+    private ?RW_App_Model_Paginator $_paginator = null;
 
     /**
      * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
      */
-    private ?\RW_App_Model_Upload $_upload = null;
+    private RW_App_Model_Cache $_cache;
+
+    /**
+     * Não pode ser usado dentro do Loader pois cada classe tem configurações diferentes
+     */
+    private ?RW_App_Model_Upload $_upload = null;
 
     /**
      * Define se deve usar o cache ou não
-     * @var boolean
      */
-    protected $useCache = false;
+    protected bool $useCache = false;
 
     /**
      * Define de deve usar o paginator
-     * @var boolean
      */
-    private $usePaginator = false;
+    private bool $usePaginator = false;
 
     /**
      * Define a tabela a ser usada
-     * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * Define o nome da chave
@@ -69,24 +61,18 @@ class RW_App_Model_Base
 
     /**
      * Define se deve remover os registros ou apenas marcar como removido
-     *
-     * @var boolean
      */
-    protected $useDeleted = false;
+    protected bool $useDeleted = false;
 
     /**
      * Define se deve mostrar os registros marcados como removido
-     *
-     * @var boolean
      */
-    protected $showDeleted = false;
+    protected bool $showDeleted = false;
 
     /**
      * Campo a ser usado no <option>
-     *
-     * @var string
      */
-    protected $htmlSelectOption = '{nome}';
+    protected string $htmlSelectOption = '{nome}';
 
     /**
      * Campos a serem adicionados no <option> como data
@@ -97,11 +83,11 @@ class RW_App_Model_Base
 
     /**
      *
-     * @param string       $table Nome da tabela a ser usada
-     * @param string|array $key   Nome ou array de chaves a serem usadas
+     * @param string|null $table Nome da tabela a ser usada
+     * @param string|array $key Nome ou array de chaves a serem usadas
      *
      */
-    public function __construct($table = null, $key = null)
+    public function __construct(string $table = null, $key = null)
     {
         // Verifica o nome da tabela
         if (empty($table) && !is_string($table)) {
@@ -122,14 +108,11 @@ class RW_App_Model_Base
         }
 
         // Define a chave e o nome da tabela
-        $this->key   = $key;
+        $this->key = $key;
         $this->table = $table;
     }
 
-    /**
-     * @return RW_App_Loader
-     */
-    public function getLoader()
+    public function getLoader(): RW_App_Loader
     {
         if (!isset($this->_loader)) {
             $this->setLoader(new RW_App_Loader());
@@ -143,12 +126,7 @@ class RW_App_Model_Base
         $this->_loader = $loader;
     }
 
-    /**
-     * @param string $table
-     *
-     * @return Zend_Db_Table
-     */
-    public function getTableGateway($table = null)
+    public function getTableGateway(string $table = null): Zend_Db_Table
     {
         if (empty($table) && isset($this->table)) {
             $table = $this->table;
@@ -165,14 +143,14 @@ class RW_App_Model_Base
     /**
      * Retorna o select para a consulta
      *
-     * @param string|array $where  OPTIONAL An SQL WHERE clause
-     * @param string|array $order  OPTIONAL An SQL ORDER clause.
-     * @param int          $count  OPTIONAL An SQL LIMIT count.
-     * @param int          $offset OPTIONAL An SQL LIMIT offset.
+     * @param string|array $where OPTIONAL An SQL WHERE clause
+     * @param string|array $order OPTIONAL An SQL ORDER clause.
+     * @param int|null $count OPTIONAL An SQL LIMIT count.
+     * @param int|null $offset OPTIONAL An SQL LIMIT offset.
      *
      * @return Zend_Db_Table_Select
      */
-    public function getSelect($where = null, $order = null, $count = null, $offset = null)
+    public function getSelect($where = null, $order = null, int $count = null, int $offset = null): Zend_Db_Table_Select
     {
         // Retorna o select para a tabela
         $select = $this->getTableSelect();
@@ -214,21 +192,22 @@ class RW_App_Model_Base
         $where = $this->getWhere($where);
 
         // processa as clausulas
-        foreach($where as $id=>$w) {
+        foreach ($where as $id => $w) {
             // Zend_Db_Expr
             if ($w instanceof Zend_Db_Expr) {
                 $select->where($w);
-
-            // Valor numerico
+                // Valor numerico
             } elseif (!is_numeric($id) && is_numeric($w)) {
-                if (strpos($id,'.') === false) $id = "{$this->table}.$id";
+                if (strpos($id, '.') === false) {
+                    $id = "{$this->table}.$id";
+                }
                 $select->where("$id = ?", $w, 'INTEGER');
-
-            // Texto e Data
+                // Texto e Data
             } elseif (!is_numeric($id)) {
-                if (strpos($id,'.') === false) $id = "{$this->table}.$id";
+                if (strpos($id, '.') === false) {
+                    $id = "{$this->table}.$id";
+                }
                 $select->where("$id = ?", $w, 'STRING');
-
             } else {
                 throw new LogicException("Condição inválida '$w' em " . get_class($this) . '::getSelect()');
             }
@@ -239,24 +218,18 @@ class RW_App_Model_Base
 
     /**
      * Retorna o select a ser usado no fetchAll e fetchRow
-     *
-     * @return Zend_Db_Table_Select
      */
-    public function getTableSelect()
+    public function getTableSelect(): Zend_Db_Table_Select
     {
         return $this->getTableGateway()
-                    ->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-                    ->setIntegrityCheck(false);
+            ->select(Zend_Db_Table_Abstract::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(false);
     }
 
     /**
      * Processa as clausulas especiais do where
-     *
-     * @param array|string $where
-     *
-     * @return array
      */
-    public function getWhere($where)
+    public function getWhere(array $where): array
     {
         return $where;
     }
@@ -264,26 +237,22 @@ class RW_App_Model_Base
     /**
      * Retorna o SQL que será usado para a consulta
      *
-     * @param string|array $where  OPTIONAL An SQL WHERE clause
-     * @param string|array $order  OPTIONAL An SQL ORDER clause.
-     * @param int          $count  OPTIONAL An SQL LIMIT count.
-     * @param int          $offset OPTIONAL An SQL LIMIT offset.
+     * @param string|array $where OPTIONAL An SQL WHERE clause
+     * @param string|array $order OPTIONAL An SQL ORDER clause.
+     * @param int|null $count OPTIONAL An SQL LIMIT count.
+     * @param int|null $offset OPTIONAL An SQL LIMIT offset.
      *
      * @return string
      */
-    public function getSQLString($where = null, $order = null, $count = null, $offset = null)
+    public function getSQLString($where = null, $order = null, int $count = null, int $offset = null): string
     {
         return $this->getSelect($where, $order, $count, $offset)->assemble();
     }
 
     /**
      * Inclui campos extras ao retorna do fetchAll quando não estiver usando a paginação
-     *
-     * @param array $fetchAll
-     *
-     * @return array
      */
-    protected function getFetchAllExtraFields($fetchAll)
+    protected function getFetchAllExtraFields(array $fetchAll): array
     {
         return $fetchAll;
     }
@@ -291,108 +260,108 @@ class RW_App_Model_Base
     /**
      * Retorna vários registros
      *
-     * @param string|array $where  OPTIONAL An SQL WHERE clause
-     * @param string|array $order  OPTIONAL An SQL ORDER clause.
-     * @param int          $count  OPTIONAL An SQL LIMIT count.
-     * @param int          $offset OPTIONAL An SQL LIMIT offset.
+     * @param string|array $where OPTIONAL An SQL WHERE clause
+     * @param string|array $order OPTIONAL An SQL ORDER clause.
+     * @param int|null $count OPTIONAL An SQL LIMIT count.
+     * @param int|null $offset OPTIONAL An SQL LIMIT offset.
      *
-     * @return array|null Lista de registros ou nulo se não localizar nenhum
+     * @return array|Zend_Paginator|null Lista de registros ou nulo se não localizar nenhum
      */
-    public function fetchAll($where = null, $order = null, $count = null, $offset = null)
+    public function fetchAll($where = null, $order = null, int $count = null, int $offset = null)
     {
         // Cria a assinatura da consulta
         if ($where instanceof Zend_Db_Select) {
             $md5 = md5($where->assemble());
         } else {
-            $md5 = md5(var_export($this->showDeleted, true) . var_export($this->usePaginator, true) . var_export($where, true) . var_export($order, true) . var_export($count, true) . var_export($offset, true));
+            $md5 = md5(
+                var_export($this->showDeleted, true) . var_export($this->usePaginator, true) . var_export(
+                    $where,
+                    true
+                ) . var_export($order, true) . var_export($count, true) . var_export($offset, true)
+            );
         }
 
         // Verifica se tem no cache
         // o Zend_Paginator precisa do Zend_Paginator_Adapter_DbSelect para acessar o cache
         if ($this->getUseCache() && !$this->getUsePaginator() && $this->getCache()->test($md5)) {
             return $this->getCache()->load($md5);
-
-        } else {
-
-            // Define a consulta
-            if ($where instanceof Zend_Db_Select) {
-                $select = $where;
-            } else {
-                $select = $this->getSelect($where, $order, $count, $offset);
-            }
-
-            // Verifica se deve usar o Paginator
-            if ($this->getUsePaginator()) {
-                $fetchAll = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select));
-
-                // Verifica se deve usar o cache
-                if ($this->getUseCache()) {
-                    $fetchAll->setCacheEnabled(true)->setCache($this->getCache());
-                }
-
-                // Configura o paginator
-                $fetchAll->setPageRange($this->getPaginator()->getPageRange());
-                $fetchAll->setCurrentPageNumber($this->getPaginator()->getCurrentPageNumber());
-                $fetchAll->setItemCountPerPage($this->getPaginator()->getItemCountPerPage());
-
-            } else {
-                // Recupera os registros do banco de dados
-                $fetchAll = $this->getTableGateway()->fetchAll($select);
-
-                // Verifica se foi localizado algum registro
-                if ( !is_null($fetchAll) && count($fetchAll) > 0 ) {
-                    // Passa o $fetch para array para poder incluir campos extras
-                    $fetchAll = $fetchAll->toArray();
-
-                    // Verifica se deve adiciopnar campos extras
-                    $fetchAll = $this->getFetchAllExtraFields($fetchAll);
-                } else {
-                    $fetchAll = null;
-                }
-
-                // Grava a consulta no cache
-                if ($this->getUseCache()) {
-                    $this->getCache()->save($fetchAll, $md5);
-                }
-            }
-
-            // Some garbage collection
-            unset($select);
-
-            // retorna o resultado da consulta
-            return $fetchAll;
         }
+
+        // Define a consulta
+        if ($where instanceof Zend_Db_Select) {
+            $select = $where;
+        } else {
+            $select = $this->getSelect($where, $order, $count, $offset);
+        }
+
+        // Verifica se deve usar o Paginator
+        if ($this->getUsePaginator()) {
+            $fetchAll = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select));
+
+            // Verifica se deve usar o cache
+            if ($this->getUseCache()) {
+                $fetchAll->setCacheEnabled(true)->setCache($this->getCache());
+            }
+
+            // Configura o paginator
+            $fetchAll->setPageRange($this->getPaginator()->getPageRange());
+            $fetchAll->setCurrentPageNumber($this->getPaginator()->getCurrentPageNumber());
+            $fetchAll->setItemCountPerPage($this->getPaginator()->getItemCountPerPage());
+        } else {
+            // Recupera os registros do banco de dados
+            $fetchAll = $this->getTableGateway()->fetchAll($select);
+
+            // Verifica se foi localizado algum registro
+            if (!is_null($fetchAll) && count($fetchAll) > 0) {
+                // Passa o $fetch para array para poder incluir campos extras
+                $fetchAll = $fetchAll->toArray();
+
+                // Verifica se deve adiciopnar campos extras
+                $fetchAll = $this->getFetchAllExtraFields($fetchAll);
+            } else {
+                $fetchAll = null;
+            }
+        }
+
+        // Grava a consulta no cache
+        if ($this->getUseCache()) {
+            $this->getCache()->save($fetchAll, $md5);
+        }
+
+        // Some garbage collection
+        unset($select);
+
+        // retorna o resultado da consulta
+        return $fetchAll;
     }
 
     /**
      * Recupera um registro
      *
      * @param mixed $where condições para localizar o registro
-     *
-     * @return array|null Array com o registro ou null se não localizar
      */
-    public function fetchRow($where, $order = null)
+    public function fetchRow($where, $order = null): ?array
     {
         // Define se é a chave da tabela
         if (is_numeric($where) || is_string($where)) {
             // Veririfica se há chave definida
             if (empty($this->key)) {
                 throw new InvalidArgumentException('Chave não definida em ' . get_class($this) . '::fetchRow()');
+            }
 
             // Verifica se é uma chave muktipla ou com cast
-            } elseif (is_array($this->key)) {
-
+            if (is_array($this->key)) {
                 // Verifica se é uma chave simples com cast
-                if (count($this->key) == 1) {
-                    $where = [$this->getKey(true)=>$where];
-
-                // Não é possível acessar um registro com chave multipla usando apenas uma delas
-                } else {
-                    throw new InvalidArgumentException('Não é possível acessar chaves múltiplas informando apenas uma em ' . get_class($this) . '::fetchRow()');
+                if (count($this->key) !== 1) {
+                    // Não é possível acessar um registro com chave multipla usando apenas uma delas
+                    throw new InvalidArgumentException(
+                        'Não é possível acessar chaves múltiplas informando apenas uma em '
+                        . get_class($this) . '::fetchRow()'
+                    );
                 }
-
+                $where = [$this->getKey(true) => $where];
             } else {
-                $where = [$this->key=>$where];
+                $where = [$this->key => $where];
             }
         }
 
@@ -400,7 +369,7 @@ class RW_App_Model_Base
         $fetchRow = $this->fetchAll($where, $order, 1);
 
         // Retorna o registro se algum foi encontrado
-        return (!empty($fetchRow))? $fetchRow[0] : null;
+        return (!empty($fetchRow)) ? $fetchRow[0] : null;
     }
 
 
@@ -409,14 +378,14 @@ class RW_App_Model_Base
      *
      * Quando usar chaves multiplas será usada sempre a primeira
      *
-     * @param string|array $where  OPTIONAL An SQL WHERE clause
-     * @param string|array $order  OPTIONAL An SQL ORDER clause.
-     * @param int          $count  OPTIONAL An SQL LIMIT count.
-     * @param int          $offset OPTIONAL An SQL LIMIT offset.
+     * @param string|array $where OPTIONAL An SQL WHERE clause
+     * @param string|array $order OPTIONAL An SQL ORDER clause.
+     * @param int|null $count OPTIONAL An SQL LIMIT count.
+     * @param int|null $offset OPTIONAL An SQL LIMIT offset.
      *
      * @return array|null
      */
-    public function fetchAssoc($where = null, $order = null, $count = null, $offset = null)
+    public function fetchAssoc($where = null, $order = null, int $count = null, int $offset = null): ?array
     {
         // Recupera todos os registros
         $fetchAll = $this->fetchAll($where, $order, $count, $offset);
@@ -443,13 +412,13 @@ class RW_App_Model_Base
     /**
      * Retorna o total de registros encontrados com a consulta
      *
-     * @todo se usar consulta com mais de uma tabela talvez de erro
-     *
-     * @param string|array $where  An SQL WHERE clause
+     * @param string|array $where An SQL WHERE clause
      *
      * @return int
+     * @todo se usar consulta com mais de uma tabela talvez de erro
+     *
      */
-    public function fetchCount($where = null)
+    public function fetchCount($where = null): int
     {
         // Define o select
         $select = $this->getSelect($where);
@@ -469,9 +438,9 @@ class RW_App_Model_Base
     /**
      * Retorna o HTML de um <select> apra usar em formulários
      *
-     * @param string $nome        Name/ID a ser usado no <select>
-     * @param string $selecionado Valor pré seleiconado
-     * @param string $opts        Opções adicionais
+     * @param string $nome Name/ID a ser usado no <select>
+     * @param string|null $selecionado Valor pré seleiconado
+     * @param array $opts Opções adicionais
      *
      * Os valores de option serão os valores dos campos definidos em $htmlSelectOption
      * Aos options serão adicionados data-* de acordo com os campos definidos em $htmlSelectOptionData
@@ -488,7 +457,7 @@ class RW_App_Model_Base
      *
      * @return string
      */
-    public function getHtmlSelect($nome, $selecionado = null, $opts = null)
+    public function getHtmlSelect(string $nome, string $selecionado = null, array $opts = []): string
     {
         // Recupera os registros
         $where = $opts['where'] ?? null;
@@ -512,7 +481,7 @@ class RW_App_Model_Base
         $grouped = $opts['grouped'] ?? false;
 
         // Define a chave a ser usada
-        if (isset($opts['key']) && !empty($opts['key']) && is_string($opts['key'])) {
+        if (!empty($opts['key']) && is_string($opts['key'])) {
             $key = $opts['key'];
         } else {
             $key = $this->getKey(true);
@@ -521,7 +490,7 @@ class RW_App_Model_Base
         // Monta as opções
         $options = '';
         $group = false;
-        if (! empty($fetchAll)) {
+        if (!empty($fetchAll)) {
             foreach ($fetchAll as $row) {
                 preg_match_all('/\{([a-z_]*)\}/', $this->htmlSelectOption, $matches);
 
@@ -536,7 +505,6 @@ class RW_App_Model_Base
                 // Verifica se deve adicionar campos ao data
                 $data = '';
                 if (isset($this->htmlSelectOptionData)) {
-                    $data = '';
                     foreach ($this->htmlSelectOptionData as $name => $field) {
                         if (is_numeric($name)) {
                             $name = $field;
@@ -566,8 +534,12 @@ class RW_App_Model_Base
         }
 
         // Verifica se tem valor padrão
-        if ( !is_null($selecionado) ) {
-            $temp = str_replace("<option value=\"$selecionado\"", "<option value=\"$selecionado\" selected=\"selected\"", $options);
+        if (!is_null($selecionado)) {
+            $temp = str_replace(
+                "<option value=\"$selecionado\"",
+                "<option value=\"$selecionado\" selected=\"selected\"",
+                $options
+            );
             if ($temp === $options) {
                 $selecionado = null;
             }
@@ -578,8 +550,9 @@ class RW_App_Model_Base
         $select = "<select class=\"form-control\" name=\"$nome\" id=\"$nome\" $selectPlaceholder>";
 
         // Verifica se tem valor padrão selecionado
-        if ((empty($selecionado) || $showEmpty) && !$neverShowEmpty)
+        if ((empty($selecionado) || $showEmpty) && !$neverShowEmpty) {
             $select .= "<option value=\"\">$placeholder</option>";
+        }
 
         // Coloca as opções
         $select .= $options;
@@ -593,10 +566,8 @@ class RW_App_Model_Base
 
     /**
      * Retorna o frontend para gravar o cache
-     *
-     * @return RW_App_Model_Upload
      */
-    public function getUpload()
+    public function getUpload(): ?RW_App_Model_Upload
     {
         if (!isset($this->_upload)) {
             $this->_upload = new RW_App_Model_Upload();
@@ -618,23 +589,17 @@ class RW_App_Model_Base
     /**
      * Define se deve usar o cache
      *
-     * @param boolean $useCache
+     * @param bool $useCache
      */
     public function setUseCache($useCache)
     {
         // Grava o cache
         $this->useCache = $useCache;
 
-        // Mantem a cadeia
         return $this;
     }
 
-    /**
-     * Retorna se deve usar o cache
-     *
-     * @return boolean
-     */
-    public function getUseCache()
+    public function getUseCache(): bool
     {
         return $this->useCache;
     }
@@ -647,10 +612,8 @@ class RW_App_Model_Base
     /**
      * Retorna o frontend para gravar o cache
      * não pode usar o loader pois irá afetar a paginação quando houve mais de uma sendo usada
-     *
-     * @return RW_App_Model_Paginator
      */
-    public function getPaginator()
+    public function getPaginator(): ?RW_App_Model_Paginator
     {
         if (!isset($this->_paginator)) {
             $this->_paginator = new RW_App_Model_Paginator();
@@ -663,24 +626,16 @@ class RW_App_Model_Base
 
     /**
      * Define se deve usar o paginator
-     *
-     * @param boolean $usepaginator
      */
-    public function setUsePaginator($usePaginator)
+    public function setUsePaginator(bool $usePaginator): RW_App_Model_Base
     {
         // Grava o paginator
         $this->usePaginator = $usePaginator;
 
-        // Mantem a cadeia
         return $this;
     }
 
-    /**
-     * Retorna se deve usar o paginator
-     *
-     * @return boolean
-     */
-    public function getUsePaginator()
+    public function getUsePaginator(): bool
     {
         return $this->usePaginator;
     }
@@ -689,11 +644,7 @@ class RW_App_Model_Base
      * Getters and setters
      */
 
-    /**
-     *
-     * @return string
-     */
-    public function getTable()
+    public function getTable(): ?string
     {
         return $this->table;
     }
@@ -711,11 +662,9 @@ class RW_App_Model_Base
 
         // Verifica se é para retorna apenas a primeira da chave multipla
         if (is_array($key) && $returnSingle === true) {
-            if (is_array($key)) {
-                foreach($key as $type=>$keyName) {
-                    $key = $keyName;
-                    break;
-                }
+            foreach ($key as $type => $keyName) {
+                $key = $keyName;
+                break;
             }
         }
 
@@ -723,11 +672,11 @@ class RW_App_Model_Base
     }
 
     /**
-     * @param string|array
+     * @param string|array $key
      *
      * @return self
      */
-    public function setKey($key)
+    public function setKey($key): RW_App_Model_Base
     {
         if (empty($key) && !is_string($key) && !is_array($key)) {
             throw new InvalidArgumentException('Chave inválida em ' . get_class($this) . '::setKey()');
@@ -739,7 +688,6 @@ class RW_App_Model_Base
     }
 
     /**
-     *
      * @return string|array
      */
     public function getOrder()
@@ -747,11 +695,7 @@ class RW_App_Model_Base
         return $this->order;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getHtmlSelectOption()
+    public function getHtmlSelectOption(): string
     {
         return $this->htmlSelectOption;
     }
@@ -766,14 +710,11 @@ class RW_App_Model_Base
     }
 
     /**
-     *
      * @param string|array|Zend_Db_Expr $order
-     *
-     * @return self
      */
-    public function setOrder($order)
+    public function setOrder($order): RW_App_Model_Base
     {
-        if (empty($order) && !is_string($order) && !is_array($order) && ( ! $order instanceof Zend_Db_Expr)) {
+        if (empty($order) && !is_string($order) && !is_array($order) && (!$order instanceof Zend_Db_Expr)) {
             throw new InvalidArgumentException('Chave inválida em ' . get_class($this) . '::setOrder()');
         }
 
@@ -782,25 +723,18 @@ class RW_App_Model_Base
         return $this;
     }
 
-    /**
-     *
-     * @param string $htmlSelectOption
-     *
-     * @return self
-     */
-    public function setHtmlSelectOption($htmlSelectOption)
+    public function setHtmlSelectOption(string $htmlSelectOption): RW_App_Model_Base
     {
         $this->htmlSelectOption = $htmlSelectOption;
         return $this;
     }
 
     /**
-     *
      * @param array|string $htmlSelectOptionData
      *
      * @return self
      */
-    public function setHtmlSelectOptionData($htmlSelectOptionData)
+    public function setHtmlSelectOptionData($htmlSelectOptionData): RW_App_Model_Base
     {
         $this->htmlSelectOptionData = $htmlSelectOptionData;
         return $this;
@@ -808,51 +742,37 @@ class RW_App_Model_Base
 
     /**
      * Retorna se irá usar o campo deleted ou remover o registro quando usar delete()
-     *
-     * @return boolean
      */
-    public function getUseDeleted()
+    public function getUseDeleted(): bool
     {
         return $this->useDeleted;
     }
 
     /**
      * Define se irá usar o campo deleted ou remover o registro quando usar delete()
-     *
-     * @param boolean $useDeleted
-     *
-     * @return  self
      */
-    public function setUseDeleted($useDeleted)
+    public function setUseDeleted(bool $useDeleted): RW_App_Model_Base
     {
         $this->useDeleted = $useDeleted;
 
-        // Mantem a cadeia
         return $this;
     }
 
     /**
      * Retorna se deve retornar os registros marcados como removidos
-     *
-     * @return boolean
      */
-    public function getShowDeleted()
+    public function getShowDeleted(): bool
     {
         return $this->showDeleted;
     }
 
     /**
      * Define se deve retornar os registros marcados como removidos
-     *
-     * @param boolean $showDeleted
-     *
-     * @return  self
      */
-    public function setShowDeleted($showDeleted)
+    public function setShowDeleted(bool $showDeleted): RW_App_Model_Base
     {
         $this->showDeleted = $showDeleted;
 
-        // Mantem a cadeia
         return $this;
     }
 }

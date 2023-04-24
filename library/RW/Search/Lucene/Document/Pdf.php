@@ -1,44 +1,44 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Implemantação do Zend_Search_Lucene_Document para PDF
-
- * @todo não lembro de onde copiei e o que alterei
  *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2011-2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
+ * @todo não lembro de onde copiei e o que alterei
  */
 class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
 {
 
     /**
      * File charset text encoding
-     *
-     * @var String
      */
-    protected $_fileEncoding = 'CP1252';
+    protected string $_fileEncoding = 'CP1252';
 
     /**
      * Charset to be used internally
-     *
-     * @var String
      */
-    protected $_internalEncoding = 'UTF-8';
+    protected string $_internalEncoding = 'UTF-8';
 
     /**
      * Object constructor
      *
-     * @param string  $fileName
-     * @param boolean $storeContent
-     * @param string  $fileEncoding
-     * @param string  $internalEncoding
+     * @param string $fileName
+     * @param bool $storeContent
+     * @param string|null $fileEncoding
+     * @param string|null $internalEncoding
      * @throws Zend_Search_Lucene_Exception
      */
-    private function __construct($fileName, $storeContent, $fileEncoding = null, $internalEncoding = null) {
-        if (!is_null($fileEncoding)){
+    private function __construct(
+        string $fileName,
+        bool $storeContent,
+        string $fileEncoding = null,
+        string $internalEncoding = null
+    ) {
+        if (!is_null($fileEncoding)) {
             $this->_fileEncoding = $fileEncoding;
         }
-        if (!is_null($internalEncoding)){
+        if (!is_null($internalEncoding)) {
             $this->_internalEncoding = $internalEncoding;
         }
         // Load the PDF document.
@@ -51,16 +51,24 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
         foreach ($pdf->properties as $meta => $metaValue) {
             switch ($meta) {
                 case 'Title':
-                    if (trim($pdf->properties['Title']) != '') $coreProperties['title'] = $pdf->properties['Title'];
+                    if (trim($pdf->properties['Title']) != '') {
+                        $coreProperties['title'] = $pdf->properties['Title'];
+                    }
                     break;
                 case 'Subject':
-                    if (trim($pdf->properties['Subject']) != '') $coreProperties['subject'] = $pdf->properties['Subject'];
+                    if (trim($pdf->properties['Subject']) != '') {
+                        $coreProperties['subject'] = $pdf->properties['Subject'];
+                    }
                     break;
                 case 'Author':
-                    if (trim($pdf->properties['Author']) != '') $coreProperties['author'] = $pdf->properties['Author'];
+                    if (trim($pdf->properties['Author']) != '') {
+                        $coreProperties['author'] = $pdf->properties['Author'];
+                    }
                     break;
                 case 'Keywords':
-                    if (trim($pdf->properties['Keywords']) != '') $coreProperties['keywords'] = $pdf->properties['Keywords'];
+                    if (trim($pdf->properties['Keywords']) != '') {
+                        $coreProperties['keywords'] = $pdf->properties['Keywords'];
+                    }
                     break;
                 case 'CreationDate':
                     $dateCreated = $pdf->properties['CreationDate'];
@@ -72,14 +80,15 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
                     // Convert date from the PDF format of D:20090731160351+01'00'
                     // @todo this should probably be a function in Zend_PDF to convert from this format
                     // @todo is_dst DEPRECATED, o que fazer com o $distance
-                    $dateCreated = mktime(substr($dateCreated, 10, 2), //hour
+                    $dateCreated = mktime(
+                        substr($dateCreated, 10, 2), //hour
                         substr($dateCreated, 12, 2), //minute
                         substr($dateCreated, 14, 2), //second
-                        substr($dateCreated,  6, 2), //month
-                        substr($dateCreated,  8, 2), //day
-                        substr($dateCreated,  2, 4) //year
-                        );
-                        //,$distance); //distance
+                        substr($dateCreated, 6, 2), //month
+                        substr($dateCreated, 8, 2), //day
+                        substr($dateCreated, 2, 4) //year
+                    );
+                    //,$distance); //distance
                     $coreProperties['CreationDate'] = date('Ymd', $dateCreated);
                     break;
                 case 'Date':
@@ -105,7 +114,9 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
 
         // Store meta data properties
         foreach ($coreProperties as $key => $value) {
-            if ($value) $this->addField(Zend_Search_Lucene_Field::Text($key, $value, $this->_internalEncoding));
+            if ($value) {
+                $this->addField(Zend_Search_Lucene_Field::Text($key, $value, $this->_internalEncoding));
+            }
         }
 
         // Store title (if not present in meta data)
@@ -116,18 +127,19 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
 
     /**
      * Convert a PDF into text.
-	 * ref: http://community.livejournal.com/php/295413.html
+     * ref: http://community.livejournal.com/php/295413.html
      *
      * @param string $data The binary data to extract the data from.
      * @return string The extracted text from the PDF
      */
-    protected function pdf2txt($data){
+    protected function pdf2txt($data): ?string
+    {
         /**
          * Split apart the PDF document into sections. We will address each
          * section separately.
          */
         $a_obj = $this->getDataArray($data, "obj", "endobj");
-        $j     = 0;
+        $j = 0;
 
         /**
          * Attempt to extract each part of the PDF document into a "filter"
@@ -138,18 +150,25 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
         foreach ($a_obj as $obj) {
             $a_filter = $this->getDataArray($obj, "<<", ">>");
             if (is_array($a_filter) && isset($a_filter[0])) {
-                if (!isset($a_chunks[$j])) $a_chunks[$j] = [];
+                if (!isset($a_chunks[$j])) {
+                    $a_chunks[$j] = [];
+                }
                 $a_chunks[$j]["filter"] = $a_filter[0];
                 $a_data = $this->getDataArray($obj, "stream", "endstream");
                 if (is_array($a_data) && isset($a_data[0])) {
-                    $a_chunks[$j]["data"] = trim(substr($a_data[0], strlen("stream"),
-                        strlen($a_data[0]) - strlen("stream") - strlen("endstream")));
+                    $a_chunks[$j]["data"] = trim(
+                        substr(
+                            $a_data[0],
+                            strlen("stream"),
+                            strlen($a_data[0]) - strlen("stream") - strlen("endstream")
+                        )
+                    );
                 }
                 $j++;
             }
         }
 
-        $result_data = NULL;
+        $result_data = null;
 
         // Decode the chunks
         foreach ($a_chunks as $chunk) {
@@ -166,14 +185,20 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
                         // Specially for ccentuated characters ... per example \343 = &atilde; but also valid for other
                         $data = preg_replace_callback('~\\\([0-9]{3})~i', fn($matches) => chr(octdec("\x01")), $data);
                         // Convert encoding. Surpress warnings and remove invalid characters
-                        if ($this->_fileEncoding != $this->_internalEncoding){
-                            $data = @iconv($this->_fileEncoding, $this->_internalEncoding.'//TRANSLIT//IGNORE', $data);
+                        if ($this->_fileEncoding != $this->_internalEncoding) {
+                            $data = @iconv(
+                                $this->_fileEncoding,
+                                $this->_internalEncoding . '//TRANSLIT//IGNORE',
+                                $data
+                            );
                         }
                         // Convert accentuated to non-accentuated characters
                         // @todo latin alphabets only, no greek, chinese, russian ...
                         $data = $this->_clearString($data);
                         //RW_Debug::dump($data);
-                        if (trim($data) != "") $result_data .= ' ' . $this->ps2txt($data);
+                        if (trim($data) != "") {
+                            $result_data .= ' ' . $this->ps2txt($data);
+                        }
                     }
                 }
             }
@@ -186,7 +211,7 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
 
         // Return the data extracted from the document.
         if ($result_data == "") {
-            return NULL;
+            return null;
         } else {
             return $result_data;
         }
@@ -198,7 +223,8 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
      *
      * @return array
      */
-    protected function _get_html_translation_table_CP1252() {
+    protected function _get_html_translation_table_CP1252()
+    {
         $trans = get_html_translation_table(HTML_ENTITIES);
         $trans[chr(130)] = '&sbquo;';  // Single Low-9 Quotation Mark
         $trans[chr(131)] = '&fnof;';   // Latin Small Letter F With Hook
@@ -234,8 +260,9 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
      * @param String $sString
      * @return String
      */
-    protected function _clearString($sString) {
-        if (in_array(strtolower($this->_internalEncoding), ['utf-8', 'utf8'])){
+    protected function _clearString($sString)
+    {
+        if (in_array(strtolower($this->_internalEncoding), ['utf-8', 'utf8'])) {
             $sString = utf8_decode($sString);
         }
         $string = strtr($sString, $this->_get_html_translation_table_CP1252());
@@ -246,10 +273,11 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
     /**
      * Convert a small chunk of data into text.
      *
-     * @param  string $ps_data The chunk of data to convert.
+     * @param string $ps_data The chunk of data to convert.
      * @return string          The string extracted from the data.
      */
-    protected function ps2txt($ps_data){
+    protected function ps2txt($ps_data)
+    {
         // Stop this function returning bogus information from non-data string.
         if (ord($ps_data[0]) < 10) {
             return $ps_data;
@@ -291,20 +319,20 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
     /**
      * Convert a section of data into an array, separated by the start and end words.
      *
-     * @param  string $data       The data.
-     * @param  string $start_word The start of each section of data.
-     * @param  string $end_word   The end of each section of data.
+     * @param string $data The data.
+     * @param string $start_word The start of each section of data.
+     * @param string $end_word The end of each section of data.
      * @return array              The array of data.
      */
     protected function getDataArray($data, $start_word, $end_word)
     {
-        $start    = 0;
-        $end      = 0;
+        $start = 0;
+        $end = 0;
         $a_result = [];
 
         while ($start !== false && $end !== false) {
             $start = strpos($data, $start_word, $end);
-            $end   = strpos($data, $end_word, $start);
+            $end = strpos($data, $end_word, $start);
             if ($end !== false && $start !== false) {
                 // data is between start and end
                 $a_result[] = substr($data, $start, $end - $start + strlen($end_word));
@@ -317,14 +345,15 @@ class RW_Search_Lucene_Document_Pdf extends Zend_Search_Lucene_Document
     /**
      * Load Pdf document from a file
      *
-     * @param string  $fileName
+     * @param string $fileName
      * @param boolean $storeContent
-     * @param string  $fileEncoding
-     * @param string  $internalEncoding
+     * @param string $fileEncoding
+     * @param string $internalEncoding
      * @return Zend_Search_Lucene_Document_Pdf
      * @throws Zend_Search_Lucene_Document_Exception
      */
-    public static function loadPdfFile($fileName, $storeContent = false, $fileEncoding = null, $internalEncoding = null) {
+    public static function loadPdfFile($fileName, $storeContent = false, $fileEncoding = null, $internalEncoding = null)
+    {
         if (!is_readable($fileName)) {
             require_once 'Zend/Search/Lucene/Document/Exception.php';
             throw new Zend_Search_Lucene_Document_Exception('Provided file \'' . $fileName . '\' is not readable.');
