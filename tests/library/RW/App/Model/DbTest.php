@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RWTest\App\Model;
 
 use Exception;
@@ -70,7 +72,7 @@ class DbTest extends BaseTestCase
     {
         foreach ($this->defaultValues as $row) {
             $this->getAdapter()->query(
-                "INSERT into {$this->tableName}({$this->tableKeyName}, artist, title, deleted)
+                "INSERT into $this->tableName($this->tableKeyName, artist, title, deleted)
                                         VALUES (
                                             {$row[$this->tableKeyName]},
                                             '{$row['artist']}',
@@ -258,7 +260,7 @@ class DbTest extends BaseTestCase
             'As alterações foram detectadas corretamente?'
         );
 
-        $this->assertFalse($this->Db->update(array(), 2));
+        $this->assertFalse($this->Db->update([], 2));
         $this->assertFalse($this->Db->update(null, 2));
     }
 

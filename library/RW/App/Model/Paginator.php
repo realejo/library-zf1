@@ -1,13 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Gerenciador do paginator utilizado pelo RW_App_Model
  *
  * Ele é usado apenas para guarda a configuração da paginação. O paginator é
  * criado direto na consulta no retorno do fetchAll
- *
- * @link      http://github.com/realejo/libraray-zf1
- * @copyright Copyright (c) 2014 Realejo (http://realejo.com.br)
- * @license   http://unlicense.org
  */
 class RW_App_Model_Paginator
 {

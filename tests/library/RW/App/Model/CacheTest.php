@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace RWTest\App\Model;
 
 use Exception;
